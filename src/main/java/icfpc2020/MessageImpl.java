@@ -20,7 +20,8 @@ public class MessageImpl implements Message {
     }
 
     public void setValue(int position, int value) {
-        assert value == 0 || value == 1: "Wrong value";
+        assert value == 0 || value == 1: "Wrong value " + value;
+        assert position / 64 < message.length: "Wrong position " + position;
         message[position / 64] |= ((long) value) << position % 64;
     }
 
@@ -31,6 +32,7 @@ public class MessageImpl implements Message {
 
     @Override
     public int getValueAt(int position) {
+        assert position / 64 < message.length: "Wrong position " + position;
         final long l = message[position / 64] & 1L << position % 64;
         return l != 0L ? 1: 0;
     }
