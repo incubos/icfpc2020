@@ -160,8 +160,14 @@ public class BoardDecipher {
                     break;
                 }
             }
-            final Board pictogram = rowBoard.subBoard(currentX, 0, pictogramWidth, rowBoard.height);
-            result.add(parsePictogram(pictogram));
+            int pictogramHeight = rowBoard.height;
+            final Board pictogram = rowBoard.subBoard(currentX, 0, pictogramWidth, pictogramHeight);
+            for (; pictogramHeight >= 1; pictogramHeight--) {
+                if (!rowClear(pictogram, pictogramHeight - 1)) {
+                    break;
+                }
+            }
+            result.add(parsePictogram(pictogram.subBoard(0, 0, pictogramWidth, pictogramHeight)));
 
             sx = currentX + pictogramWidth + 1;
         }
