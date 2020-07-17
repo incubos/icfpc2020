@@ -32,7 +32,7 @@ public enum Command {
     Nil("nil", 28, 3),
     IsNil("isnil", 29, 3),
     ListLPar("(", 30, 1, 1, 3, 5),
-    ListComma(",", 30, 6, 1, 3, 5),
+    ListComma(",", 30, 6, 1, 2, 5),
     ListRPar(")", 30, 10, 1, 3, 5),
     Vector("vec", 31, 6),
     Draw("draw", 32, 6),
