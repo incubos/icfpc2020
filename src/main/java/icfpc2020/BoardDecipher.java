@@ -1,6 +1,7 @@
 package icfpc2020;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.ir.expressions.IrConstKind;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -168,10 +169,42 @@ public class BoardDecipher {
         return result;
     }
 
+    private static Integer parseNumber(final Board pictogram) {
+        // Number bit
+        if (pictogram.getValue(0, 0) != 0) {
+            return null;
+        }
+        for (int x = 1; x < pictogram.width; x++) {
+            if (pictogram.getValue(x, 0) == 0) {
+                return null;
+            }
+        }
+        for (int y = 1; y < pictogram.height; y++) {
+            if (pictogram.getValue(0, y) == 0) {
+                return null;
+            }
+        }
+        int number = 0;
+        int power = 1;
+        for (int y = 1; y < pictogram.height; y++) {
+            for (int x = 1; x < pictogram.width; x++) {
+                if (pictogram.getValue(x, y) == 1) {
+                    number += power;
+                }
+                power *= 2;
+            }
+        }
+        return number;
+    }
+
     @NotNull
     private static ParseResult parsePictogram(Board pictogram) {
         if (pictogram.width == 1 && pictogram.height == 1) {
             return new DotR(pictogram);
+        }
+        final Integer number = parseNumber(pictogram);
+        if (number != null) {
+            return new NumberR(number, pictogram);
         }
         ParseResult parseResult = null;
         for (final Command command : commandsSortedBySize) {

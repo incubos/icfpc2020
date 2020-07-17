@@ -19,17 +19,17 @@ public class BoardDecipherTest {
         final String actual = dumpCommands(decipher);
         Assert.assertEquals(
                 "=\n" +
-        "?=?\n" +
-        "?=?\n" +
-        "?=?\n" +
-        "?=?\n" +
-        "....\n" +
-        "?=?\n" +
-        "?=?\n" +
-        "....\n" +
-        "?=?\n" +
-        "?=?\n" +
-        "....\n",
+                        "?=?\n" +
+                        "?=?\n" +
+                        "2=2\n" +
+                        "3=3\n" +
+                        "....\n" +
+                        "10=10\n" +
+                        "11=11\n" +
+                        "....\n" +
+                        "1=1\n" +
+                        "2=2\n" +
+                        "....\n",
                 actual);
     }
 
