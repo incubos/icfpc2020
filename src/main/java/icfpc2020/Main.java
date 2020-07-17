@@ -1,15 +1,20 @@
 package icfpc2020;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.*;
 import java.net.http.*;
 
 class Main {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
+
     public static void main(String[] args) {
         try {
             var serverUrl = args[0];
             var playerKey = args[1];
 
-            System.out.println("ServerUrl: " + serverUrl + "; PlayerKey: " + playerKey);
+            log.info("ServerUrl: {}; PlayerKey: {}", serverUrl, playerKey);
 
             var request = HttpRequest.newBuilder()
                     .uri(URI.create(serverUrl))
@@ -23,16 +28,15 @@ class Main {
             var status = response.statusCode();
 
             if (status != HttpURLConnection.HTTP_OK) {
-                System.out.println("Unexpected server response:");
-                System.out.println("HTTP code: " + status);
-                System.out.println("Response body: " + response.body());
+                log.error("Unexpected server response:");
+                log.error("HTTP code: {}", status);
+                log.error("Response body: {}", response.body());
                 System.exit(2);
             }
 
-            System.out.println("Server response: " + response.body());
+            log.info("Server response: {}", response.body());
         } catch (Exception e) {
-            System.out.println("Unexpected server response:");
-            e.printStackTrace(System.out);
+            log.error("Unexpected server response", e);
             System.exit(1);
         }
     }
