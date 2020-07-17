@@ -13,12 +13,10 @@ public class AlienMessageClient {
     private static final Logger log = LoggerFactory.getLogger(AlienMessageClient.class);
     private final HttpClient httpClient;
     private final String serverUrl;
-    private final String playerKey;
 
-    public AlienMessageClient(final HttpClient httpClient, final String serverUrl, final String playerKey) {
+    public AlienMessageClient(final HttpClient httpClient, final String serverUrl) {
         this.httpClient = httpClient;
         this.serverUrl = serverUrl;
-        this.playerKey = playerKey;
     }
 
     public Message sendMessage(final Message message) {
@@ -26,7 +24,7 @@ public class AlienMessageClient {
         var request = HttpRequest.newBuilder()
                                  .POST(HttpRequest.BodyPublishers.ofString(messageString))
                                  .version(HttpClient.Version.HTTP_1_1)
-                                 .uri(URI.create(serverUrl + "?apiKey=" + playerKey))
+                                 .uri(URI.create(serverUrl))
                                  .build();
         try {
             log.info("Sending message {}", messageString);
