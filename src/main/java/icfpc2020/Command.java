@@ -18,7 +18,7 @@ public enum Command {
     Demodulate("dem", 14, 4),
     Send("send", 15, 3, 3, 4, 4),
     Negate("neg", 16, 3),
-    App("app", 17, 2),
+    App("ap", 17, 2),
     S("s", 18, 3),
     C("c", 19, 3),
     B("b", 20, 3),

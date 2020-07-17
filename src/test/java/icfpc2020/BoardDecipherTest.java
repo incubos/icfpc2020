@@ -37,17 +37,17 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("inc\n" +
-                        "app inc 0 = 1\n" +
-                        "app inc 1 = 2\n" +
-                        "app inc 2 = 3\n" +
-                        "app inc 3 = 4\n" +
+                        "ap inc 0 = 1\n" +
+                        "ap inc 1 = 2\n" +
+                        "ap inc 2 = 3\n" +
+                        "ap inc 3 = 4\n" +
                         ". . . .\n" +
-                        "app inc 300 = 301\n" +
-                        "app inc 301 = 302\n" +
+                        "ap inc 300 = 301\n" +
+                        "ap inc 301 = 302\n" +
                         ". . . .\n" +
-                        "app inc 1 = 0\n" +
-                        "app inc 2 = 1\n" +
-                        "app inc 3 = 2\n" +
+                        "ap inc 1 = 0\n" +
+                        "ap inc 2 = 1\n" +
+                        "ap inc 3 = 2\n" +
                         ". . . .",
                 actual);
     }
@@ -58,16 +58,16 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("dec\n" +
-                "app dec 1 = 0\n" +
-                "app dec 2 = 1\n" +
-                "app dec 3 = 2\n" +
-                "app dec 4 = 3\n" +
+                "ap dec 1 = 0\n" +
+                "ap dec 2 = 1\n" +
+                "ap dec 3 = 2\n" +
+                "ap dec 4 = 3\n" +
                 ". . . .\n" +
-                "app dec 1024 = 1023\n" +
+                "ap dec 1024 = 1023\n" +
                 ". . . .\n" +
-                "app dec 0 = 1\n" +
-                "app dec 1 = 2\n" +
-                "app dec 2 = 3\n" +
+                "ap dec 0 = 1\n" +
+                "ap dec 1 = 2\n" +
+                "ap dec 2 = 3\n" +
                 ". . . .", actual);
     }
 
@@ -77,11 +77,11 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("add\n" +
-                "app app add 1 2 = 3\n" +
-                "app app add 2 1 = 3\n" +
-                "app app add 0 1 = 1\n" +
-                "app app add 2 3 = 5\n" +
-                "app app add 3 5 = 8\n" +
+                "ap ap add 1 2 = 3\n" +
+                "ap ap add 2 1 = 3\n" +
+                "ap ap add 0 1 = 1\n" +
+                "ap ap add 2 3 = 5\n" +
+                "ap ap add 3 5 = 8\n" +
                 ". . . .", actual);
     }
 
@@ -91,15 +91,15 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("x0 x1 x2 x3 x4 0 0 0 0\n" +
-                "app app add 0 x0 = x0\n" +
-                "app app add 0 x1 = x1\n" +
-                "app app add 0 x2 = x2\n" +
+                "ap ap add 0 x0 = x0\n" +
+                "ap ap add 0 x1 = x1\n" +
+                "ap ap add 0 x2 = x2\n" +
                 ". . . .\n" +
-                "app app add x0 0 = x0\n" +
-                "app app add x1 0 = x1\n" +
-                "app app add x2 0 = x2\n" +
+                "ap ap add x0 0 = x0\n" +
+                "ap ap add x1 0 = x1\n" +
+                "ap ap add x2 0 = x2\n" +
                 ". . . .\n" +
-                "app app add x0 x1 = app app add x1 x0\n" +
+                "ap ap add x0 x1 = ap ap add x1 x0\n" +
                 ". . . .", actual);
     }
 
@@ -110,19 +110,19 @@ public class BoardDecipherTest {
 //        final String actual = dumpCommands(decipher);
 //        // TODO add modulation
 //        Assert.assertEquals("mod\n" +
-//                "app mod 0 = ?\n" +
-//                "app mod 1 = ?\n" +
-//                "app mod 1 = ?\n" +
-//                "app mod 2 = ?\n" +
-//                "app mod 2 = ?\n" +
+//                "ap mod 0 = ?\n" +
+//                "ap mod 1 = ?\n" +
+//                "ap mod 1 = ?\n" +
+//                "ap mod 2 = ?\n" +
+//                "ap mod 2 = ?\n" +
 //                ". . . .\n" +
-//                "app mod 16 = ?\n" +
-//                "app mod 16 = ?\n" +
+//                "ap mod 16 = ?\n" +
+//                "ap mod 16 = ?\n" +
 //                ". . . .\n" +
-//                "app mod 255 = ?\n" +
-//                "app mod 255 = ?\n" +
-//                "app mod 256 = ?\n" +
-//                "app mod 256 = ?\n" +
+//                "ap mod 255 = ?\n" +
+//                "ap mod 255 = ?\n" +
+//                "ap mod 256 = ?\n" +
+//                "ap mod 256 = ?\n" +
 //                ". . . .", actual);
 //    }
 
@@ -134,10 +134,10 @@ public class BoardDecipherTest {
         // TODO add modulation
         Assert.assertEquals("( , )\n" +
                 "( ) = nil\n" +
-                "( x0 ) = app app cons x0 nil\n" +
-                "( x0 , x1 ) = app app cons x0 app app cons x1 nil\n" +
-                "( x0 , x1 , x2 ) = app app cons x0 app app cons x1 app app cons x2 nil\n" +
-                "( x0 , x1 , x2 , x5 ) = app app cons x0 app app cons x1 app app cons x2 app app cons x5 nil\n" +
+                "( x0 ) = ap ap cons x0 nil\n" +
+                "( x0 , x1 ) = ap ap cons x0 ap ap cons x1 nil\n" +
+                "( x0 , x1 , x2 ) = ap ap cons x0 ap ap cons x1 ap ap cons x2 nil\n" +
+                "( x0 , x1 , x2 , x5 ) = ap ap cons x0 ap ap cons x1 ap ap cons x2 ap ap cons x5 nil\n" +
                 ". . . .", actual);
     }
 
@@ -148,12 +148,12 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("draw\n" +
-                "app draw ( ) = |picture|\n" +
-                "app draw ( app app vec 1 1 ) = |picture|\n" +
-                "app draw ( app app vec 1 2 ) = |picture|\n" +
-                "app draw ( app app vec 2 5 ) = |picture|\n" +
-                "app draw ( app app vec 1 2 , app app vec 3 1 ) = |picture|\n" +
-                "app draw ( app app vec 5 3 , app app vec 6 3 , app app vec 4 4 , app app vec 6 4 , app app vec 4 5 ) = |picture|\n" +
+                "ap draw ( ) = |picture|\n" +
+                "ap draw ( ap ap vec 1 1 ) = |picture|\n" +
+                "ap draw ( ap ap vec 1 2 ) = |picture|\n" +
+                "ap draw ( ap ap vec 2 5 ) = |picture|\n" +
+                "ap draw ( ap ap vec 1 2 , ap ap vec 3 1 ) = |picture|\n" +
+                "ap draw ( ap ap vec 5 3 , ap ap vec 6 3 , ap ap vec 4 4 , ap ap vec 6 4 , ap ap vec 4 5 ) = |picture|\n" +
                 ". . . .", actual);
     }
 
