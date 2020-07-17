@@ -4,7 +4,7 @@ import java.net.*;
 import java.net.http.*;
 
 class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         try {
             var serverUrl = args[0];
             var playerKey = args[1];
