@@ -148,12 +148,28 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("draw\n" +
-                "ap draw ( ) = |picture|\n" +
-                "ap draw ( ap ap vec 1 1 ) = |picture|\n" +
-                "ap draw ( ap ap vec 1 2 ) = |picture|\n" +
-                "ap draw ( ap ap vec 2 5 ) = |picture|\n" +
-                "ap draw ( ap ap vec 1 2 , ap ap vec 3 1 ) = |picture|\n" +
-                "ap draw ( ap ap vec 5 3 , ap ap vec 6 3 , ap ap vec 4 4 , ap ap vec 6 4 , ap ap vec 4 5 ) = |picture|\n" +
+                "ap draw ( ) = |[]|\n" +
+                "ap draw ( ap ap vec 1 1 ) = |[1,1]|\n" +
+                "ap draw ( ap ap vec 1 2 ) = |[1,2]|\n" +
+                "ap draw ( ap ap vec 2 5 ) = |[2,5]|\n" +
+                "ap draw ( ap ap vec 1 2 , ap ap vec 3 1 ) = |[1,2;3,1]|\n" +
+                "ap draw ( ap ap vec 5 3 , ap ap vec 6 3 , ap ap vec 4 4 , ap ap vec 6 4 , ap ap vec 4 5 ) = |[4,4;4,5;5,3;6,3;6,4]|\n" +
+                ". . . .", actual);
+    }
+
+    @Test
+    public void test41() throws IOException {
+        final Board board = PngParser.loadPng("message41.png", 4, 4);
+        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+        final String actual = dumpCommands(decipher);
+        Assert.assertEquals("ap interact b\n" +
+                "ap ap b x0 x1 = ( 0 , ap ap cons x1 x0 , ( ap ap cons x1 x0 ) )\n" +
+                "b = ap ap b ap b ap ap s ap ap b ap b ap cons 0 ap ap c ap ap b b cons ap ap c cons nil ap ap c cons nil ap c cons\n" +
+                "ap ap ap interact b nil ap ap vec 0 0 = ( ( ap ap vec 0 0 ) , ( |[0,0]| ) )\n" +
+                "ap ap ap interact b ( ap ap vec 0 0 ) ap ap vec 2 3 = ( x2 , ( |[0,0;2,3]| ) )\n" +
+                "ap ap ap interact b x2 ap ap vec 1 2 = ( x3 , ( |[0,0;1,2;2,3]| ) )\n" +
+                "ap ap ap interact b x3 ap ap vec 3 2 = ( x4 , ( |[0,0;1,2;2,3;3,2]| ) )\n" +
+                "ap ap ap interact b x4 ap ap vec 4 0 = ( x5 , ( |[0,0;1,2;2,3;3,2;4,0]| ) )\n" +
                 ". . . .", actual);
     }
 

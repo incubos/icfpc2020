@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class ParseResult {
     final Board board;
@@ -81,7 +82,16 @@ class PictureR extends ParseResult {
 
     @Override
     public String toString() {
-        return "|picture|";
+        final List<String> points = new ArrayList<>();
+        for (int x = 0; x < board.width; x++) {
+            for (int y = 0; y < board.height; y++) {
+                if (board.getValue(x, y) == 1) {
+                    points.add(x + "," + y);
+                }
+            }
+        }
+        // Show values
+        return "|[" + String.join(";", points) + "]|";
     }
 }
 
@@ -282,7 +292,7 @@ public class BoardDecipher {
                 return null;
             }
         }
-        return new PictureR(pictogram);
+        return new PictureR(pictogram.subBoard(1, 1, pictogram.width - 2, pictogram.height - 2));
     }
 
     private static Integer parseVariable(Board pictogram) {
