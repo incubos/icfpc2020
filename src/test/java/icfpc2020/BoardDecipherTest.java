@@ -91,7 +91,7 @@ public class BoardDecipherTest {
         final Board board = PngParser.loadPng("message8.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
-        Assert.assertEquals("x0 x1 x2 x3 x4 0 0 0 0\n" +
+        Assert.assertEquals("x0 x1 x2 x3 x4 . . . .\n" +
                 "ap ap add 0 x0 = x0\n" +
                 "ap ap add 0 x1 = x1\n" +
                 "ap ap add 0 x2 = x2\n" +
@@ -178,7 +178,7 @@ public class BoardDecipherTest {
         final Board board = PngParser.loadPng("message42.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
-        Assert.assertEquals("ap interact galaxy = 0 0 0 0", actual);
+        Assert.assertEquals("ap interact galaxy = . . . .", actual);
     }
 
 

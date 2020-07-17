@@ -153,7 +153,7 @@ public class BoardDecipher {
         return true;
     }
 
-    public static int[] getNextOffsets(final Board board, final int x, final int y) {
+    public static int[] getLeftTopMargins(final Board board, final int x, final int y) {
         // Find minimal non-clear X
         int minX = x;
         for (; minX < board.width; minX++) {
@@ -171,6 +171,24 @@ public class BoardDecipher {
         return new int[] {minX, minY};
     }
 
+    public static int[] getRightBottomMargins(final Board board) {
+        // Find max non-clear X
+        int maxX = board.width - 1;
+        for (; maxX >= 0; maxX--) {
+            if (!columnClear(board, maxX)) {
+                break;
+            }
+        }
+        // Find max non-clear Y
+        int maxY = board.height - 1;
+        for (; maxY >= 0; maxY--) {
+            if (!rowClear(board, maxY)) {
+                break;
+            }
+        }
+        return new int[] {maxX, maxY};
+    }
+
     public static List<List<ParseResult>> decipher(final Board board) {
         Arrays.sort(commandsSortedBySize, (o1, o2) -> {
             // Compare by size
@@ -181,7 +199,7 @@ public class BoardDecipher {
         int sx = 0;
         int sy = 0;
         while (sy < board.height) {
-            final int[] nextOffsetXY = getNextOffsets(board, sx, sy);
+            final int[] nextOffsetXY = getLeftTopMargins(board, sx, sy);
             int currentX = nextOffsetXY[0];
             int currentY = nextOffsetXY[1];
             if (currentY >= board.height) {
@@ -206,8 +224,8 @@ public class BoardDecipher {
         int sx = 0;
         final List<ParseResult> result = new ArrayList<ParseResult>();
         while (sx < rowBoard.width) {
-            final int[] nextOffsetXY = getNextOffsets(rowBoard, sx, 0);
-            int currentX = nextOffsetXY[0];
+            final int[] leftTopMargins = getLeftTopMargins(rowBoard, sx, 0);
+            int currentX = leftTopMargins[0];
             if (currentX >= rowBoard.width) {
                 break;
             }
@@ -218,18 +236,25 @@ public class BoardDecipher {
                     break;
                 }
             }
-            int pictogramHeight = rowBoard.height;
-            final Board pictogram = rowBoard.subBoard(currentX, 0, pictogramWidth, pictogramHeight);
-            for (; pictogramHeight >= 1; pictogramHeight--) {
-                if (!rowClear(pictogram, pictogramHeight - 1)) {
-                    break;
-                }
-            }
-            result.add(parsePictogram(pictogram.subBoard(0, 0, pictogramWidth, pictogramHeight)));
+            final Board pictogram = rowBoard.subBoard(currentX, 0, pictogramWidth, rowBoard.height);
+            result.add(parsePictogram(trimMargins(pictogram)));
 
             sx = currentX + pictogramWidth + 1;
         }
         return result;
+    }
+
+    private static Board trimMargins(final Board board) {
+        final int[] leftTopMargins = getLeftTopMargins(board, 0, 0);
+        final int[] rightBottomMargins = getRightBottomMargins(board);
+        final int left = leftTopMargins[0];
+        final int top = leftTopMargins[1];
+        final int width = rightBottomMargins[0] - left + 1;
+        final int height = rightBottomMargins[1] - top + 1;
+        if (left == 0 && top == 0 && width == board.width && height == board.height) {
+            return board;
+        }
+        return board.subBoard(left, top, width, height);
     }
 
     // clear = 0 for ordinary numbers, 1 for variables
