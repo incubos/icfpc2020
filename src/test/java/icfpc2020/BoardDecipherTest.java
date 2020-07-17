@@ -157,6 +157,14 @@ public class BoardDecipherTest {
                 ". . . .", actual);
     }
 
+    @Test
+    public void test42() throws IOException {
+        final Board board = PngParser.loadPng("message42.png", 4, 4);
+        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+        final String actual = dumpCommands(decipher);
+        Assert.assertEquals("ap interact galaxy = 0 0 0 0", actual);
+    }
+
 
     private static String dumpCommands(List<List<ParseResult>> decipher) {
         return decipher.stream().map( row ->

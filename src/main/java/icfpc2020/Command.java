@@ -46,7 +46,7 @@ public enum Command {
     InteractionProtocol("interact", 39, 6),
     StatelessDrawingProtocol("statelessdraw", 40, 14, 1, 7, 7),
     StatefulDrawingProtocol("statefuldraw", 41, 14, 1, 7, 7),
-    Galaxy("galaxy", 42, 14, 1, 7, 7);
+    Galaxy("galaxy", 42, 13, 1, 7, 7);
 
     private String code;
     private Board board;
