@@ -1,6 +1,7 @@
 package icfpc2020;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.ir.expressions.IrConstKind;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,9 +87,27 @@ public class BoardDecipher {
         return true;
     }
 
+    private static boolean columnFilled(Board board, int x){
+        for (int y = 0; y < board.height; y++) {
+            if (board.getValue(x, y) == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static boolean rowClear(Board board, int y){
         for (int x = 0; x < board.width; x++) {
             if (board.getValue(x, y) == 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean rowFilled(Board board, int y){
+        for (int x = 0; x < board.width; x++) {
+            if (board.getValue(x, y) == 0) {
                 return false;
             }
         }
@@ -174,18 +193,19 @@ public class BoardDecipher {
         return result;
     }
 
-    private static Integer parseNumber(final Board pictogram) {
+    // clear = 0 for ordinary numbers, 1 for variables
+    private static Integer parseNumber(final Board pictogram, int clear) {
         // Number bit
-        if (pictogram.getValue(0, 0) != 0) {
+        if (pictogram.getValue(0, 0) != clear) {
             return null;
         }
         for (int x = 1; x < pictogram.width; x++) {
-            if (pictogram.getValue(x, 0) == 0) {
+            if (pictogram.getValue(x, 0) == clear) {
                 return null;
             }
         }
         for (int y = 1; y < pictogram.height; y++) {
-            if (pictogram.getValue(0, y) == 0) {
+            if (pictogram.getValue(0, y) == clear) {
                 return null;
             }
         }
@@ -193,7 +213,7 @@ public class BoardDecipher {
         int power = 1;
         for (int y = 1; y < pictogram.height; y++) {
             for (int x = 1; x < pictogram.width; x++) {
-                if (pictogram.getValue(x, y) == 1) {
+                if (pictogram.getValue(x, y) != clear) {
                     number += power;
                 }
                 power *= 2;
@@ -207,7 +227,11 @@ public class BoardDecipher {
         if (pictogram.width == 1 && pictogram.height == 1) {
             return new DotR(pictogram);
         }
-        final Integer number = parseNumber(pictogram);
+        final Integer variable = parseVariable(pictogram);
+        if (variable != null) {
+            return new VariableR(variable, pictogram);
+        }
+        final Integer number = parseNumber(pictogram, 0);
         if (number != null) {
             return new NumberR(number, pictogram);
         }
@@ -224,5 +248,18 @@ public class BoardDecipher {
             parseResult = new ParseResult(pictogram);
         }
         return parseResult;
+    }
+
+    private static Integer parseVariable(Board pictogram) {
+        // min size
+        if (!(4 <= pictogram.width && 4 <= pictogram.height)) {
+            return null;
+        }
+        if (!(columnFilled(pictogram, 0) && columnFilled(pictogram, pictogram.width - 1) &&
+                rowFilled(pictogram, 0) && rowFilled(pictogram, pictogram.height - 1))) {
+            return null;
+        }
+        // Check inversed number
+        return parseNumber(pictogram.subBoard(1, 1, pictogram.width - 2, pictogram.height - 2), 1);
     }
 }

@@ -90,16 +90,16 @@ public class BoardDecipherTest {
         final Board board = PngParser.loadPng("message8.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
-        Assert.assertEquals("i i dec i i 0 0 0 0\n" +
-                "app app add 0 i = i\n" +
-                "app app add 0 i = i\n" +
-                "app app add 0 dec = dec\n" +
+        Assert.assertEquals("x0 x1 x2 x3 x4 0 0 0 0\n" +
+                "app app add 0 x0 = x0\n" +
+                "app app add 0 x1 = x1\n" +
+                "app app add 0 x2 = x2\n" +
                 ". . . .\n" +
-                "app app add i 0 = i\n" +
-                "app app add i 0 = i\n" +
-                "app app add dec 0 = dec\n" +
+                "app app add x0 0 = x0\n" +
+                "app app add x1 0 = x1\n" +
+                "app app add x2 0 = x2\n" +
                 ". . . .\n" +
-                "app app add i i = app app add i i\n" +
+                "app app add x0 x1 = app app add x1 x0\n" +
                 ". . . .", actual);
     }
 
