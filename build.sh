@@ -1,9 +1,5 @@
 #!/bin/sh
 
-ant
-
-# cd app
-# javac -d build *.java
-#
-# cd build
-# jar cfe Main.jar Main *
+javac -cp ".:lib/*" -d build $(find ./src/main/java -type f -name "*.java")
+cd build
+jar cf ../dist/wintermute.jar $(find . -type f)
