@@ -1,4 +1,7 @@
-.idea
-build
+.idea/
+build/
+dist/
+
 Dockerfile
+
 *.iml
