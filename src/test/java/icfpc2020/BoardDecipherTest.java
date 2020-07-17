@@ -103,6 +103,61 @@ public class BoardDecipherTest {
                 ". . . .", actual);
     }
 
+//    @Test
+//    public void test13() throws IOException {
+//        final Board board = PngParser.loadPng("message13.png", 4, 4);
+//        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+//        final String actual = dumpCommands(decipher);
+//        // TODO add modulation
+//        Assert.assertEquals("mod\n" +
+//                "app mod 0 = ?\n" +
+//                "app mod 1 = ?\n" +
+//                "app mod 1 = ?\n" +
+//                "app mod 2 = ?\n" +
+//                "app mod 2 = ?\n" +
+//                ". . . .\n" +
+//                "app mod 16 = ?\n" +
+//                "app mod 16 = ?\n" +
+//                ". . . .\n" +
+//                "app mod 255 = ?\n" +
+//                "app mod 255 = ?\n" +
+//                "app mod 256 = ?\n" +
+//                "app mod 256 = ?\n" +
+//                ". . . .", actual);
+//    }
+
+    @Test
+    public void test30() throws IOException {
+        final Board board = PngParser.loadPng("message30.png", 4, 4);
+        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+        final String actual = dumpCommands(decipher);
+        // TODO add modulation
+        Assert.assertEquals("( , )\n" +
+                "( ) = nil\n" +
+                "( x0 ) = app app cons x0 nil\n" +
+                "( x0 , x1 ) = app app cons x0 app app cons x1 nil\n" +
+                "( x0 , x1 , x2 ) = app app cons x0 app app cons x1 app app cons x2 nil\n" +
+                "( x0 , x1 , x2 , x5 ) = app app cons x0 app app cons x1 app app cons x2 app app cons x5 nil\n" +
+                ". . . .", actual);
+    }
+
+
+    @Test
+    public void test32() throws IOException {
+        final Board board = PngParser.loadPng("message32.png", 4, 4);
+        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+        final String actual = dumpCommands(decipher);
+        Assert.assertEquals("draw\n" +
+                "app draw ( ) = |picture|\n" +
+                "app draw ( app app vec 1 1 ) = |picture|\n" +
+                "app draw ( app app vec 1 2 ) = |picture|\n" +
+                "app draw ( app app vec 2 5 ) = |picture|\n" +
+                "app draw ( app app vec 1 2 , app app vec 3 1 ) = |picture|\n" +
+                "app draw ( app app vec 5 3 , app app vec 6 3 , app app vec 4 4 , app app vec 6 4 , app app vec 4 5 ) = |picture|\n" +
+                ". . . .", actual);
+    }
+
+
     private static String dumpCommands(List<List<ParseResult>> decipher) {
         return decipher.stream().map( row ->
             row.stream().map(ParseResult::toString).collect(Collectors.joining(" "))

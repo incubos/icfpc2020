@@ -1,7 +1,6 @@
 package icfpc2020;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.ir.expressions.IrConstKind;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +70,18 @@ class DotR extends ParseResult {
     @Override
     public String toString() {
         return ".";
+    }
+}
+
+class PictureR extends ParseResult {
+
+    public PictureR(Board board) {
+        super(board);
+    }
+
+    @Override
+    public String toString() {
+        return "|picture|";
     }
 }
 
@@ -235,19 +246,43 @@ public class BoardDecipher {
         if (number != null) {
             return new NumberR(number, pictogram);
         }
-        ParseResult parseResult = null;
         for (final Command command : commandsSortedBySize) {
             if (pictogram.contains(command.getBoard(), 0, 0)) {
-                parseResult = new CommandR(command);
-                break;
+                return new CommandR(command);
             }
         }
-        if (parseResult == null) {
-            // No commands found!
-            // TODO: parse number or variable
-            parseResult = new ParseResult(pictogram);
+        final ParseResult picture = parsePicture(pictogram);
+        if (picture != null) {
+            return picture;
         }
-        return parseResult;
+        // Unknown object!
+        return new ParseResult(pictogram);
+    }
+
+    private static ParseResult parsePicture(Board pictogram) {
+        // Size check
+        if (!(pictogram.width >= 10 && pictogram.height >= 10)) {
+            return null;
+        }
+        // Corners check
+        if (pictogram.getValue(0, 0) != 0 ||
+                pictogram.getValue(pictogram.width-1, 0) != 0 ||
+                pictogram.getValue(pictogram.width - 1, pictogram.height - 1) != 0 ||
+                pictogram.getValue(0, pictogram.height - 1) != 0) {
+            return null;
+        }
+        // Check edges
+        for (int x = 1; x < pictogram.width - 1; x++) {
+            if (pictogram.getValue(x, 0) == 0 || pictogram.getValue(x, pictogram.height - 1) == 0) {
+                return null;
+            }
+        }
+        for (int y = 1; y < pictogram.height - 1; y++) {
+            if (pictogram.getValue(0, y) == 0 || pictogram.getValue(pictogram.width - 1, y) == 0) {
+                return null;
+            }
+        }
+        return new PictureR(pictogram);
     }
 
     private static Integer parseVariable(Board pictogram) {
