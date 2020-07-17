@@ -1,7 +1,9 @@
 package icfpc2020;
 
+import icfpc2020.operators.Demodulate;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -92,6 +94,22 @@ class PictureR extends ParseResult {
         }
         // Show values
         return "|[" + String.join(";", points) + "]|";
+    }
+}
+
+class ModulationR extends ParseResult {
+
+    public ModulationR(Board board) {
+        super(board);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder b = new StringBuilder();
+        for (int x = 0; x < board.width; x++) {
+            b.append(board.getValue(x, 0));
+        }
+        return "[" + new Demodulate(b.toString()).dem() + "]";
     }
 }
 
@@ -265,6 +283,9 @@ public class BoardDecipher {
         if (picture != null) {
             return picture;
         }
+        if (pictogram.height == 2 && pictogram.width >= 3) {
+            return new ModulationR(pictogram);
+        }
         // Unknown object!
         return new ParseResult(pictogram);
     }
@@ -306,5 +327,21 @@ public class BoardDecipher {
         }
         // Check inversed number
         return parseNumber(pictogram.subBoard(1, 1, pictogram.width - 2, pictogram.height - 2), 1);
+    }
+
+    public static String dumpCommands(List<List<ParseResult>> decipher) {
+        return decipher.stream().map( row ->
+                row.stream().map(ParseResult::toString).collect(Collectors.joining(" "))
+        ).collect(Collectors.joining("\n"));
+    }
+
+    public static void main(String[] args) throws IOException {
+        for (int i = 4; i <= 42; i++) {
+            final Board board = PngParser.loadPng("message" + i + ".png", 4, 4);
+            final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+            System.out.println("#" + i);
+            System.out.println(dumpCommands(decipher));
+            System.out.println();
+        }
     }
 }

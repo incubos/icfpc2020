@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BoardDecipherTest {
+import static icfpc2020.BoardDecipher.dumpCommands;
 
+public class BoardDecipherTest {
 
     @Test
     public void test4() throws IOException {
@@ -103,28 +104,27 @@ public class BoardDecipherTest {
                 ". . . .", actual);
     }
 
-//    @Test
-//    public void test13() throws IOException {
-//        final Board board = PngParser.loadPng("message13.png", 4, 4);
-//        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
-//        final String actual = dumpCommands(decipher);
-//        // TODO add modulation
-//        Assert.assertEquals("mod\n" +
-//                "ap mod 0 = ?\n" +
-//                "ap mod 1 = ?\n" +
-//                "ap mod 1 = ?\n" +
-//                "ap mod 2 = ?\n" +
-//                "ap mod 2 = ?\n" +
-//                ". . . .\n" +
-//                "ap mod 16 = ?\n" +
-//                "ap mod 16 = ?\n" +
-//                ". . . .\n" +
-//                "ap mod 255 = ?\n" +
-//                "ap mod 255 = ?\n" +
-//                "ap mod 256 = ?\n" +
-//                "ap mod 256 = ?\n" +
-//                ". . . .", actual);
-//    }
+    @Test
+    public void test13() throws IOException {
+        final Board board = PngParser.loadPng("message13.png", 4, 4);
+        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+        final String actual = dumpCommands(decipher);
+        Assert.assertEquals("mod\n" +
+                "ap mod 0 = [0]\n" +
+                "ap mod 1 = [1]\n" +
+                "ap mod 1 = [-1]\n" +
+                "ap mod 2 = [2]\n" +
+                "ap mod 2 = [-2]\n" +
+                ". . . .\n" +
+                "ap mod 16 = [16]\n" +
+                "ap mod 16 = [-16]\n" +
+                ". . . .\n" +
+                "ap mod 255 = [255]\n" +
+                "ap mod 255 = [-255]\n" +
+                "ap mod 256 = [256]\n" +
+                "ap mod 256 = [-256]\n" +
+                ". . . .", actual);
+    }
 
     @Test
     public void test30() throws IOException {
@@ -182,9 +182,6 @@ public class BoardDecipherTest {
     }
 
 
-    private static String dumpCommands(List<List<ParseResult>> decipher) {
-        return decipher.stream().map( row ->
-            row.stream().map(ParseResult::toString).collect(Collectors.joining(" "))
-        ).collect(Collectors.joining("\n"));
-    }
+
+
 }
