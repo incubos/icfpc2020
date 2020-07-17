@@ -48,26 +48,26 @@ public enum Command {
     StatefulDrawingProtocol("statefuldraw", 41, 14, 1, 7, 7),
     Galaxy("galaxy", 42, 14, 1, 7, 7);
 
-    private String name;
+    private String code;
     private Board board;
 
-    Command(String name, int message, int size) {
-        this(name, message, 1, 1, size, size);
+    Command(String code, int message, int size) {
+        this(code, message, 1, 1, size, size);
     }
 
-    Command(String name, int message, int x, int y, int width, int height) {
-        this.name = name;
+    Command(String code, int message, int x, int y, int width, int height) {
+        this.code = code;
         try {
             this.board = PngParser.loadPng("message" + message + ".png", 4, 4).subBoard(x, y, width, height);
         } catch (IOException e) {
-            System.err.println("Failed to load command " + name + "\n" + e.getStackTrace());
+            System.err.println("Failed to load command " + code + "\n" + e.getStackTrace());
         }
     }
 
 
     @Override
     public String toString() {
-        return name;
+        return code;
     }
 
     public Board getBoard() {
@@ -79,7 +79,7 @@ public enum Command {
         final Command[] commands = Command.values();
         System.out.println("================================");
         for (int i = 0; i < commands.length; i++) {
-            System.out.println(commands[i].name);
+            System.out.println(commands[i].code);
             System.out.println(commands[i].getBoard().toString());
         }
     }

@@ -9,12 +9,12 @@ public class PngParser {
     public static Board loadPng(final String path, int scale, int margin) throws IOException {
         final URL resource = PngParser.class.getResource("/messages/" + path);
         final BufferedImage image = ImageIO.read(resource);
-        System.out.println("Loading " + resource + " w x h: " + image.getWidth() + " x " + image.getHeight() +
-                " scale: " + scale + " margin: " + margin);
+//        System.out.println("Loading " + resource + " w x h: " + image.getWidth() + " x " + image.getHeight() +
+//                " scale: " + scale + " margin: " + margin);
         final int width = (image.getWidth() - 2 * margin) / scale;
         final int height = (image.getHeight() - 2 * margin) / scale;
         final Board board = new Board(width, height);
-        System.out.println("Board: " + width + " x " + height);
+//        System.out.println("Board: " + width + " x " + height);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 final int rgb = image.getRGB(x * scale + margin, y * scale + margin);

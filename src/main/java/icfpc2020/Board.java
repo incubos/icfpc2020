@@ -29,27 +29,20 @@ public class Board {
         final StringBuilder b = new StringBuilder();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                b.append(getValue(x, y) == 1? '#' : ' ');
+                b.append(getValue(x, y) == 1? '.' : ' ');
             }
             b.append("\n");
         }
         return "Board w x h " + width  + " x "+ height + "\n" + b.toString();
     }
 
-    /**
-     * Check equality with other board in a range of coordinates.
-     * xstart .. xend and ystart .. yend
-     */
-    public boolean checkEquals(final Board other, int xstart, int xend, int ystart, int yend) {
-        if (width <= xend || height <= yend) {
+    public boolean contains(final Board other, final int x, final int y) {
+        if (width < x + other.width || height < y + other.height) {
             return false;
         }
-        if (other.width <= xend || other.height <= yend) {
-            return false;
-        }
-        for (int x = xstart; x < xend; x++) {
-            for (int y = ystart; y < yend; y++) {
-                if (getValue(x, y) != other.getValue(x, y)) {
+        for (int xo = 0; xo < other.width; xo++) {
+            for (int yo = 0; yo < other.height; yo++) {
+                if (getValue(x + xo, y + yo) != other.getValue(xo, yo)) {
                     return false;
                 }
             }
@@ -61,8 +54,8 @@ public class Board {
      * Creates a subboard copy
      */
     public Board subBoard(int x, int y, int width, int height) {
-        assert 0 <= x && x + width < this.width: "Illegal x, width";
-        assert 0 <= y && y + height < this.height: "Illegal y, width";
+        assert 0 <= x && x + width <= this.width: "Illegal x, width";
+        assert 0 <= y && y + height <= this.height: "Illegal y, width";
         final Board result = new Board(width, height);
         for (int x1 = 0; x1 < width; x1++) {
             for (int y1 = 0; y1 < height; y1++) {
