@@ -20,12 +20,14 @@ public class AlienMessageClient {
     }
 
     public Message sendMessage(final Message message) {
+        String messageString = message.toString();
         var request = HttpRequest.newBuilder()
-                                 .POST(HttpRequest.BodyPublishers.ofString(message.toString()))
+                                 .POST(HttpRequest.BodyPublishers.ofString(messageString))
                                  .version(HttpClient.Version.HTTP_1_1)
                                  .uri(URI.create(serverUrl))
                                  .build();
         try {
+            log.info("Sending message {}", messageString);
             var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             var status = response.statusCode();
             var responseBody = response.body();

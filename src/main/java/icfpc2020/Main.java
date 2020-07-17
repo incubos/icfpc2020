@@ -37,6 +37,7 @@ class Main {
             log.info("Server response: {}", responseBody);
             alienClient.sendMessage(new MessageImpl("1101000"));
             alienClient.sendMessage(new MessageImpl("11011000011101000"));
+            alienClient.sendMessage(new MessageImpl("11011000011101000"));
         } catch (Exception e) {
             log.error("Unexpected error", e);
             System.exit(1);
