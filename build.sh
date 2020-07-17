@@ -1,7 +1,9 @@
 #!/bin/sh
 
-cd app
-javac -d build *.java
+ant
 
-cd build
-jar cfe Main.jar Main *
+# cd app
+# javac -d build *.java
+#
+# cd build
+# jar cfe Main.jar Main *
