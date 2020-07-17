@@ -17,6 +17,7 @@ class Main {
         var alienClient = new AlienMessageClient(HttpClient.newBuilder().build(), serverUrl);
         // First message should contain player key in body
         alienClient.sendMessage(new MessageImpl(playerKey));
+        alienClient.sendMessage(new MessageImpl("1101000"));
         alienClient.sendMessage(new MessageImpl("11011000011101000"));
     }
 }
