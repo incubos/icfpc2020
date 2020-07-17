@@ -38,6 +38,7 @@ class Main {
             alienClient.sendMessage(new MessageImpl("1101000"));
             alienClient.sendMessage(new MessageImpl("11011000011101000"));
             alienClient.sendMessage(new MessageImpl("11011000011101000"));
+            alienClient.sendMessage(new MessageImpl("11111111111111111111111111111111"));
         } catch (Exception e) {
             log.error("Unexpected error", e);
             System.exit(1);
