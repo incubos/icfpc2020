@@ -5,8 +5,7 @@ public class MessageImpl implements Message {
     private final int length;
 
     public MessageImpl(String s) {
-        length = s.length();
-        message = new long[length / 64 + 1];
+        this(s.length());
 
         for (int i = 0; i < length; i++) {
             if (s.charAt(i) == '1') {
@@ -15,7 +14,12 @@ public class MessageImpl implements Message {
         }
     }
 
-     public void setValue(int position, int value) {
+    public MessageImpl(int length) {
+        this.length = length;
+        message = new long[length / 64 + 1];
+    }
+
+    public void setValue(int position, int value) {
         assert value == 0 || value == 1: "Wrong value";
         message[position / 64] |= ((long) value) << position % 64;
     }
