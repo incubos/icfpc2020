@@ -1,7 +1,6 @@
 package icfpc2020;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.ir.expressions.IrConstKind;
 
 import java.util.ArrayList;
 import java.util.Arrays;
