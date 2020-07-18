@@ -8,6 +8,7 @@ import java.math.BigInteger;
  * @author incubos
  */
 public final class ConstantValue implements LazyValue {
+    // TODO: Intern
     @NotNull
     private final BigInteger value;
 

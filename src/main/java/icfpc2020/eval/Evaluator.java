@@ -47,7 +47,7 @@ public final class Evaluator {
         System.out.println(evaluator);
 
         // Evaluate
-        System.out.println(evaluator.function("test").eval().asConst());
+        System.out.println(evaluator.function("test").asConst());
     }
 
     @NotNull

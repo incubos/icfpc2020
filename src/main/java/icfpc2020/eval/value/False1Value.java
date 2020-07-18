@@ -5,20 +5,22 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author incubos
  */
-public class Add2Value implements LazyValue {
-    public static final LazyValue INSTANCE = new Add2Value();
+public class False1Value implements LazyValue {
+    @NotNull
+    private final LazyValue left;
 
-    private Add2Value() {
+    public False1Value(@NotNull final LazyValue left) {
+        this.left = left;
     }
 
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
-        return new Add1Value(arg);
+        return arg;
     }
 
     @Override
     public String toString() {
-        return "add";
+        return "(f " + left + ")";
     }
 }

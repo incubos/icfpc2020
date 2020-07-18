@@ -8,10 +8,15 @@ import java.math.BigInteger;
  * @author incubos
  */
 public final class IncrementValue implements LazyValue {
+    public static final LazyValue INSTANCE = new IncrementValue();
+
+    private IncrementValue() {
+    }
+
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
-        return new ConstantValue(arg.eval().asConst().add(BigInteger.ONE));
+        return new ConstantValue(arg.asConst().add(BigInteger.ONE));
     }
 
     @Override

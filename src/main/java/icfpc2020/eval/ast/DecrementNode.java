@@ -7,11 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 /**
- * {@code dec}.
- *
  * @author incubos
  */
 final class DecrementNode implements ASTNode {
+    static final ASTNode INSTANCE = new DecrementNode();
+
+    private DecrementNode() {
+    }
+
     @Override
     public String toString() {
         return "dec";
@@ -20,6 +23,6 @@ final class DecrementNode implements ASTNode {
     @NotNull
     @Override
     public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
-        return new DecrementValue();
+        return DecrementValue.INSTANCE;
     }
 }

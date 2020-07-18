@@ -18,6 +18,12 @@ public interface LazyValue {
     }
 
     default BigInteger asConst() {
-        throw new UnsupportedOperationException();
+        LazyValue previous;
+        LazyValue current = this;
+        do {
+            previous = current;
+            current = current.eval();
+        } while (previous != current);
+        return current.asConst();
     }
 }

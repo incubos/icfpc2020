@@ -6,8 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 /**
- * {@code var}.
- *
  * @author incubos
  */
 final class VariableNode implements ASTNode {

@@ -6,6 +6,11 @@ import org.jetbrains.annotations.NotNull;
  * @author incubos
  */
 public class Divide2Value implements LazyValue {
+    public static final LazyValue INSTANCE = new Divide2Value();
+
+    private Divide2Value() {
+    }
+
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {

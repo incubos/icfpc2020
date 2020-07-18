@@ -7,11 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 /**
- * {@code mul}.
- *
  * @author incubos
  */
 final class MultiplyNode implements ASTNode {
+    static final ASTNode INSTANCE = new MultiplyNode();
+
+    private MultiplyNode() {
+    }
+
     @Override
     public String toString() {
         return "mul";
@@ -20,6 +23,6 @@ final class MultiplyNode implements ASTNode {
     @NotNull
     @Override
     public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
-        return new Multiply2Value();
+        return Multiply2Value.INSTANCE;
     }
 }

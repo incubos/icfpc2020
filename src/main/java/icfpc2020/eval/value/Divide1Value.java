@@ -18,8 +18,8 @@ public class Divide1Value implements LazyValue {
     @NotNull
     @Override
     public LazyValue apply(final LazyValue arg) {
-        final BigInteger l = left.eval().asConst();
-        final BigInteger r = arg.eval().asConst();
+        final BigInteger l = left.asConst();
+        final BigInteger r = arg.asConst();
         return new ConstantValue(l.divide(r));
     }
 

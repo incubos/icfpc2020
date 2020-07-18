@@ -1,6 +1,6 @@
 package icfpc2020.eval.ast;
 
-import icfpc2020.eval.value.IncrementValue;
+import icfpc2020.eval.value.Equality2Value;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,20 +9,20 @@ import java.util.function.Function;
 /**
  * @author incubos
  */
-final class IncrementNode implements ASTNode {
-    static final ASTNode INSTANCE = new IncrementNode();
+final class EqualityNode implements ASTNode {
+    static final ASTNode INSTANCE = new EqualityNode();
 
-    private IncrementNode() {
+    private EqualityNode() {
     }
 
     @Override
     public String toString() {
-        return "inc";
+        return "eq";
     }
 
     @NotNull
     @Override
     public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
-        return IncrementValue.INSTANCE;
+        return Equality2Value.INSTANCE;
     }
 }

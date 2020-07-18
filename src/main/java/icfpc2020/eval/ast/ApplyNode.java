@@ -7,8 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 /**
- * {@code ap}.
- *
  * @author incubos
  */
 final class ApplyNode implements ASTNode {

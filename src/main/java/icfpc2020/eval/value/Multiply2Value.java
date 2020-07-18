@@ -6,6 +6,11 @@ import org.jetbrains.annotations.NotNull;
  * @author incubos
  */
 public class Multiply2Value implements LazyValue {
+    public static final LazyValue INSTANCE = new Multiply2Value();
+
+    private Multiply2Value() {
+    }
+
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {

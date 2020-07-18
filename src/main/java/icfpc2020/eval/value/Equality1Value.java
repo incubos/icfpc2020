@@ -7,11 +7,11 @@ import java.math.BigInteger;
 /**
  * @author incubos
  */
-public class Add1Value implements LazyValue {
+public class Equality1Value implements LazyValue {
     @NotNull
     private final LazyValue left;
 
-    public Add1Value(@NotNull final LazyValue left) {
+    public Equality1Value(@NotNull final LazyValue left) {
         this.left = left;
     }
 
@@ -20,11 +20,15 @@ public class Add1Value implements LazyValue {
     public LazyValue apply(final LazyValue arg) {
         final BigInteger l = left.asConst();
         final BigInteger r = arg.asConst();
-        return new ConstantValue(l.add(r));
+        if (l.equals(r)) {
+            return True2Value.INSTANCE;
+        } else {
+            return False2Value.INSTANCE;
+        }
     }
 
     @Override
     public String toString() {
-        return "(add " + left + ")";
+        return "(eq " + left + ")";
     }
 }

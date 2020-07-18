@@ -7,11 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 /**
- * {@code add}.
- *
  * @author incubos
  */
 final class AddNode implements ASTNode {
+    static final ASTNode INSTANCE = new AddNode();
+
+    private AddNode() {
+    }
+
     @Override
     public String toString() {
         return "add";
@@ -20,6 +23,6 @@ final class AddNode implements ASTNode {
     @NotNull
     @Override
     public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
-        return new Add2Value();
+        return Add2Value.INSTANCE;
     }
 }

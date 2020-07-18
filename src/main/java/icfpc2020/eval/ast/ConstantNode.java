@@ -8,8 +8,6 @@ import java.math.BigInteger;
 import java.util.function.Function;
 
 /**
- * {@code const}.
- *
  * @author incubos
  */
 final class ConstantNode implements ASTNode {

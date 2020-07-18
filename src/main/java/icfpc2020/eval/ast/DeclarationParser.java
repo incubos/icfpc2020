@@ -36,17 +36,23 @@ public final class DeclarationParser {
             case "ap":
                 return new ApplyNode(parse(tokens), parse(tokens));
             case "neg":
-                return new NegateNode();
+                return NegateNode.INSTANCE;
             case "inc":
-                return new IncrementNode();
+                return IncrementNode.INSTANCE;
             case "dec":
-                return new DecrementNode();
+                return DecrementNode.INSTANCE;
             case "add":
-                return new AddNode();
+                return AddNode.INSTANCE;
             case "mul":
-                return new MultiplyNode();
+                return MultiplyNode.INSTANCE;
             case "div":
-                return new DivideNode();
+                return DivideNode.INSTANCE;
+            case "eq":
+                return EqualityNode.INSTANCE;
+            case "t":
+                return TrueNode.INSTANCE;
+            case "f":
+                return FalseNode.INSTANCE;
             default:
                 try {
                     return new ConstantNode(new BigInteger(token));

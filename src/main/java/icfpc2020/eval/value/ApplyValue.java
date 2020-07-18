@@ -21,13 +21,13 @@ public final class ApplyValue implements LazyValue {
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
-        return eval().apply(arg.eval());
+        return eval().apply(arg);
     }
 
     @NotNull
     @Override
     public LazyValue eval() {
-        return function.apply(argument.eval());
+        return function.apply(argument);
     }
 
     @Override

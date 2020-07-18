@@ -7,11 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 /**
- * {@code neg}.
- *
  * @author incubos
  */
 final class NegateNode implements ASTNode {
+    static final ASTNode INSTANCE = new NegateNode();
+
+    private NegateNode() {
+    }
+
     @Override
     public String toString() {
         return "neg";
@@ -20,6 +23,6 @@ final class NegateNode implements ASTNode {
     @NotNull
     @Override
     public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
-        return new NegateValue();
+        return NegateValue.INSTANCE;
     }
 }

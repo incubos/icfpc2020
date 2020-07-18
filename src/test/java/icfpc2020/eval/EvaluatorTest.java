@@ -1,5 +1,6 @@
 package icfpc2020.eval;
 
+import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -12,52 +13,71 @@ import static org.junit.Assert.assertEquals;
  * @author incubos
  */
 public class EvaluatorTest {
-    private static void eval(
-            @NotNull final String expectedResult,
-            @NotNull final String code) throws Exception {
+    private static final String TEST_FUNCTION = "test";
+
+    @NotNull
+    private static LazyValue function(@NotNull final String code) throws Exception {
         final Evaluator evaluator =
                 new Evaluator(
                         new ByteArrayInputStream(
-                                code.getBytes(StandardCharsets.UTF_8)));
+                                (TEST_FUNCTION + " = " + code).getBytes(StandardCharsets.UTF_8)));
+        return evaluator.function(TEST_FUNCTION);
+    }
+
+    private static void evalConst(
+            @NotNull final String expectedResult,
+            @NotNull final String code) throws Exception {
         assertEquals(
                 expectedResult,
-                evaluator.function("test").eval().asConst().toString());
+                function(code).asConst().toString());
+    }
+
+    private static void isTrue(@NotNull final String code) throws Exception {
+        assertEquals(
+                "t",
+                function(code).eval().toString());
+    }
+
+    private static void isFalse(@NotNull final String code) throws Exception {
+        assertEquals(
+                "f",
+                function(code).eval().toString());
     }
 
     @Test
     public void literal() throws Exception {
-        eval("42", "test = 42");
+        evalConst("42", "42");
     }
 
     @Test
     public void inc() throws Exception {
-        eval("1", "test = ap inc 0");
-        eval("2", "test = ap inc 1");
-        eval("3", "test = ap inc ap inc ap inc 0");
-        eval("0", "test = ap inc -1");
-        eval("-1", "test = ap inc -2");
+        evalConst("1", "ap inc 0");
+        evalConst("2", "ap inc 1");
+        evalConst("3", "ap inc ap inc ap inc 0");
+        evalConst("0", "ap inc -1");
+        evalConst("-1", "ap inc -2");
     }
 
     @Test
     public void dec() throws Exception {
-        eval("-1", "test = ap dec 0");
-        eval("0", "test = ap dec 1");
-        eval("1", "test = ap dec 2");
-        eval("-2", "test = ap dec -1");
+        evalConst("-1", "ap dec 0");
+        evalConst("0", "ap dec 1");
+        evalConst("1", "ap dec 2");
+        evalConst("-2", "ap dec -1");
     }
 
     @Test
     public void add() throws Exception {
-        eval("3", "test = ap ap add 1 2");
-        eval("3", "test = ap ap add 2 1");
-        eval("1", "test = ap ap add 0 1");
+        evalConst("3", "ap ap add 1 2");
+        evalConst("3", "ap ap add 2 1");
+        evalConst("1", "ap ap add 0 1");
     }
 
     @Test
     public void neg() throws Exception {
-        eval("0", "test = ap neg 0");
-        eval("-1", "test = ap neg 1");
-        eval("1", "test = ap neg -1");
+        evalConst("0", "ap neg 0");
+        evalConst("-1", "ap neg 1");
+        evalConst("1", "ap neg -1");
     }
 
     @Test
@@ -72,7 +92,7 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 "3",
-                evaluator.function("test").eval().asConst().toString());
+                evaluator.function("test").asConst().toString());
 
     }
 
@@ -88,27 +108,42 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 "42",
-                evaluator.function("test").eval().asConst().toString());
+                evaluator.function("test").asConst().toString());
 
     }
 
     @Test
     public void mul() throws Exception {
-        eval("8", "test = ap ap mul 4 2");
-        eval("-6", "test = ap ap mul 3 -2");
+        evalConst("8", "ap ap mul 4 2");
+        evalConst("-6", "ap ap mul 3 -2");
     }
 
     @Test
     public void div() throws Exception {
-        eval("2", "test = ap ap div 4 2");
-        eval("1", "test = ap ap div 4 3");
-        eval("1", "test = ap ap div 4 4");
-        eval("0", "test = ap ap div 4 5");
-        eval("2", "test = ap ap div 4 2");
-        eval("2", "test = ap ap div 5 2");
-        eval("-3", "test = ap ap div 6 -2");
-        eval("-1", "test = ap ap div 5 -3");
-        eval("-1", "test = ap ap div -5 3");
-        eval("1", "test = ap ap div -5 -3");
+        evalConst("2", "ap ap div 4 2");
+        evalConst("1", "ap ap div 4 3");
+        evalConst("1", "ap ap div 4 4");
+        evalConst("0", "ap ap div 4 5");
+        evalConst("2", "ap ap div 4 2");
+        evalConst("2", "ap ap div 5 2");
+        evalConst("-3", "ap ap div 6 -2");
+        evalConst("-1", "ap ap div 5 -3");
+        evalConst("-1", "ap ap div -5 3");
+        evalConst("1", "ap ap div -5 -3");
+    }
+
+    @Test
+    public void eq() throws Exception {
+        isFalse("ap ap eq 0 -2");
+        isFalse("ap ap eq 0 -1");
+        isTrue("ap ap eq 0 0");
+        isFalse("ap ap eq 0 1");
+        isFalse("ap ap eq 0 2");
+
+        isTrue("ap ap eq -1 -1");
+        isFalse("ap ap eq 1 -1");
+        isFalse("ap ap eq 1 0");
+        isTrue("ap ap eq 1 1");
+        isFalse("ap ap eq 1 2");
     }
 }
