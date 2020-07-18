@@ -14,28 +14,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GalaxyParser {
-    public void gogogalaxy() throws IOException {
-        final BufferedReader reader =
-                new BufferedReader(new InputStreamReader(GalaxyParser.class.getResourceAsStream("/galaxy.txt")));
-        boolean success = true;
-        while (true) {
-            final String line = reader.readLine();
-            if (line == null) {
-                break;
-            }
-            final EvalResult lineEval = parseTextLine(line);
-            if (!line.trim().equals(lineEval.toString().trim())) {
-                System.out.println(line);
-                System.out.println(lineEval.toString().trim());
-                success = false;
-                break;
-            }
-        }
-        System.out.println("Parsed successfully: " + success);
-    }
-
     @NotNull
-    private EvalResult parseTextLine(String line) {
+    public EvalResult parseTextLine(String line) {
         final List<Object> tokens = Arrays.stream(line.split(" ")).map(t -> {
             for (final Command command : Command.values()) {
                 if (t.equals(command.toString())) {
@@ -101,11 +81,5 @@ public class GalaxyParser {
             return new ECmd(command, args);
         }
         return null;
-    }
-
-
-
-    public static void main(String[] args) throws IOException {
-        new GalaxyParser().gogogalaxy();
     }
 }
