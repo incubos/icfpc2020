@@ -3,11 +3,13 @@ package icfpc2020.eval;
 import icfpc2020.eval.ast.ASTNode;
 import icfpc2020.eval.ast.Declaration;
 import icfpc2020.eval.ast.DeclarationParser;
+import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -45,12 +47,19 @@ public final class Evaluator {
         System.out.println(evaluator);
 
         // Evaluate
-        System.out.println(evaluator.evaluate());
+        System.out.println(evaluator.evaluate("test").apply());
     }
 
     @NotNull
-    public String evaluate() {
-        throw new UnsupportedOperationException("Implement me!");
+    public LazyValue evaluate(
+            @NotNull final String function,
+            final LazyValue... args) {
+        final ASTNode node = declarations.get(function);
+        if (node == null) {
+            throw new NoSuchElementException();
+        }
+
+        return node.eval(args);
     }
 
     @Override

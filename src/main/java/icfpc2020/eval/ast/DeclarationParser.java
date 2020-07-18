@@ -34,11 +34,11 @@ public final class DeclarationParser {
 
         switch (token) {
             case "ap":
-                return new Apply(parse(tokens), parse(tokens));
+                return new ApplyNode(parse(tokens), parse(tokens));
             case "inc":
-                return new Increment();
+                return new IncrementNode();
             default:
-                return new Constant(new BigInteger(token));
+                return new ConstantNode(new BigInteger(token));
         }
     }
 }

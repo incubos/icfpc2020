@@ -1,1 +1,1 @@
-:1029 = ap inc 0
+test = ap inc ap inc ap inc 0
