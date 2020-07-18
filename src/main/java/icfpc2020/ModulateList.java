@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ModulateList {
+    // ap is a part of valid construct here, it's just not reflected in modulated result.
+    // e.g. ap ap cons 0 nil = 1101000, with first two `ap`s ignored in modulation.
     private static final Map<Command, String> modulateDict = Map.of(Command.App, "",
                                                                     Command.Cons, "11",
                                                                     Command.Nil, "00",
