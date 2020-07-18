@@ -2,12 +2,14 @@ package icfpc2020.eval;
 
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author incubos
@@ -169,4 +171,18 @@ public class EvaluatorTest {
         evalConst("3", "ap ap ap s add inc 1");
         evalConst("42", "ap ap ap s mul ap add 1 6");
     }
+
+    @Test
+    public void pwr2() throws Exception {
+        evalConst("1", "ap pwr2 0");
+        evalConst("2", "ap pwr2 1");
+        evalConst("256", "ap pwr2 8");
+        evalConst("1267650600228229401496703205376", "ap pwr2 100");
+        evalConst("2", "ap ap mul 2 ap ap ap ap eq 0 0 1 ap ap ap 1 ap mul 2 ap ap 1 pwr2 ap add -1 ap ap add -1 1");
+        try {
+            evalConst("1", "ap pwr2 ap dec 0");
+            fail("Have to throw ArithmeticException");
+        } catch (ArithmeticException e) { }
+    }
+
 }
