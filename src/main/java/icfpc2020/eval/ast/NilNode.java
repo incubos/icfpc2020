@@ -25,9 +25,4 @@ final class NilNode implements ASTNode {
     public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
         return NilValue.INSTANCE;
     }
-
-    @Override
-    public boolean needArgumentEvaluation() {
-        return false;
-    }
 }

@@ -13,8 +13,4 @@ import java.util.function.Function;
 public interface ASTNode {
     @NotNull
     LazyValue eval(@NotNull Function<String, ASTNode> declarations);
-
-    default boolean needArgumentEvaluation() {
-        return true;
-    }
 }

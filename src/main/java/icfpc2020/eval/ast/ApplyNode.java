@@ -32,6 +32,6 @@ final class ApplyNode implements ASTNode {
     public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
         return new ApplyValue(
                 function.eval(declarations),
-                function.needArgumentEvaluation() ? argument.eval(declarations) : new LazyValue() {} );
+                argument.eval(declarations));
     }
 }
