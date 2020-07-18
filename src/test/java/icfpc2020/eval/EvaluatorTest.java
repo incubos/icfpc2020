@@ -1,11 +1,9 @@
 package icfpc2020.eval;
 
 import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
