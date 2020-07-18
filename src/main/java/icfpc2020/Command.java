@@ -3,15 +3,15 @@ package icfpc2020;
 import icfpc2020.galaxy.EBoolean;
 import icfpc2020.galaxy.ECmd;
 import icfpc2020.galaxy.EvalResult;
-import icfpc2020.operators.CommandEval;
+import icfpc2020.galaxy.CommandEval;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-import static icfpc2020.operators.CommandEval.processAp;
-import static icfpc2020.operators.CommandEval.processOperand;
+import static icfpc2020.galaxy.CommandEval.processAp;
+import static icfpc2020.galaxy.CommandEval.processOperand;
 
 public enum Command {
     Equality("=", 0, 4, 3),

@@ -1,10 +1,6 @@
-package icfpc2020.operators;
+package icfpc2020.galaxy;
 
 import icfpc2020.Command;
-import icfpc2020.galaxy.EBoolean;
-import icfpc2020.galaxy.ECmd;
-import icfpc2020.galaxy.ENumber;
-import icfpc2020.galaxy.EvalResult;
 import kotlin.jvm.functions.Function2;
 
 import java.math.BigInteger;
