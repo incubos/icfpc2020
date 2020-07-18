@@ -21,9 +21,9 @@ public class DemodulateList {
                 result.add(new CommandR(Command.Nil));
                 s = s.substring(2);
             } else {
-                var bi = new Demodulate(s).dem();
+                var bi = Demodulate.dem(new MessageImpl(s));
                 result.add(new NumberR(bi, Board.EMPTY));
-                var modulateLength = new Modulate(bi).mod().length();
+                var modulateLength = Modulate.mod(bi).toString().length();
                 s = s.substring(modulateLength);
             }
         }

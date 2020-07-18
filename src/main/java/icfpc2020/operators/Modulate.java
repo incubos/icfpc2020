@@ -1,5 +1,8 @@
 package icfpc2020.operators;
 
+import icfpc2020.Message;
+import icfpc2020.MessageImpl;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -11,28 +14,25 @@ import java.math.BigInteger;
  */
 public class Modulate {
 
-    private final BigInteger number;
-
-    public Modulate(BigInteger number) {
-        this.number = number;
+    private Modulate() {
     }
 
-    public String mod() {
+    public static Message mod(BigInteger number) {
         StringBuilder sb = new StringBuilder();
-        if (number.compareTo(BigInteger.ZERO) <0)
+        if (number.compareTo(BigInteger.ZERO) < 0)
             sb.append("10");
         else
             sb.append("01");
-        if (number != BigInteger.ZERO) {
+        if (!number.equals(BigInteger.ZERO)) {
             String bits = number.abs().toString(2);
             int trailingZeros = 4 - bits.length() % 4;
             sb.append("1".repeat((trailingZeros + bits.length()) / 4))
-                    .append("0")
-                    .append("0".repeat(trailingZeros))
-                    .append(bits);
+              .append("0")
+              .append("0".repeat(trailingZeros))
+              .append(bits);
         } else {
             sb.append("0");
         }
-        return sb.toString();
+        return new MessageImpl(sb.toString());
     }
 }

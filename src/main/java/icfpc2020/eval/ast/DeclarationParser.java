@@ -49,6 +49,10 @@ public final class DeclarationParser {
                 return CdrNode.INSTANCE;
             case "add":
                 return AddNode.INSTANCE;
+            case "mod":
+                return ModulateNode.INSTANCE;
+            case "dem":
+                return DemodulateNode.INSTANCE;
             case "mul":
                 return MultiplyNode.INSTANCE;
             case "div":

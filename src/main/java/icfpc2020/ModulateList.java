@@ -29,7 +29,7 @@ public class ModulateList {
                 sb.append(modulateDict.get(command));
             } else if (o instanceof NumberR) {
                 var number = ((NumberR) o).n;
-                sb.append(new Modulate(number).mod());
+                sb.append(Modulate.mod(number));
             }
         });
         return new MessageImpl(sb.toString());

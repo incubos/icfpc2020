@@ -22,8 +22,9 @@ class Main {
             HttpClient httpClient = HttpClient.newBuilder().build();
             var alienClient = new AlienMessageClient(httpClient, serverUrl);
             BigInteger playerKey = new BigInteger(playerKeyString);
-            Message message = new MessageImpl(String.format("11%s11%s00", new Modulate(playerKey).mod(),
-                                                                new Modulate(BigInteger.ZERO).mod()));
+            Message message = new MessageImpl(String.format("11%s11%s00",
+                                                            Modulate.mod(playerKey),
+                                                                Modulate.mod(BigInteger.ZERO)));
             alienClient.sendMessage(message);
         } catch (Exception e) {
             log.error("Unexpected error", e);
