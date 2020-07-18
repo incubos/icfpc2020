@@ -1,40 +1,100 @@
 package icfpc2020;
 
-import icfpc2020.galaxy.ENumber;
+import icfpc2020.galaxy.EBoolean;
+import icfpc2020.galaxy.ECmd;
 import icfpc2020.galaxy.EvalResult;
+import icfpc2020.operators.CommandEval;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
+
+import static icfpc2020.operators.CommandEval.processAp;
+import static icfpc2020.operators.CommandEval.processOperand;
 
 public enum Command {
-    // 1 Number
-    // 2 Negative Number
-    // 8 Variable
     Equality("=", 0, 4, 3),
-    Successor("inc", 1, 5, 4) ,
-    Predecessor("dec", 1, 6, 4),
-    Sum("add", 2, 7, 4),
-    Product("mul", 2, 9, 4),
-    IntegerDivision("div", 2, 10, 4),
-    EqualityBooleans("eq", 2, 11, 4),
-    StrictLessThan("lt", 2, 12, 4),
+    Successor("inc", 1, 5, 4) {
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return CommandEval.processOperand(cmd, args, universe, (o) -> o.add(new BigInteger("1")));
+        }
+    },
+    Predecessor("dec", 1, 6, 4) {
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return CommandEval.processOperand(cmd, args, universe, (o) -> o.add(new BigInteger("-1")));
+        }
+    },
+    Sum("add", 2, 7, 4) {
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return CommandEval.processOperands(cmd, args, universe, BigInteger::add);
+        }
+    },
+    Product("mul", 2, 9, 4) {
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return CommandEval.processOperands(cmd, args, universe, BigInteger::multiply);
+        }
+    },
+    IntegerDivision("div", 2, 10, 4) {
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return CommandEval.processOperands(cmd, args, universe, BigInteger::divide);
+        }
+    },
+    EqualityBooleans("eq", 2, 11, 4){
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return CommandEval.eqBooleans(cmd, args, universe);
+
+        }
+    },
+    StrictLessThan("lt", 2, 12, 4) {
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return CommandEval.strictLessThan(cmd, args, universe);
+        }
+    },
     Modulate("mod", 1, 13, 4),
     Demodulate("dem", 1, 14, 4),
     Send("send", 1, 15, 3, 3, 4, 4),
     Negate("neg", 1, 16, 3),
-    App("ap", 2, 17, 2),
+    App("ap", 2, 17, 2) {
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return processAp(cmd, args, universe);
+        }
+    },
     S("s", 3, 18, 3),
     C("c", 3, 19, 3),
     B("b", 3, 20, 3),
-    TrueK("t", 0, 21, 3),
-    False("f", 0, 22, 3),
-    PowerOfTwo("pwr2", 1, 23, 7),
+    TrueK("t", 0, 21, 3){
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return new EBoolean(true);
+        }
+    },
+    False("f", 0, 22, 3){
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return new EBoolean(false);
+        }
+    },
+    PowerOfTwo("pwr2", 1, 23, 7){
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            return processOperand(cmd, args, universe, (o) -> BigInteger.valueOf(1).shiftLeft(o.intValue()));
+        }
+    },
     I("i", 1, 24, 2),
     Cons("cons", 3, 25, 5),
     CarFirst("car", 1, 26, 5),
     CdrTail("cdr", 1, 27, 5),
     Nil("nil", 1, 28, 3),
-    IsNil("isnil",1,  29, 3),
+    IsNil("isnil", 1, 29, 3),
     ListLPar("(", 0, 30, 1, 1, 3, 5),
     ListComma(",", 0, 30, 6, 1, 2, 5),
     ListRPar(")", 0, 30, 10, 1, 3, 5),
@@ -93,8 +153,8 @@ public enum Command {
         }
     }
 
-    public EvalResult apply(List<EvalResult> collect) {
-        throw new UnsupportedOperationException();
+    public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+        throw new UnsupportedOperationException("Command " + toString() + " is not supported yet!");
     }
 }
 

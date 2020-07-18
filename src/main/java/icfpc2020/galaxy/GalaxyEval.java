@@ -7,43 +7,34 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GalaxyEval {
-    public Map<String, EvalResult> eval(StringBuilder stringBuilder) throws IOException {
-        return eval(new InputStreamReader(GalaxyEval.class.getResourceAsStream("/galaxy.txt")));
-    }
 
     @NotNull
-     public Map<String, EvalResult> eval(Reader reader) throws IOException {
+     public Map<String, EvalResult> eval(final Reader reader, final String variable) throws IOException {
         final BufferedReader bufferedReader = new BufferedReader(reader);
         final Map<String, EvalResult> universe = new HashMap<>();
-        final List<String> variablesOrder = new ArrayList<>();
         while (true) {
             final String line = bufferedReader.readLine();
             if (line == null) {
                 break;
             }
-            final EAssign lineEval = new GalaxyParser().parseTextLine(line);
-            lineEval.eval(universe);
-            variablesOrder.add(lineEval.name);
+            final EAssign assign = new GalaxyParser().parseTextLine(line);
+            assign.eval(universe);
+            System.out.println(assign.toString());
         }
-        while (variablesOrder.size() != 0) {
-            final String val = variablesOrder.get(variablesOrder.size() - 1);
+        String result = null;
+        while (true) {
             // Dereference variable
-            final EvalResult result = universe.get(val).eval(universe);
-            universe.put(val, result);
-            variablesOrder.remove(val);
+            final EvalResult newResult = universe.get(variable).eval(universe);
+            universe.put(variable, newResult);
+            final String newResultStr = newResult.toString();
+            if (newResultStr.equals(result)) {
+                break;
+            } else {
+                result = newResultStr;
+            }
         }
         return universe;
     }
 
 
-    public static String toText(Map<String, EvalResult> universe) {
-        return universe.entrySet().stream()
-                .sorted((Comparator.comparing(Map.Entry::getKey))).map((e ->
-                e.getKey() + " = " + e.getValue().toString())).collect(Collectors.joining("\n"));
-    }
-
-    public static void main(String[] args) throws IOException {
-        final Map<String, EvalResult> resultMap = new GalaxyEval().eval(new StringReader("variable = 1"));
-        System.out.println(toText(resultMap));
-    }
 }

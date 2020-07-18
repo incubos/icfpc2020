@@ -19,7 +19,7 @@ public class GalaxyParser {
                     return command;
                 }
             }
-            if (Pattern.matches("\\d+", t)) {
+            if (Pattern.matches("-?\\d+", t)) {
                 return new BigInteger(t);
             }
             return t;

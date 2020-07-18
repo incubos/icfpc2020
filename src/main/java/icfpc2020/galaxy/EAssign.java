@@ -2,7 +2,7 @@ package icfpc2020.galaxy;
 
 import java.util.Map;
 
-class EAssign implements EvalResult {
+public class EAssign implements EvalResult {
      final String name;
      final EvalResult right;
 
@@ -15,6 +15,11 @@ class EAssign implements EvalResult {
     public EvalResult eval(Map<String, EvalResult> universe) {
         universe.put(name, right);
         return this;
+    }
+
+    @Override
+    public String pp() {
+        return name + " = " + right.pp();
     }
 
     @Override

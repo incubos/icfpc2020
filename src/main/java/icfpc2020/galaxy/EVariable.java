@@ -14,11 +14,16 @@ class EVariable implements EvalResult {
         if (universe.containsKey(name)) {
             return universe.get(name);
         }
-        throw new IllegalStateException("Not expected");
+        throw new IllegalStateException("Variable not defined: "+ name);
     }
 
     @Override
     public String toString() {
+        return name;
+    }
+
+    @Override
+    public String pp() {
         return name;
     }
 }

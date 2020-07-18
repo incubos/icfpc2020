@@ -1,13 +1,12 @@
 package icfpc2020.galaxy;
 
-import java.math.BigInteger;
 import java.util.Map;
 
-public class ENumber implements EvalResult {
-    public final BigInteger number;
+public class EBoolean implements EvalResult {
+    public final boolean value;
 
-    public ENumber(BigInteger number) {
-        this.number = number;
+    public EBoolean(boolean value) {
+        this.value = value;
     }
 
     @Override
@@ -17,11 +16,11 @@ public class ENumber implements EvalResult {
 
     @Override
     public String pp() {
-        return number.toString();
+        return value ? "t" : "f";
     }
 
     @Override
     public String toString() {
-        return number.toString();
+        return value ? "t" : "f";
     }
 }

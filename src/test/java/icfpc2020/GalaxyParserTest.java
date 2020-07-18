@@ -1,5 +1,6 @@
 package icfpc2020;
 
+import icfpc2020.galaxy.EAssign;
 import icfpc2020.galaxy.EvalResult;
 import icfpc2020.galaxy.GalaxyParser;
 import org.junit.Assert;
@@ -23,8 +24,9 @@ public class GalaxyParserTest {
                 break;
             }
             final GalaxyParser galaxyParser = new GalaxyParser();
-            final EvalResult lineEval = galaxyParser.parseTextLine(line);
-            Assert.assertEquals(line.trim(), lineEval.toString().trim());
+            final EAssign cmd = galaxyParser.parseTextLine(line);
+            System.err.println(cmd.toString());
+            Assert.assertEquals(line.trim(), cmd.pp().trim());
         }
     }
 }
