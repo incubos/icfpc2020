@@ -1,5 +1,6 @@
 package icfpc2020.eval.ast;
 
+import icfpc2020.eval.value.ApplyValue;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,15 +22,14 @@ final class ApplyNode implements ASTNode {
         this.argument = argument;
     }
 
-    @NotNull
-    @Override
-    public LazyValue eval(final LazyValue... args) {
-        assert args.length == 0;
-        return function.eval(argument.eval());
-    }
-
     @Override
     public String toString() {
         return "ap " + function.toString() + " " + argument.toString();
+    }
+
+    @NotNull
+    @Override
+    public LazyValue eval() {
+        return new ApplyValue(function.eval(), argument.eval());
     }
 }

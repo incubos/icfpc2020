@@ -9,17 +9,20 @@ import java.math.BigInteger;
  */
 public final class ConstantValue implements LazyValue {
     @NotNull
-    final BigInteger value;
+    private final BigInteger value;
 
     public ConstantValue(@NotNull final BigInteger value) {
         this.value = value;
     }
 
-    @NotNull
     @Override
-    public LazyValue apply(final LazyValue... args) {
-        assert args.length == 0;
+    public LazyValue eval() {
         return this;
+    }
+
+    @Override
+    public BigInteger asConst() {
+        return value;
     }
 
     @Override

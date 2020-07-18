@@ -47,19 +47,17 @@ public final class Evaluator {
         System.out.println(evaluator);
 
         // Evaluate
-        System.out.println(evaluator.evaluate("test").apply());
+        System.out.println(evaluator.function("test").eval().asConst());
     }
 
     @NotNull
-    public LazyValue evaluate(
-            @NotNull final String function,
-            final LazyValue... args) {
+    public LazyValue function(@NotNull final String function) {
         final ASTNode node = declarations.get(function);
         if (node == null) {
             throw new NoSuchElementException();
         }
 
-        return node.eval(args);
+        return node.eval();
     }
 
     @Override

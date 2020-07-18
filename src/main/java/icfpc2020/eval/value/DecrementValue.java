@@ -7,24 +7,15 @@ import java.math.BigInteger;
 /**
  * @author incubos
  */
-public class DecrementValue implements LazyValue {
-    @NotNull
-    private final LazyValue value;
-
-    public DecrementValue(@NotNull final LazyValue value) {
-        this.value = value;
-    }
-
+public final class DecrementValue implements LazyValue {
     @NotNull
     @Override
-    public LazyValue apply(final LazyValue... args) {
-        final LazyValue argument = value.apply();
-        assert argument instanceof ConstantValue;
-        return new ConstantValue(((ConstantValue) argument).value.subtract(BigInteger.ONE));
+    public LazyValue apply(@NotNull LazyValue arg) {
+        return new ConstantValue(arg.eval().asConst().subtract(BigInteger.ONE));
     }
 
     @Override
     public String toString() {
-        return "dec " + value;
+        return "dec";
     }
 }

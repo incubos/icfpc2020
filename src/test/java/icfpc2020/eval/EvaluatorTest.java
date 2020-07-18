@@ -21,7 +21,7 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 expectedResult,
-                evaluator.evaluate("test").apply().toString());
+                evaluator.function("test").eval().asConst().toString());
     }
 
     @Test
@@ -72,5 +72,20 @@ public class EvaluatorTest {
     @Test
     public void dec_1() throws Exception {
         eval("-2", "test = ap dec -1");
+    }
+
+    @Test
+    public void add_1_2() throws Exception {
+        eval("3", "test = ap ap add 1 2");
+    }
+
+    @Test
+    public void add_2_1() throws Exception {
+        eval("3", "test = ap ap add 2 1");
+    }
+
+    @Test
+    public void add_0_1() throws Exception {
+        eval("1", "test = ap ap add 0 1");
     }
 }

@@ -1,23 +1,23 @@
 package icfpc2020.eval.ast;
 
-import icfpc2020.eval.value.DecrementValue;
+import icfpc2020.eval.value.Add2Value;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * {@code dec}.
+ * {@code add}.
  *
  * @author incubos
  */
-final class DecrementNode implements ASTNode {
+final class AddNode implements ASTNode {
     @Override
     public String toString() {
-        return "dec";
+        return "add";
     }
 
     @NotNull
     @Override
     public LazyValue eval() {
-        return new DecrementValue();
+        return new Add2Value();
     }
 }

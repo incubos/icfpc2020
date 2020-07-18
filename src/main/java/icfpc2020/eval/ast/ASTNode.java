@@ -10,5 +10,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ASTNode {
     @NotNull
-    LazyValue eval(LazyValue... args);
+    LazyValue eval();
 }

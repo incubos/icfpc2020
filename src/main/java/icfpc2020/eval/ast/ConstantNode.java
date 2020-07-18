@@ -7,27 +7,23 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigInteger;
 
 /**
- * {@code ap}.
+ * {@code const}.
  *
  * @author incubos
  */
 final class ConstantNode implements ASTNode {
-    @NotNull
-    private final BigInteger value;
     // TODO: interning
     @NotNull
-    private final LazyValue lazyValue;
+    private final LazyValue value;
 
     ConstantNode(@NotNull final BigInteger value) {
-        this.value = value;
-        this.lazyValue = new ConstantValue(value);
+        this.value = new ConstantValue(value);
     }
 
     @NotNull
     @Override
-    public LazyValue eval(final LazyValue... args) {
-        assert args.length == 0;
-        return lazyValue;
+    public LazyValue eval() {
+        return value;
     }
 
     @Override
