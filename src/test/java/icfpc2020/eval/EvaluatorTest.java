@@ -243,4 +243,30 @@ public class EvaluatorTest {
         evalConst("42", "ap ap ap if0 0 42 43");
         evalConst("42", "ap ap ap if0 1 43 42");
     }
+
+    @Test
+    public void nil() throws Exception {
+        evalVar("t",
+                "x0 = 1\n" +
+                      "test = ap nil x0");
+        evalConst("2", "ap ap ap nil 1 2 3");
+        evalConst("3", "ap ap ap nil t 3 4");
+        evalConst("4", "ap ap ap nil x0 4 5"); // x0 not defined and throw out
+    }
+
+    @Test
+    public void isnil() throws Exception {
+        evalVar("t",
+                   "x0 = nil\n" +
+                        "test = ap isnil x0");
+        evalVar("f",
+                   "x0 = ap ap cons 1 2\n" +
+                        "test = ap isnil x0");
+        evalVar("f",
+                "x0 = ap ap cons 1 nil\n" +
+                        "test = ap isnil x0");
+        evalConst("1", "ap ap ap isnil nil 1 2");
+        evalConst("2", "ap ap ap isnil 0 1 2");
+    }
+
 }
