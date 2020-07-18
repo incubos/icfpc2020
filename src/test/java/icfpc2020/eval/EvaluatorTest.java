@@ -88,4 +88,19 @@ public class EvaluatorTest {
     public void add_0_1() throws Exception {
         eval("1", "test = ap ap add 0 1");
     }
+
+    @Test
+    public void neg0() throws Exception {
+        eval("0", "test = ap neg 0");
+    }
+
+    @Test
+    public void neg1() throws Exception {
+        eval("-1", "test = ap neg 1");
+    }
+
+    @Test
+    public void neg_1() throws Exception {
+        eval("1", "test = ap neg -1");
+    }
 }

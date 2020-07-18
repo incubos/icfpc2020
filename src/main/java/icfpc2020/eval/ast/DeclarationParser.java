@@ -35,6 +35,8 @@ public final class DeclarationParser {
         switch (token) {
             case "ap":
                 return new ApplyNode(parse(tokens), parse(tokens));
+            case "neg":
+                return new NegateNode();
             case "inc":
                 return new IncrementNode();
             case "dec":
