@@ -37,6 +37,8 @@ public final class DeclarationParser {
                 return new ApplyNode(parse(tokens), parse(tokens));
             case "inc":
                 return new IncrementNode();
+            case "dec":
+                return new DecrementNode();
             default:
                 return new ConstantNode(new BigInteger(token));
         }
