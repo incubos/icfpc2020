@@ -113,6 +113,18 @@ class ModulationR extends ParseResult {
     }
 }
 
+class ModulationNilR extends ParseResult {
+
+    public ModulationNilR(Board board) {
+        super(board);
+    }
+
+    @Override
+    public String toString() {
+        return "[nil]";
+    }
+}
+
 public class BoardDecipher {
 
     private final static Command[] commandsSortedBySize = Command.values().clone();
@@ -292,6 +304,17 @@ public class BoardDecipher {
         return positiveNumber? number : -number;
     }
 
+    private static ParseResult parseModulation(Board pictogram) {
+        if (pictogram.width == 2 && pictogram.height == 1 &&
+                (pictogram.getValue(0, 0) & pictogram.getValue(1, 0)) != 0) {
+            return new ModulationNilR(pictogram);
+        }
+        if (pictogram.height == 2 && pictogram.width >= 3) {
+            return new ModulationR(pictogram);
+        }
+        return null;
+    }
+
     @NotNull
     private static ParseResult parsePictogram(Board pictogram) {
         if (pictogram.width == 1 && pictogram.height == 1) {
@@ -310,18 +333,19 @@ public class BoardDecipher {
                 return new CommandR(command);
             }
         }
-        final ParseResult picture = parsePicture(pictogram);
+        final ParseResult picture = parseCommand(pictogram);
         if (picture != null) {
             return picture;
         }
-        if (pictogram.height == 2 && pictogram.width >= 3) {
-            return new ModulationR(pictogram);
+        final ParseResult modulation = parseModulation(pictogram);
+        if (modulation != null) {
+            return modulation;
         }
         // Unknown object!
         return new ParseResult(pictogram);
     }
 
-    private static ParseResult parsePicture(Board pictogram) {
+    private static ParseResult parseCommand(Board pictogram) {
         // Size check
         if (!(pictogram.width >= 10 && pictogram.height >= 10)) {
             return null;
