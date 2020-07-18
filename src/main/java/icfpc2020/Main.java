@@ -35,9 +35,13 @@ class Main {
                 throw new RuntimeException("Got unexpected server response code");
             }
             log.info("Server response: {}", responseBody);
+            // (0,nil)
             alienClient.sendMessage(new MessageImpl("1101000"));
+            // (1,0,nil)
             alienClient.sendMessage(new MessageImpl("11011000011101000"));
+            // (1,0,nil)
             alienClient.sendMessage(new MessageImpl("11011000011101000"));
+            // random to confirm echo behaviour
             alienClient.sendMessage(new MessageImpl("11111111111111111111111111111111"));
         } catch (Exception e) {
             log.error("Unexpected error", e);
