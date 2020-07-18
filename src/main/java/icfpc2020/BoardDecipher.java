@@ -436,22 +436,20 @@ public class BoardDecipher {
     }
 
     public static void main(String[] args) throws IOException {
-//        for (int i = 4; i <= 42; i++) {
-//            final Board board = PngParser.loadPng("message" + i + ".png", 4, 4);
-//            final List<List<Pictogram>> decipher = BoardDecipher.decipher(board);
-//            System.out.println("#" + i);
-//            System.out.println(dumpCommands(decipher));
-//            System.out.println();
-//        }
-        System.out.println("Deciphering number 15");
-        final Board board = PngParser.loadPng("message15.png", 4, 4);
-//        System.out.println(board.width + "x" + board.height);
-//        System.out.println("#15");
-//        System.out.println(dumpCommands(BoardDecipher.decipher(board)));
-//        System.out.println();
-        final Board board1 = board.subBoard(0, 100, 80, board.height - 100);
-        System.out.println(board1.toString());
-        System.out.println(dumpCommands(BoardDecipher.decipher(board1)));
+        for (int i = 4; i <= 42; i++) {
+            System.out.println("#" + i);
+            final Board board = PngParser.loadPng("message" + i + ".png", 4, 4);
+            dumpBoard(board);
+        }
+        // https://twitter.com/icfpcontest2020/status/1284438144784490502
+        dumpBoard(PngParser.loadPng("twitter_more.png", 4, 4));
+    }
+
+    private static void dumpBoard(Board board) {
+        System.out.println(board.width + "x" + board.height);
+        System.out.println(board.toString());
+        System.out.println("Board");
+        System.out.println(dumpCommands(BoardDecipher.decipher(board)));
         System.out.println();
     }
 }
