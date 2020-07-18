@@ -2,13 +2,17 @@ package icfpc2020.galaxy;
 
 import icfpc2020.Command;
 import kotlin.jvm.functions.Function2;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 public class CommandEval {
+    private static final Set<Command> BOOL_COMMANDS = Set.of(Command.TrueK, Command.False);
 
     public static void evalAndUpdateArg(
             ECmd cmd,
@@ -68,8 +72,13 @@ public class CommandEval {
         final EvalResult func = args.get(0).eval(universe);
         cmd.args.set(0, func);
         final EvalResult funcArg = args.size() == 2 ? args.get(1) : null;
-        if (!(func instanceof ECmd) && funcArg == null) {
-            return func;
+        if (funcArg == null) {
+            if (!(func instanceof ECmd)) {
+                return func;
+            }
+            if (BOOL_COMMANDS.contains(((ECmd) func).command)) {
+                return func;
+            }
         }
         final EvalResult curry = CommandEval.curry(func, funcArg);
         if (curry != null) {
@@ -106,12 +115,23 @@ public class CommandEval {
     ) {
         evalAndUpdateArg(cmd, args, universe, 0);
         evalAndUpdateArg(cmd, args, universe, 1);
-
-        if (args.get(0) instanceof EBoolean && args.get(1) instanceof EBoolean) {
-            return new EBoolean(((EBoolean) args.get(0)).value == ((EBoolean) args.get(1)).value);
+        final EvalResult arg0 = args.get(0);
+        final EvalResult arg1 = args.get(1);
+        if (arg0 instanceof ECmd && arg1 instanceof ECmd) {
+            if (BOOL_COMMANDS.contains(((ECmd) arg0).command) &&
+                    BOOL_COMMANDS.contains(((ECmd) arg0).command)) {
+                return ((ECmd)arg0).command == ((ECmd) arg1).command
+                        ? createBool(Command.TrueK)
+                        : createBool(Command.False);
+            }
         }
         // No reduction today!
         return cmd;
+    }
+
+    @NotNull
+    private static ECmd createBool(Command boolCommand) {
+        return new ECmd(boolCommand, new ArrayList<>());
     }
 
     public static EvalResult strictLessThan(
@@ -123,7 +143,9 @@ public class CommandEval {
         evalAndUpdateArg(cmd, args, universe, 1);
 
         if (args.get(0) instanceof ENumber && args.get(1) instanceof ENumber) {
-            return new EBoolean(((ENumber) args.get(0)).number.compareTo(((ENumber) args.get(1)).number) < 0);
+            return ((ENumber) args.get(0)).number.compareTo(((ENumber) args.get(1)).number) < 0
+                    ? createBool(Command.TrueK)
+                    : createBool(Command.False);
         }
         // No reduction today!
         return cmd;

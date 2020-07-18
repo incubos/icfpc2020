@@ -1,6 +1,5 @@
 package icfpc2020;
 
-import icfpc2020.galaxy.EBoolean;
 import icfpc2020.galaxy.ECmd;
 import icfpc2020.galaxy.EvalResult;
 import icfpc2020.galaxy.CommandEval;
@@ -74,13 +73,21 @@ public enum Command {
     TrueK("t", 0, 21, 3){
         @Override
         public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
-            return new EBoolean(true);
+            if (args.size() != 0) {
+                return args.get(0);
+            }
+            // No reduction
+            return cmd;
         }
     },
     False("f", 0, 22, 3){
         @Override
         public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
-            return new EBoolean(false);
+            if (args.size() > 1) {
+                return args.get(1);
+            }
+            // No reduction
+            return cmd;
         }
     },
     PowerOfTwo("pwr2", 1, 23, 7){
