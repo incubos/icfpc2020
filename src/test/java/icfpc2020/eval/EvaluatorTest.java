@@ -25,6 +25,11 @@ public class EvaluatorTest {
     }
 
     @Test
+    public void const42() throws Exception {
+        eval("test = 42", "42");
+    }
+
+    @Test
     public void inc0() throws Exception {
         eval("test = ap inc 0", "1");
     }
