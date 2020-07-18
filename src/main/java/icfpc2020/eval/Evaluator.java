@@ -5,6 +5,8 @@ import icfpc2020.eval.ast.Declaration;
 import icfpc2020.eval.ast.DeclarationParser;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
  * @author incubos
  */
 public final class Evaluator {
+    private static final Logger log = LoggerFactory.getLogger(Evaluator.class);
     private final Map<String, ASTNode> declarations = new HashMap<>();
 
     public Evaluator(@NotNull final InputStream is) throws IOException {
@@ -26,6 +29,7 @@ public final class Evaluator {
         while ((line = reader.readLine()) != null) {
             final Declaration declaration = DeclarationParser.parse(line);
             if (declarations.put(declaration.name, declaration.node) != null) {
+                log.error("duplicate declaration for name {}, node {}", declaration.name, declaration.name);
                 throw new IllegalStateException("Duplicate declaration: " + declaration.name);
             }
         }
@@ -54,7 +58,8 @@ public final class Evaluator {
     private ASTNode getDeclaration(@NotNull final String name) {
         final ASTNode node = declarations.get(name);
         if (node == null) {
-            throw new NoSuchElementException(name);
+            log.error("No declaration for name {}", name);
+            throw new NoSuchElementException();
         }
         return node;
     }
