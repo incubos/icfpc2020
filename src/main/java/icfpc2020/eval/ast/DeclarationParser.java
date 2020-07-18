@@ -55,6 +55,8 @@ public final class DeclarationParser {
                 return TrueNode.INSTANCE;
             case "f":
                 return FalseNode.INSTANCE;
+            case "c":
+                return CNode.INSTANCE;
             case "s":
                 return SNode.INSTANCE;
             case "pwr2":
