@@ -40,8 +40,8 @@ public enum Command {
     MultipleDraw("multipledraw", 34, 7),
     // TODO or mod cons?
     ModulateList("mod", 35, 4),
-    Send0("send0", 36, 6),
-    Send0Deadline("deadline0", 36, 5, 9, 4, 4),
+    Send0Deadline("deadline0", 36, 6),
+    Send0("send0", 36, 5, 9, 4, 4),
     Is0("is0", 37, 5),
     Interact("interact", 38, 6),
     InteractionProtocol("interact", 39, 6),

@@ -7,14 +7,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-class ParseResult {
+class Pictogram {
     final Board board;
 
-    public ParseResult(Board board) {
+    public Pictogram(Board board) {
         this.board = board;
     }
+
+    private static final Map<String, String> KNOWN_FIGURES= Map.of(
+            ":7x7-141854172500000", "humans",
+            ":7x7-389184811999064", "aliens",
+            ":21x5-1229782323916997700", "~~~~~~"
+    );
 
     @Override
     public String toString() {
@@ -29,11 +36,15 @@ class ParseResult {
             }
         }
 
-        return ":" + board.width + "x" + board.height + "-" + sum;
+        final String s = ":" + board.width + "x" + board.height + "-" + sum;
+        if (KNOWN_FIGURES.containsKey(s)) {
+            return KNOWN_FIGURES.get(s);
+        }
+        return s;
     }
 }
 
-class NumberR extends ParseResult {
+class NumberR extends Pictogram {
     final int n;
 
     public NumberR(int n, Board board) {
@@ -47,7 +58,7 @@ class NumberR extends ParseResult {
     }
 }
 
-class VariableR extends ParseResult {
+class VariableR extends Pictogram {
     final int n;
 
     public VariableR(int n, Board board) {
@@ -61,7 +72,7 @@ class VariableR extends ParseResult {
     }
 }
 
-class CommandR extends ParseResult {
+class CommandR extends Pictogram {
     final Command command;
 
     public CommandR(Command command) {
@@ -75,7 +86,7 @@ class CommandR extends ParseResult {
     }
 }
 
-class DotR extends ParseResult {
+class DotR extends Pictogram {
 
     public DotR(Board board) {
         super(board);
@@ -87,7 +98,7 @@ class DotR extends ParseResult {
     }
 }
 
-class PictureR extends ParseResult {
+class PictureR extends Pictogram {
 
     public PictureR(Board board) {
         super(board);
@@ -108,7 +119,7 @@ class PictureR extends ParseResult {
     }
 }
 
-class ModulationR extends ParseResult {
+class ModulationR extends Pictogram {
 
     public ModulationR(Board board) {
         super(board);
@@ -129,7 +140,7 @@ class ModulationR extends ParseResult {
     }
 }
 
-class ModulationNilR extends ParseResult {
+class ModulationNilR extends Pictogram {
 
     public ModulationNilR(Board board) {
         super(board);
@@ -141,11 +152,21 @@ class ModulationNilR extends ParseResult {
     }
 }
 
+class ParseResult {
+     final Pictogram pictogram;
+     final int xOffset;
+
+    public ParseResult(final Pictogram result, final int xOffset){
+        this.pictogram = result;
+        this.xOffset = xOffset;
+    }
+}
+
 public class BoardDecipher {
 
     private final static Command[] commandsSortedBySize = Command.values().clone();
 
-    private static boolean columnClear(Board board, int x){
+    private static boolean columnClear(Board board, int x) {
         for (int y = 0; y < board.height; y++) {
             if (board.getValue(x, y) == 1) {
                 return false;
@@ -154,7 +175,7 @@ public class BoardDecipher {
         return true;
     }
 
-    private static boolean columnFilled(Board board, int x){
+    private static boolean columnFilled(Board board, int x) {
         for (int y = 0; y < board.height; y++) {
             if (board.getValue(x, y) == 0) {
                 return false;
@@ -163,7 +184,7 @@ public class BoardDecipher {
         return true;
     }
 
-    private static boolean rowClear(Board board, int y){
+    private static boolean rowClear(Board board, int y) {
         for (int x = 0; x < board.width; x++) {
             if (board.getValue(x, y) == 1) {
                 return false;
@@ -172,7 +193,7 @@ public class BoardDecipher {
         return true;
     }
 
-    private static boolean rowFilled(Board board, int y){
+    private static boolean rowFilled(Board board, int y) {
         for (int x = 0; x < board.width; x++) {
             if (board.getValue(x, y) == 0) {
                 return false;
@@ -196,7 +217,7 @@ public class BoardDecipher {
                 break;
             }
         }
-        return new int[] {minX, minY};
+        return new int[]{minX, minY};
     }
 
     public static int[] getRightBottomMargins(final Board board) {
@@ -214,7 +235,7 @@ public class BoardDecipher {
                 break;
             }
         }
-        return new int[] {maxX, maxY};
+        return new int[]{maxX, maxY};
     }
 
     public static List<List<ParseResult>> decipher(final Board board) {
@@ -250,7 +271,7 @@ public class BoardDecipher {
 
     private static List<ParseResult> parseRow(Board rowBoard) {
         int sx = 0;
-        final List<ParseResult> result = new ArrayList<ParseResult>();
+        final List<ParseResult> result = new ArrayList<>();
         while (sx < rowBoard.width) {
             final int[] leftTopMargins = getLeftTopMargins(rowBoard, sx, 0);
             int currentX = leftTopMargins[0];
@@ -265,7 +286,7 @@ public class BoardDecipher {
                 }
             }
             final Board pictogram = rowBoard.subBoard(currentX, 0, pictogramWidth, rowBoard.height);
-            result.add(parsePictogram(trimMargins(pictogram)));
+            result.add(new ParseResult(parsePictogram(trimMargins(pictogram)), currentX));
 
             sx = currentX + pictogramWidth + 1;
         }
@@ -293,7 +314,7 @@ public class BoardDecipher {
         }
         final boolean positiveNumber = pictogram.width == pictogram.height;
         final boolean negativeNumber = pictogram.width == pictogram.height - 1;
-        if (!positiveNumber && ! negativeNumber) {
+        if (!positiveNumber && !negativeNumber) {
             return null;
         }
         for (int x = 1; x < pictogram.width; x++) {
@@ -317,10 +338,10 @@ public class BoardDecipher {
                 power *= 2;
             }
         }
-        return positiveNumber? number : -number;
+        return positiveNumber ? number : -number;
     }
 
-    private static ParseResult parseModulation(Board pictogram) {
+    private static Pictogram parseModulation(Board pictogram) {
         if (pictogram.width == 2 && pictogram.height == 1 &&
                 (pictogram.getValue(0, 0) & pictogram.getValue(1, 0)) != 0) {
             return new ModulationNilR(pictogram);
@@ -332,7 +353,7 @@ public class BoardDecipher {
     }
 
     @NotNull
-    private static ParseResult parsePictogram(Board pictogram) {
+    private static Pictogram parsePictogram(Board pictogram) {
         if (pictogram.width == 1 && pictogram.height == 1) {
             return new DotR(pictogram);
         }
@@ -350,26 +371,26 @@ public class BoardDecipher {
                 return new CommandR(command);
             }
         }
-        final ParseResult picture = parsePicture(pictogram);
+        final Pictogram picture = parsePicture(pictogram);
         if (picture != null) {
             return picture;
         }
-        final ParseResult modulation = parseModulation(pictogram);
+        final Pictogram modulation = parseModulation(pictogram);
         if (modulation != null) {
             return modulation;
         }
         // Unknown object!
-        return new ParseResult(pictogram);
+        return new Pictogram(pictogram);
     }
 
-    private static ParseResult parsePicture(Board pictogram) {
+    private static Pictogram parsePicture(Board pictogram) {
         // Size check
         if (!(pictogram.width >= 10 && pictogram.height >= 10)) {
             return null;
         }
         // Corners check
         if (pictogram.getValue(0, 0) != 0 ||
-                pictogram.getValue(pictogram.width-1, 0) != 0 ||
+                pictogram.getValue(pictogram.width - 1, 0) != 0 ||
                 pictogram.getValue(pictogram.width - 1, pictogram.height - 1) != 0 ||
                 pictogram.getValue(0, pictogram.height - 1) != 0) {
             return null;
@@ -402,18 +423,36 @@ public class BoardDecipher {
     }
 
     public static String dumpCommands(List<List<ParseResult>> decipher) {
-        return decipher.stream().map( row ->
-                row.stream().map(ParseResult::toString).collect(Collectors.joining(" "))
+        return decipher.stream().map(row -> {
+                    final StringBuilder b = new StringBuilder();
+                    for (final ParseResult parseResult: row) {
+                        // Tabulate
+                        b.append(" ".repeat(Math.max(b.length() == 0? 0 : 1, parseResult.xOffset / 2 - b.length())));
+                        // Add pictogram
+                        b.append(parseResult.pictogram.toString());
+                    }
+                    return b.toString();
+                }
         ).collect(Collectors.joining("\n"));
     }
 
     public static void main(String[] args) throws IOException {
-        for (int i = 4; i <= 42; i++) {
-            final Board board = PngParser.loadPng("message" + i + ".png", 4, 4);
-            final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
-            System.out.println("#" + i);
-            System.out.println(dumpCommands(decipher));
-            System.out.println();
-        }
+//        for (int i = 4; i <= 42; i++) {
+//            final Board board = PngParser.loadPng("message" + i + ".png", 4, 4);
+//            final List<List<Pictogram>> decipher = BoardDecipher.decipher(board);
+//            System.out.println("#" + i);
+//            System.out.println(dumpCommands(decipher));
+//            System.out.println();
+//        }
+        System.out.println("Deciphering number 15");
+        final Board board = PngParser.loadPng("message15.png", 4, 4);
+//        System.out.println(board.width + "x" + board.height);
+//        System.out.println("#15");
+//        System.out.println(dumpCommands(BoardDecipher.decipher(board)));
+//        System.out.println();
+        final Board board1 = board.subBoard(0, 100, 80, board.height - 100);
+        System.out.println(board1.toString());
+        System.out.println(dumpCommands(BoardDecipher.decipher(board1)));
+        System.out.println();
     }
 }

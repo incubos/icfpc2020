@@ -16,40 +16,19 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("=\n" +
-                        "0 = 0\n" +
-                        "1 = 1\n" +
-                        "2 = 2\n" +
-                        "3 = 3\n" +
-                        ". . . .\n" +
-                        "10 = 10\n" +
-                        "11 = 11\n" +
-                        ". . . .\n" +
-                        "-1 = -1\n" +
-                        "-2 = -2\n" +
-                        ". . . .", actual);
+                "0   =   0\n" +
+                "1   =   1\n" +
+                "2   =    2\n" +
+                "3   =    3\n" +
+                ". . . .\n" +
+                "10  =    10\n" +
+                "11  =    11\n" +
+                ". . . .\n" +
+                "-1  =   -1\n" +
+                "-2  =    -2\n" +
+                ". . . .", actual);
     }
 
-
-    @Test
-    public void test5() throws IOException {
-        final Board board = PngParser.loadPng("message5.png", 4, 4);
-        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
-        final String actual = dumpCommands(decipher);
-        Assert.assertEquals("inc\n" +
-                        "ap inc 0 = 1\n" +
-                        "ap inc 1 = 2\n" +
-                        "ap inc 2 = 3\n" +
-                        "ap inc 3 = 4\n" +
-                        ". . . .\n" +
-                        "ap inc 300 = 301\n" +
-                        "ap inc 301 = 302\n" +
-                        ". . . .\n" +
-                        "ap inc -1 = 0\n" +
-                        "ap inc -2 = -1\n" +
-                        "ap inc -3 = -2\n" +
-                        ". . . .",
-                actual);
-    }
 
     @Test
     public void test6() throws IOException {
@@ -57,48 +36,36 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("dec\n" +
-                "ap dec 1 = 0\n" +
-                "ap dec 2 = 1\n" +
-                "ap dec 3 = 2\n" +
-                "ap dec 4 = 3\n" +
+                "ap dec 1 =   0\n" +
+                "ap dec 2 =    1\n" +
+                "ap dec 3 =    2\n" +
+                "ap dec 4 =    3\n" +
                 ". . . .\n" +
-                "ap dec 1024 = 1023\n" +
+                "ap dec 1024 =  1023\n" +
                 ". . . .\n" +
-                "ap dec 0 = -1\n" +
-                "ap dec -1 = -2\n" +
-                "ap dec -2 = -3\n" +
+                "ap dec 0 =   -1\n" +
+                "ap dec -1 =  -2\n" +
+                "ap dec -2 =   -3\n" +
                 ". . . .", actual);
     }
 
-    @Test
-    public void test7() throws IOException {
-        final Board board = PngParser.loadPng("message7.png", 4, 4);
-        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
-        final String actual = dumpCommands(decipher);
-        Assert.assertEquals("add\n" +
-                "ap ap add 1 2 = 3\n" +
-                "ap ap add 2 1 = 3\n" +
-                "ap ap add 0 1 = 1\n" +
-                "ap ap add 2 3 = 5\n" +
-                "ap ap add 3 5 = 8\n" +
-                ". . . .", actual);
-    }
+
 
     @Test
     public void test8() throws IOException {
         final Board board = PngParser.loadPng("message8.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
-        Assert.assertEquals("x0 x1 x2 x3 x4 . . . .\n" +
-                "ap ap add 0 x0 = x0\n" +
-                "ap ap add 0 x1 = x1\n" +
-                "ap ap add 0 x2 = x2\n" +
+        Assert.assertEquals("x0 x1 x2 x3  x4   . . . .\n" +
+                "ap ap add 0 x0 =  x0\n" +
+                "ap ap add 0 x1 =  x1\n" +
+                "ap ap add 0 x2 =   x2\n" +
                 ". . . .\n" +
-                "ap ap add x0 0 = x0\n" +
-                "ap ap add x1 0 = x1\n" +
-                "ap ap add x2 0 = x2\n" +
+                "ap ap add x0 0 =  x0\n" +
+                "ap ap add x1 0 =  x1\n" +
+                "ap ap add x2 0 =   x2\n" +
                 ". . . .\n" +
-                "ap ap add x0 x1 = ap ap add x1 x0\n" +
+                "ap ap add x0 x1 =  ap ap add x1 x0\n" +
                 ". . . .", actual);
     }
 
@@ -108,20 +75,35 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("mod\n" +
-                "ap mod 0 = [0]\n" +
-                "ap mod 1 = [1]\n" +
-                "ap mod -1 = [-1]\n" +
-                "ap mod 2 = [2]\n" +
-                "ap mod -2 = [-2]\n" +
+                "ap mod 0 =   [0]\n" +
+                "ap mod 1 =   [1]\n" +
+                "ap mod -1 =  [-1]\n" +
+                "ap mod 2 =    [2]\n" +
+                "ap mod -2 =   [-2]\n" +
                 ". . . .\n" +
-                "ap mod 16 = [16]\n" +
-                "ap mod -16 = [-16]\n" +
+                "ap mod 16 =   [16]\n" +
+                "ap mod -16 =  [-16]\n" +
                 ". . . .\n" +
-                "ap mod 255 = [255]\n" +
+                "ap mod 255 =  [255]\n" +
                 "ap mod -255 = [-255]\n" +
-                "ap mod 256 = [256]\n" +
+                "ap mod 256 =  [256]\n" +
                 "ap mod -256 = [-256]\n" +
                 ". . . .", actual);
+    }
+
+    @Test
+    public void test15() throws IOException {
+        final Board board = PngParser.loadPng("message15.png", 4, 4);
+        final Board subBoard = board.subBoard(0, 100, 80, board.height - 100);
+        final List<List<ParseResult>> decipher = BoardDecipher.decipher(subBoard);
+        final String actual = dumpCommands(decipher);
+        Assert.assertEquals("ap send0 x0 = x1\n" +
+                "humans x0                         aliens\n" +
+                "humans ~~~~~~    ap mod x0        aliens\n" +
+                "humans                        x0  aliens\n" +
+                "humans                        x1  aliens\n" +
+                "humans       ap mod x1 ~~~~~~     aliens\n" +
+                "humans x1                         aliens", actual);
     }
 
     @Test
@@ -131,11 +113,11 @@ public class BoardDecipherTest {
         final String actual = dumpCommands(decipher);
         // TODO add modulation
         Assert.assertEquals("( , )\n" +
-                "( ) = nil\n" +
-                "( x0 ) = ap ap cons x0 nil\n" +
-                "( x0 , x1 ) = ap ap cons x0 ap ap cons x1 nil\n" +
-                "( x0 , x1 , x2 ) = ap ap cons x0 ap ap cons x1 ap ap cons x2 nil\n" +
-                "( x0 , x1 , x2 , x5 ) = ap ap cons x0 ap ap cons x1 ap ap cons x2 ap ap cons x5 nil\n" +
+                "( )    =   nil\n" +
+                "( x0 )    =   ap ap cons x0 nil\n" +
+                "( x0 , x1 )    =   ap ap cons x0 ap ap cons x1 nil\n" +
+                "( x0 , x1 , x2  )   =    ap ap cons x0 ap ap cons x1 ap ap cons x2 nil\n" +
+                "( x0 , x1 , x2  , x5 )    =   ap ap cons x0 ap ap cons x1 ap ap cons x2 ap ap cons x5 nil\n" +
                 ". . . .", actual);
     }
 
@@ -146,10 +128,10 @@ public class BoardDecipherTest {
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("draw\n" +
-                "ap draw ( ) = |[]|\n" +
-                "ap draw ( ap ap vec 1 1 ) = |[1,1]|\n" +
-                "ap draw ( ap ap vec 1 2 ) = |[1,2]|\n" +
-                "ap draw ( ap ap vec 2 5 ) = |[2,5]|\n" +
+                "ap draw ( )  =   |[]|\n" +
+                "ap draw ( ap ap vec 1 1 ) =  |[1,1]|\n" +
+                "ap draw ( ap ap vec 1 2 ) =   |[1,2]|\n" +
+                "ap draw ( ap ap vec 2 5 ) =   |[2,5]|\n" +
                 "ap draw ( ap ap vec 1 2 , ap ap vec 3 1 ) = |[1,2;3,1]|\n" +
                 "ap draw ( ap ap vec 5 3 , ap ap vec 6 3 , ap ap vec 4 4 , ap ap vec 6 4 , ap ap vec 4 5 ) = |[4,4;4,5;5,3;6,3;6,4]|\n" +
                 ". . . .", actual);
@@ -177,8 +159,8 @@ public class BoardDecipherTest {
         final Board board = PngParser.loadPng("message36.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
-        Assert.assertEquals("send0\n" +
-                "ap deadline0 ( 0 ) = ( 1 , send0 )", actual);
+        Assert.assertEquals("deadline0\n" +
+                "ap send0 ( 0 ) =  (  1 , deadline0 )", actual);
     }
 
     @Test
@@ -213,14 +195,14 @@ public class BoardDecipherTest {
 
         final String actual = dumpCommands(decipher);
         Assert.assertEquals("ap ap mul pwr2 66 :5x5-30309607 :1x19-524287\n" +
-                ":3x5-24002 :3x4-2671 :7x7-141854172500000\n" +
-                ":7x7-496439027425038\n" +
-                ":7x5-19312097412 :7x5-2935766754\n" +
-                "galaxy\n" +
-                ":5x7-8338228127 :5x7-16846417982\n" +
-                ":7x7-106433177960196\n" +
-                ":7x5-34351079144 :7x7-389184811999064\n" +
-                ":7x7-17759486067204", actual);
+                "                                       :3x5-24002 :3x4-2671                          humans\n" +
+                "                                                           :7x7-496439027425038\n" +
+                "                                                                                                    :7x5-19312097412 :7x5-2935766754\n" +
+                "                                                                            galaxy\n" +
+                "                                      :5x7-8338228127                                                                           :5x7-16846417982\n" +
+                "                                                                                                        :7x7-106433177960196\n" +
+                "                                                     :7x5-34351079144                                                         aliens\n" +
+                "                                                                            :7x7-17759486067204", actual);
     }
 
 
