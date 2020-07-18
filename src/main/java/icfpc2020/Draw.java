@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigInteger;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -30,10 +31,30 @@ public class Draw {
             this.x = x;
             this.y = y;
         }
-    }
 
-    public static Consumer<Coord> drawingBoard = coord -> {
-    };
+        public static Coord of(final long x, final long y) {
+            return new Coord(x, y);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            final Coord coord = (Coord) o;
+            return x == coord.x &&
+                    y == coord.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+
+        @Override
+        public String toString() {
+            return "(x=" + x + ", y=" + y + ')';
+        }
+    }
 
     private static BigInteger getNumber(Pictogram pictogram) {
         if (pictogram instanceof NumberR) {
@@ -43,7 +64,7 @@ public class Draw {
         }
     }
 
-    public static void draw(List<Pictogram> commands) {
+    public static void draw(List<Pictogram> commands, Consumer<Coord> drawingBoard) {
         var iter = commands.iterator();
         var index = 0;
         while (iter.hasNext()) {
