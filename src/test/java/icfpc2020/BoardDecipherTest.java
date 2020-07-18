@@ -142,15 +142,15 @@ public class BoardDecipherTest {
         final Board board = PngParser.loadPng("message35.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
-        Assert.fail("Demodulation of lists doesn't work correctly here");
-        Assert.assertEquals("mod cons\n" +
-                "ap mod nil = [nil]\n" +
+        Assert.assertEquals(
+                "mod cons\n" +
+                "ap mod nil =  [nil]\n" +
                 "ap mod ap ap cons nil nil = [0]\n" +
                 "ap mod ap ap cons 0 nil = [0]\n" +
                 "ap mod ap ap cons 1 2 = [0]\n" +
                 "ap mod ap ap cons 1 ap ap cons 2 nil = [0]\n" +
-                "ap mod ( 1 , 2 ) = [0]\n" +
-                "ap mod ( 1 , ( 2 , 3 ) , 4 ) = [0]\n" +
+                "ap mod ( 1 , 2 )  =    [0]\n" +
+                "ap mod ( 1 , ( 2 , 3 ) , 4  )   =    [0]\n" +
                 ". . . .", actual);
     }
 

@@ -61,8 +61,16 @@ public final class DeclarationParser {
                 return TrueNode.INSTANCE;
             case "f":
                 return FalseNode.INSTANCE;
+            case "i":
+                return INode.INSTANCE;
+            case "c":
+                return CNode.INSTANCE;
+            case "b":
+                return BNode.INSTANCE;
             case "s":
                 return SNode.INSTANCE;
+            case "pwr2":
+                return Pwr2Node.INSTANCE;
             default:
                 try {
                     return new ConstantNode(new BigInteger(token));

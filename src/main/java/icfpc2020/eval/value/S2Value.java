@@ -15,7 +15,7 @@ public class S2Value implements LazyValue {
 
     @NotNull
     @Override
-    public LazyValue apply(final LazyValue arg) {
+    public LazyValue apply(@NotNull final LazyValue arg) {
         return new S1Value(left, arg);
     }
 

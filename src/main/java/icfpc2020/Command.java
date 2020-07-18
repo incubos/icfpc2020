@@ -2,10 +2,8 @@ package icfpc2020;
 
 import java.io.IOException;
 
+
 public enum Command {
-    // 1 Number
-    // 2 Negative Number
-    // 8 Variable
     Equality("=", 4, 3),
     Successor("inc", 5, 4),
     Predecessor("dec", 6, 4),
@@ -65,7 +63,6 @@ public enum Command {
         }
     }
 
-
     @Override
     public String toString() {
         return code;
@@ -74,7 +71,6 @@ public enum Command {
     public Board getBoard() {
         return board;
     }
-
 
     public static void main(String[] args) {
         final Command[] commands = Command.values();
