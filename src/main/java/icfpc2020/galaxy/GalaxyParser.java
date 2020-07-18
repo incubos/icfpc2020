@@ -3,9 +3,6 @@ package icfpc2020.galaxy;
 import icfpc2020.Command;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class GalaxyParser {
     @NotNull
-    public EvalResult parseTextLine(String line) {
+    public EAssign parseTextLine(String line) {
         final List<Object> tokens = Arrays.stream(line.split(" ")).map(t -> {
             for (final Command command : Command.values()) {
                 if (t.equals(command.toString())) {
@@ -51,7 +48,7 @@ public class GalaxyParser {
         }
     }
 
-    private EvalResult parseLine(List<Object> tokens) {
+    private EAssign parseLine(List<Object> tokens) {
         final Object token0 = tokens.get(0);
         if (token0 == Command.Galaxy) {
             return new EGalaxyAssign(parseCommand(new ParseTokens(tokens, 2)));

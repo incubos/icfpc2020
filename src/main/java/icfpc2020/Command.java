@@ -1,5 +1,6 @@
 package icfpc2020;
 
+import icfpc2020.galaxy.ENumber;
 import icfpc2020.galaxy.EvalResult;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ public enum Command {
     // 2 Negative Number
     // 8 Variable
     Equality("=", 0, 4, 3),
-    Successor("inc", 1, 5, 4),
+    Successor("inc", 1, 5, 4) ,
     Predecessor("dec", 1, 6, 4),
     Sum("add", 2, 7, 4),
     Product("mul", 2, 9, 4),
