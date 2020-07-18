@@ -25,12 +25,28 @@ public class EvaluatorTest {
     }
 
     @Test
-    public void inc() throws Exception {
+    public void inc0() throws Exception {
         eval("test = ap inc 0", "1");
     }
 
     @Test
-    public void inc3() throws Exception {
+    public void inc1() throws Exception {
+        eval("test = ap inc 1", "2");
+    }
+
+    @Test
+    public void incincinc() throws Exception {
         eval("test = ap inc ap inc ap inc 0", "3");
     }
+
+    @Test
+    public void inc_1() throws Exception {
+        eval("test = ap inc -1", "0");
+    }
+
+    @Test
+    public void inc_2() throws Exception {
+        eval("test = ap inc -2", "-1");
+    }
+
 }
