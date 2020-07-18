@@ -4,6 +4,7 @@ import icfpc2020.operators.Demodulate;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,9 +45,9 @@ class Pictogram {
 }
 
 class NumberR extends Pictogram {
-    final int n;
+    final BigInteger n;
 
-    public NumberR(int n, Board board) {
+    public NumberR(BigInteger n, Board board) {
         super(board);
         this.n = n;
     }
@@ -58,9 +59,9 @@ class NumberR extends Pictogram {
 }
 
 class VariableR extends Pictogram {
-    final int n;
+    final BigInteger n;
 
-    public VariableR(int n, Board board) {
+    public VariableR(BigInteger n, Board board) {
         super(board);
         this.n = n;
     }
@@ -306,7 +307,7 @@ public class BoardDecipher {
     }
 
     // clear = 0 for ordinary numbers, 1 for variables
-    private static Integer parseNumber(final Board pictogram, int clear) {
+    private static BigInteger parseNumber(final Board pictogram, int clear) {
         // Number bit
         if (pictogram.getValue(0, 0) != clear) {
             return null;
@@ -326,18 +327,18 @@ public class BoardDecipher {
                 return null;
             }
         }
-        int number = 0;
-        int power = 1;
+        BigInteger number = BigInteger.ZERO;
+        BigInteger power = BigInteger.ONE;
         final int size = Math.min(pictogram.width, pictogram.height);
         for (int y = 1; y < size; y++) {
             for (int x = 1; x < size; x++) {
                 if (pictogram.getValue(x, y) != clear) {
-                    number += power;
+                    number = number.add(power);
                 }
-                power *= 2;
+                power = power.multiply(BigInteger.TWO);
             }
         }
-        return positiveNumber ? number : -number;
+        return positiveNumber ? number : number.negate();
     }
 
     private static Pictogram parseModulation(Board pictogram) {
@@ -356,11 +357,11 @@ public class BoardDecipher {
         if (pictogram.width == 1 && pictogram.height == 1) {
             return new DotR(pictogram);
         }
-        final Integer variable = parseVariable(pictogram);
+        final BigInteger variable = parseVariable(pictogram);
         if (variable != null) {
             return new VariableR(variable, pictogram);
         }
-        final Integer number = parseNumber(pictogram, 0);
+        final BigInteger number = parseNumber(pictogram, 0);
         if (number != null) {
             return new NumberR(number, pictogram);
         }
@@ -408,7 +409,7 @@ public class BoardDecipher {
         return new PictureR(pictogram.subBoard(1, 1, pictogram.width - 2, pictogram.height - 2));
     }
 
-    private static Integer parseVariable(Board pictogram) {
+    private static BigInteger parseVariable(Board pictogram) {
         // min size
         if (!(4 <= pictogram.width && 4 <= pictogram.height)) {
             return null;
