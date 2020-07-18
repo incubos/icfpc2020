@@ -1,5 +1,8 @@
 package icfpc2020.operators;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /**
  * https://message-from-space.readthedocs.io/en/latest/message13.html
  * :341 (mod)
@@ -8,20 +11,20 @@ package icfpc2020.operators;
  */
 public class Modulate {
 
-    private final long number;
+    private final BigInteger number;
 
-    public Modulate(long number) {
+    public Modulate(BigInteger number) {
         this.number = number;
     }
 
     public String mod() {
         StringBuilder sb = new StringBuilder();
-        if (number < 0)
+        if (number.compareTo(BigInteger.ZERO) <0)
             sb.append("10");
         else
             sb.append("01");
-        if (number != 0L) {
-            String bits = Long.toBinaryString(Math.abs(number));
+        if (number != BigInteger.ZERO) {
+            String bits = number.abs().toString(2);
             int trailingZeros = 4 - bits.length() % 4;
             sb.append("1".repeat((trailingZeros + bits.length()) / 4))
                     .append("0")
