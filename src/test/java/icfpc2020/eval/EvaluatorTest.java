@@ -146,4 +146,21 @@ public class EvaluatorTest {
         isTrue("ap ap eq 1 1");
         isFalse("ap ap eq 1 2");
     }
+
+    @Test
+    public void lt() throws Exception {
+        isFalse("ap ap lt 0 -1");
+        isFalse("ap ap lt 0 0");
+        isTrue("ap ap lt 0 1");
+        isTrue("ap ap lt 0 2");
+
+        isFalse("ap ap lt 1 0");
+        isFalse("ap ap lt 1 1");
+        isTrue("ap ap lt 1 2");
+        isTrue("ap ap lt 1 3");
+
+        isFalse("ap ap lt -19 -20");
+        isFalse("ap ap lt -20 -20");
+        isTrue("ap ap lt -21 -20");
+    }
 }

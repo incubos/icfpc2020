@@ -49,6 +49,8 @@ public final class DeclarationParser {
                 return DivideNode.INSTANCE;
             case "eq":
                 return EqualityNode.INSTANCE;
+            case "lt":
+                return LessThanNode.INSTANCE;
             case "t":
                 return TrueNode.INSTANCE;
             case "f":
