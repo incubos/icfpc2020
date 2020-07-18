@@ -3,6 +3,7 @@ package icfpc2020.eval;
 import icfpc2020.eval.ast.ASTNode;
 import icfpc2020.eval.ast.Declaration;
 import icfpc2020.eval.ast.DeclarationParser;
+import icfpc2020.eval.ast.UndefinedNode;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -56,12 +57,7 @@ public final class Evaluator {
 
     @NotNull
     private ASTNode getDeclaration(@NotNull final String name) {
-        final ASTNode node = declarations.get(name);
-        if (node == null) {
-            log.error("No declaration for name {}", name);
-            throw new NoSuchElementException();
-        }
-        return node;
+        return declarations.getOrDefault(name, new UndefinedNode(name));
     }
 
     @NotNull

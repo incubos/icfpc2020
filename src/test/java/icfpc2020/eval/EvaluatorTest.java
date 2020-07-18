@@ -134,7 +134,21 @@ public class EvaluatorTest {
         assertEquals(
                 "3",
                 evaluator.function("test").asConst().toString());
+    }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void undefinedVariables() throws Exception {
+        final String code =
+                "x0 = 1\n" +
+                        "test = ap ap add x0 x1";
+        final Evaluator evaluator =
+                new Evaluator(
+                        new ByteArrayInputStream(
+                                code.getBytes(StandardCharsets.UTF_8)));
+        assertEquals(
+                "3",
+                evaluator.function("test").asConst().toString());
+        fail("Have to throw UnsupportedOperationException");
     }
 
     @Test
