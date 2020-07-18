@@ -36,13 +36,18 @@ public class Board {
         return "Board w x h " + width  + " x "+ height + "\n" + b.toString();
     }
 
-    public boolean contains(final Board other, final int x, final int y) {
-        if (width < x + other.width || height < y + other.height) {
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Board)) {
             return false;
         }
-        for (int xo = 0; xo < other.width; xo++) {
-            for (int yo = 0; yo < other.height; yo++) {
-                if (getValue(x + xo, y + yo) != other.getValue(xo, yo)) {
+        final Board other = (Board) obj;
+        if (other.width != width || other.height != height) {
+            return false;
+        }
+        for (int x = 0; x < other.width; x++) {
+            for (int y = 0; y < other.height; y++) {
+                if (getValue(x, y) != other.getValue(x, y)) {
                     return false;
                 }
             }

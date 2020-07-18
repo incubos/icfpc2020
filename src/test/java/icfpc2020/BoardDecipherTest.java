@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static icfpc2020.BoardDecipher.dumpCommands;
 
@@ -177,14 +176,14 @@ public class BoardDecipherTest {
         final Board board = PngParser.loadPng("message41.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
-        Assert.assertEquals("ap interact b\n" +
-                "ap ap b x0 x1 = ( 0 , ap ap cons x1 x0 , ( ap ap cons x1 x0 ) )\n" +
-                "b = ap ap b ap b ap ap s ap ap b ap b ap cons 0 ap ap c ap ap b b cons ap ap c cons nil ap ap c cons nil ap c cons\n" +
-                "ap ap ap interact b nil ap ap vec 0 0 = ( ( ap ap vec 0 0 ) , ( |[0,0]| ) )\n" +
-                "ap ap ap interact b ( ap ap vec 0 0 ) ap ap vec 2 3 = ( x2 , ( |[0,0;2,3]| ) )\n" +
-                "ap ap ap interact b x2 ap ap vec 1 2 = ( x3 , ( |[0,0;1,2;2,3]| ) )\n" +
-                "ap ap ap interact b x3 ap ap vec 3 2 = ( x4 , ( |[0,0;1,2;2,3;3,2]| ) )\n" +
-                "ap ap ap interact b x4 ap ap vec 4 0 = ( x5 , ( |[0,0;1,2;2,3;3,2;4,0]| ) )\n" +
+        Assert.assertEquals("ap interact :4432743908351\n" +
+                "ap ap :4432743908351 x0 x1 = ( 0 , ap ap cons x1 x0 , ( ap ap cons x1 x0 ) )\n" +
+                ":4432743908351 = ap ap b ap b ap ap s ap ap b ap b ap cons 0 ap ap c ap ap b b cons ap ap c cons nil ap ap c cons nil ap c cons\n" +
+                "ap ap ap interact :4432743908351 nil ap ap vec 0 0 = ( ( ap ap vec 0 0 ) , ( |[0,0]| ) )\n" +
+                "ap ap ap interact :4432743908351 ( ap ap vec 0 0 ) ap ap vec 2 3 = ( x2 , ( |[0,0;2,3]| ) )\n" +
+                "ap ap ap interact :4432743908351 x2 ap ap vec 1 2 = ( x3 , ( |[0,0;1,2;2,3]| ) )\n" +
+                "ap ap ap interact :4432743908351 x3 ap ap vec 3 2 = ( x4 , ( |[0,0;1,2;2,3;3,2]| ) )\n" +
+                "ap ap ap interact :4432743908351 x4 ap ap vec 4 0 = ( x5 , ( |[0,0;1,2;2,3;3,2;4,0]| ) )\n" +
                 ". . . .", actual);
     }
 

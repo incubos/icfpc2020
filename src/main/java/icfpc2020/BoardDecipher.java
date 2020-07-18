@@ -18,7 +18,18 @@ class ParseResult {
 
     @Override
     public String toString() {
-        return "?";
+        long sum = 0;
+        long power = 1;
+        for (int x = 0; x < board.width; x++) {
+            for (int y = 0; y < board.height; y++) {
+                if (board.getValue(x, y) == 1) {
+                    sum += power;
+                }
+                power *= 2;
+            }
+        }
+
+        return ":" + sum;
     }
 }
 
@@ -109,7 +120,12 @@ class ModulationR extends ParseResult {
         for (int x = 0; x < board.width; x++) {
             b.append(board.getValue(x, 0));
         }
-        return "[" + new Demodulate(b.toString()).dem() + "]";
+        try {
+            return "[" + new Demodulate(b.toString()).dem() + "]";
+        } catch (Exception e) {
+            // Demodulation error?
+            return "[???]";
+        }
     }
 }
 
@@ -328,12 +344,13 @@ public class BoardDecipher {
         if (number != null) {
             return new NumberR(number, pictogram);
         }
+        // Parse commands
         for (final Command command : commandsSortedBySize) {
-            if (pictogram.contains(command.getBoard(), 0, 0)) {
+            if (pictogram.equals(command.getBoard())) {
                 return new CommandR(command);
             }
         }
-        final ParseResult picture = parseCommand(pictogram);
+        final ParseResult picture = parsePicture(pictogram);
         if (picture != null) {
             return picture;
         }
@@ -345,7 +362,7 @@ public class BoardDecipher {
         return new ParseResult(pictogram);
     }
 
-    private static ParseResult parseCommand(Board pictogram) {
+    private static ParseResult parsePicture(Board pictogram) {
         // Size check
         if (!(pictogram.width >= 10 && pictogram.height >= 10)) {
             return null;
