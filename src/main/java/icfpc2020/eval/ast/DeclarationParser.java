@@ -45,6 +45,8 @@ public final class DeclarationParser {
                 return new AddNode();
             case "mul":
                 return new MultiplyNode();
+            case "div":
+                return new DivideNode();
             default:
                 try {
                     return new ConstantNode(new BigInteger(token));

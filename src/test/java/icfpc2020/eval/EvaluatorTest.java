@@ -25,82 +25,38 @@ public class EvaluatorTest {
     }
 
     @Test
-    public void const42() throws Exception {
+    public void literal() throws Exception {
         eval("42", "test = 42");
     }
 
     @Test
-    public void inc0() throws Exception {
+    public void inc() throws Exception {
         eval("1", "test = ap inc 0");
-    }
-
-    @Test
-    public void inc1() throws Exception {
         eval("2", "test = ap inc 1");
-    }
-
-    @Test
-    public void incincinc() throws Exception {
         eval("3", "test = ap inc ap inc ap inc 0");
-    }
-
-    @Test
-    public void inc_1() throws Exception {
         eval("0", "test = ap inc -1");
-    }
-
-    @Test
-    public void inc_2() throws Exception {
         eval("-1", "test = ap inc -2");
     }
 
     @Test
-    public void dec0() throws Exception {
+    public void dec() throws Exception {
         eval("-1", "test = ap dec 0");
-    }
-
-    @Test
-    public void dec1() throws Exception {
         eval("0", "test = ap dec 1");
-    }
-
-    @Test
-    public void dec2() throws Exception {
         eval("1", "test = ap dec 2");
-    }
-
-    @Test
-    public void dec_1() throws Exception {
         eval("-2", "test = ap dec -1");
     }
 
     @Test
-    public void add_1_2() throws Exception {
+    public void add() throws Exception {
         eval("3", "test = ap ap add 1 2");
-    }
-
-    @Test
-    public void add_2_1() throws Exception {
         eval("3", "test = ap ap add 2 1");
-    }
-
-    @Test
-    public void add_0_1() throws Exception {
         eval("1", "test = ap ap add 0 1");
     }
 
     @Test
-    public void neg0() throws Exception {
+    public void neg() throws Exception {
         eval("0", "test = ap neg 0");
-    }
-
-    @Test
-    public void neg1() throws Exception {
         eval("-1", "test = ap neg 1");
-    }
-
-    @Test
-    public void neg_1() throws Exception {
         eval("1", "test = ap neg -1");
     }
 
@@ -137,12 +93,22 @@ public class EvaluatorTest {
     }
 
     @Test
-    public void mul_4_2() throws Exception {
+    public void mul() throws Exception {
         eval("8", "test = ap ap mul 4 2");
+        eval("-6", "test = ap ap mul 3 -2");
     }
 
     @Test
-    public void mul_3_2() throws Exception {
-        eval("-6", "test = ap ap mul 3 -2");
+    public void div() throws Exception {
+        eval("2", "test = ap ap div 4 2");
+        eval("1", "test = ap ap div 4 3");
+        eval("1", "test = ap ap div 4 4");
+        eval("0", "test = ap ap div 4 5");
+        eval("2", "test = ap ap div 4 2");
+        eval("2", "test = ap ap div 5 2");
+        eval("-3", "test = ap ap div 6 -2");
+        eval("-1", "test = ap ap div 5 -3");
+        eval("-1", "test = ap ap div -5 3");
+        eval("1", "test = ap ap div -5 -3");
     }
 }

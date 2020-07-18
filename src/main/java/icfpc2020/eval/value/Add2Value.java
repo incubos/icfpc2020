@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class Add2Value implements LazyValue {
     @NotNull
     @Override
-    public LazyValue apply(final LazyValue arg) {
+    public LazyValue apply(@NotNull final LazyValue arg) {
         return new Add1Value(arg);
     }
 
