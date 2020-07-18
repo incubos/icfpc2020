@@ -177,6 +177,10 @@ public class EvaluatorTest {
         evalConst("3", "ap ap ap c add 1 2");
     }
 
+    @Test
+    public void b() throws Exception {
+        evalConst("10", "ap ap ap b inc dec 10");
+    }
 
     @Test
     public void pwr2() throws Exception {
