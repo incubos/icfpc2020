@@ -96,7 +96,16 @@ public enum Command {
             return processOperand(cmd, args, universe, (o) -> BigInteger.valueOf(1).shiftLeft(o.intValue()));
         }
     },
-    I("i", 1, 24, 2),
+    I("i", 1, 24, 2){
+        @Override
+        public EvalResult apply(ECmd cmd, List<EvalResult> args, Map<String, EvalResult> universe) {
+            if (args.size() > 0) {
+                return args.get(0);
+            }
+            // No reduction
+            return cmd;
+        }
+    },
     Cons("cons", 3, 25, 5),
     CarFirst("car", 1, 26, 5),
     CdrTail("cdr", 1, 27, 5),

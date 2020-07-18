@@ -76,7 +76,11 @@ public class CommandEval {
             if (!(func instanceof ECmd)) {
                 return func;
             }
-            if (BOOL_COMMANDS.contains(((ECmd) func).command)) {
+            final Command command = ((ECmd) func).command;
+            if (BOOL_COMMANDS.contains(command)) {
+                return func;
+            }
+            if (command == Command.I) {
                 return func;
             }
         }
@@ -121,8 +125,8 @@ public class CommandEval {
             if (BOOL_COMMANDS.contains(((ECmd) arg0).command) &&
                     BOOL_COMMANDS.contains(((ECmd) arg0).command)) {
                 return ((ECmd)arg0).command == ((ECmd) arg1).command
-                        ? createBool(Command.TrueK)
-                        : createBool(Command.False);
+                        ? createFunction(Command.TrueK)
+                        : createFunction(Command.False);
             }
         }
         // No reduction today!
@@ -130,7 +134,7 @@ public class CommandEval {
     }
 
     @NotNull
-    private static ECmd createBool(Command boolCommand) {
+    private static ECmd createFunction(Command boolCommand) {
         return new ECmd(boolCommand, new ArrayList<>());
     }
 
@@ -144,8 +148,8 @@ public class CommandEval {
 
         if (args.get(0) instanceof ENumber && args.get(1) instanceof ENumber) {
             return ((ENumber) args.get(0)).number.compareTo(((ENumber) args.get(1)).number) < 0
-                    ? createBool(Command.TrueK)
-                    : createBool(Command.False);
+                    ? createFunction(Command.TrueK)
+                    : createFunction(Command.False);
         }
         // No reduction today!
         return cmd;
