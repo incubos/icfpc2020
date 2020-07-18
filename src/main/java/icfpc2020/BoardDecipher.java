@@ -29,7 +29,7 @@ class ParseResult {
             }
         }
 
-        return ":" + sum;
+        return ":" + board.width + "x" + board.height + "-" + sum;
     }
 }
 
