@@ -167,6 +167,12 @@ public class EvaluatorTest {
     }
 
     @Test
+    public void i() throws Exception {
+        evalConst("1", "ap i 1");
+        evalConst("8", "ap i ap ap mul 4 2");
+    }
+
+    @Test
     public void s() throws Exception {
         evalConst("3", "ap ap ap s add inc 1");
         evalConst("42", "ap ap ap s mul ap add 1 6");
