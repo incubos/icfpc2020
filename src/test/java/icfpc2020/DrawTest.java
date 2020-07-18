@@ -3,7 +3,10 @@ package icfpc2020;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,14 +34,18 @@ public class DrawTest {
         }
     }
 
-    private void checkDraw(List<Pictogram> pictograms, Set<Draw.Coord> expectedResult) {
+    private void checkDraw(List<Pictogram> pictograms, Set<Draw.Coord> expectedResult) throws IOException {
         var board = new DrawingBoard();
         Draw.draw(pictograms, board);
         Assert.assertEquals(expectedResult, board.set);
+        Files.createDirectories(Path.of("/tmp/images"));
+        var image = new ImageRenderer("/tmp/images/"+Math.abs(pictograms.hashCode())+".png");
+        board.set.forEach(image::putDot);
+        image.persist();
     }
 
     @Test
-    public void testDraw() {
+    public void testDraw() throws IOException {
 
         // ap draw ( )   =   |picture1|
         checkDraw(List.of(lPar, rPar), Set.of());
