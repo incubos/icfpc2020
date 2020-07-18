@@ -160,6 +160,7 @@ public class BoardDecipherTest {
         final Board board = PngParser.loadPng("message35.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
         final String actual = dumpCommands(decipher);
+        Assert.fail("Demodulation of lists doesn't work correctly here");
         Assert.assertEquals("mod cons\n" +
                 "ap mod nil = [nil]\n" +
                 "ap mod ap ap cons nil nil = [0]\n" +
