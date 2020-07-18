@@ -163,4 +163,10 @@ public class EvaluatorTest {
         isFalse("ap ap lt -20 -20");
         isTrue("ap ap lt -21 -20");
     }
+
+    @Test
+    public void s() throws Exception {
+        evalConst("3", "ap ap ap s add inc 1");
+        evalConst("42", "ap ap ap s mul ap add 1 6");
+    }
 }
