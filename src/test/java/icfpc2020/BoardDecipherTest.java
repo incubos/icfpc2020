@@ -205,6 +205,24 @@ public class BoardDecipherTest {
         Assert.assertEquals("ap interact galaxy = . . . .", actual);
     }
 
+    @Test
+    public void testTwitterGalaxy() throws  IOException {
+        final Board board = PngParser.loadPng("twitter_galaxy.png", 1, 0);
+        System.out.println(board.toString());
+        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+
+        final String actual = dumpCommands(decipher);
+        Assert.assertEquals("ap ap mul pwr2 66 :5x5-30309607 :1x19-524287\n" +
+                ":3x5-24002 :3x4-2671 :7x7-141854172500000\n" +
+                ":7x7-496439027425038\n" +
+                ":7x5-19312097412 :7x5-2935766754\n" +
+                "galaxy\n" +
+                ":5x7-8338228127 :5x7-16846417982\n" +
+                ":7x7-106433177960196\n" +
+                ":7x5-34351079144 :7x7-389184811999064\n" +
+                ":7x7-17759486067204", actual);
+    }
+
 
 
 
