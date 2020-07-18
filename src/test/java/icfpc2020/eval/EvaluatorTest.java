@@ -135,4 +135,14 @@ public class EvaluatorTest {
                 evaluator.function("test").eval().asConst().toString());
 
     }
+
+    @Test
+    public void mul_4_2() throws Exception {
+        eval("8", "test = ap ap mul 4 2");
+    }
+
+    @Test
+    public void mul_3_2() throws Exception {
+        eval("-6", "test = ap ap mul 3 -2");
+    }
 }
