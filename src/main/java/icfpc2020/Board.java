@@ -29,7 +29,7 @@ public class Board {
         final StringBuilder b = new StringBuilder();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                b.append(getValue(x, y) == 1? '.' : ' ');
+                b.append(getValue(x, y) == 1? '1' : '.');
             }
             b.append("\n");
         }
