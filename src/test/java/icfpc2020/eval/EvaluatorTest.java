@@ -2,7 +2,6 @@ package icfpc2020.eval;
 
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -142,8 +141,8 @@ public class EvaluatorTest {
     public void variablesForward() throws Exception {
         final String code =
                 "test = ap dec x0\n" +
-                "x0 = x1\n" +
-                "x1 = ap inc 42";
+                        "x0 = x1\n" +
+                        "x1 = ap inc 42";
         final Evaluator evaluator =
                 new Evaluator(
                         new ByteArrayInputStream(
@@ -228,17 +227,20 @@ public class EvaluatorTest {
         evalConst("10", "ap ap ap b inc dec 10");
     }
 
-    @Test
+    @Test(expected = ArithmeticException.class)
     public void pwr2() throws Exception {
         evalConst("1", "ap pwr2 0");
         evalConst("2", "ap pwr2 1");
         evalConst("256", "ap pwr2 8");
         evalConst("1267650600228229401496703205376", "ap pwr2 100");
         evalConst("2", "ap ap mul 2 ap ap ap ap eq 0 0 1 ap ap ap 1 ap mul 2 ap ap 1 pwr2 ap add -1 ap ap add -1 1");
-        try {
-            evalConst("1", "ap pwr2 ap dec 0");
-            fail("Have to throw ArithmeticException");
-        } catch (ArithmeticException e) { }
+        evalConst("1", "ap pwr2 ap dec 0");
+        fail("Have to throw ArithmeticException");
     }
 
+    @Test
+    public void if0() throws Exception {
+        evalConst("42", "ap ap ap if0 0 42 43");
+        evalConst("42", "ap ap ap if0 1 43 42");
+    }
 }
