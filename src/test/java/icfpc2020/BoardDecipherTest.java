@@ -172,6 +172,15 @@ public class BoardDecipherTest {
     }
 
     @Test
+    public void test36() throws IOException {
+        final Board board = PngParser.loadPng("message36.png", 4, 4);
+        final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
+        final String actual = dumpCommands(decipher);
+        Assert.assertEquals("send0\n" +
+                "ap deadline0 ( 0 ) = ( 1 , send0 )", actual);
+    }
+
+    @Test
     public void test41() throws IOException {
         final Board board = PngParser.loadPng("message41.png", 4, 4);
         final List<List<ParseResult>> decipher = BoardDecipher.decipher(board);
