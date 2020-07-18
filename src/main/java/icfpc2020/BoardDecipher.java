@@ -4,10 +4,7 @@ import icfpc2020.operators.Demodulate;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class Pictogram {
@@ -17,11 +14,11 @@ class Pictogram {
         this.board = board;
     }
 
-    private static final Map<String, String> KNOWN_FIGURES= Map.of(
+    private static final Map<String, String> KNOWN_FIGURES = new HashMap(Map.of(
             ":7x7-141854172500000", "humans",
             ":7x7-389184811999064", "aliens",
             ":21x5-1229782323916997700", "~~~~~~"
-    );
+    ));
 
     @Override
     public String toString() {
@@ -40,7 +37,9 @@ class Pictogram {
         if (KNOWN_FIGURES.containsKey(s)) {
             return KNOWN_FIGURES.get(s);
         }
-        return s;
+        final String encoding = ":" + board.width + "x" + board.height + ":" + (KNOWN_FIGURES.size() - 3);
+        KNOWN_FIGURES.put(s, encoding);
+        return encoding;
     }
 }
 
