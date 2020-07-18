@@ -54,7 +54,7 @@ public final class Evaluator {
     private ASTNode getDeclaration(@NotNull final String name) {
         final ASTNode node = declarations.get(name);
         if (node == null) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException(name);
         }
         return node;
     }
