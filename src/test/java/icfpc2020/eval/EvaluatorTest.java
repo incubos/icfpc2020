@@ -32,6 +32,13 @@ public class EvaluatorTest {
                 function(code).asConst().toString());
     }
 
+    private static void evalVar(
+            @NotNull final String expectedResult,
+            @NotNull final String code) throws Exception {
+        assertEquals(expectedResult,
+                     function(code).eval().toString());
+    }
+
     private static void isTrue(@NotNull final String code) throws Exception {
         assertEquals(
                 "t",
@@ -56,6 +63,23 @@ public class EvaluatorTest {
         evalConst("3", "ap inc ap inc ap inc 0");
         evalConst("0", "ap inc -1");
         evalConst("-1", "ap inc -2");
+    }
+
+    @Test
+    public void cons() throws Exception {
+        evalVar("ap ap 2 0 1","ap ap ap cons 0 1 2");
+        evalConst("0","ap car ap ap cons 0 1");
+        evalConst("1","ap cdr ap ap cons 0 1");
+    }
+
+    @Test
+    public void car() throws Exception {
+        evalVar("ap 2 t", "ap car 2");
+    }
+
+    @Test
+    public void cdr() throws Exception {
+        evalVar("ap 2 f", "ap cdr 2");
     }
 
     @Test
