@@ -4,6 +4,8 @@ import icfpc2020.eval.value.ApplyValue;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 /**
  * {@code ap}.
  *
@@ -29,7 +31,9 @@ final class ApplyNode implements ASTNode {
 
     @NotNull
     @Override
-    public LazyValue eval() {
-        return new ApplyValue(function.eval(), argument.eval());
+    public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
+        return new ApplyValue(
+                function.eval(declarations),
+                argument.eval(declarations));
     }
 }

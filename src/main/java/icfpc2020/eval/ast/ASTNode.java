@@ -3,6 +3,8 @@ package icfpc2020.eval.ast;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 /**
  * Tree node.
  *
@@ -10,5 +12,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ASTNode {
     @NotNull
-    LazyValue eval();
+    LazyValue eval(@NotNull Function<String, ASTNode> declarations);
 }

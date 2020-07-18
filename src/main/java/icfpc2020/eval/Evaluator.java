@@ -51,13 +51,17 @@ public final class Evaluator {
     }
 
     @NotNull
-    public LazyValue function(@NotNull final String function) {
-        final ASTNode node = declarations.get(function);
+    private ASTNode getDeclaration(@NotNull final String name) {
+        final ASTNode node = declarations.get(name);
         if (node == null) {
             throw new NoSuchElementException();
         }
+        return node;
+    }
 
-        return node.eval();
+    @NotNull
+    public LazyValue function(@NotNull final String name) {
+        return getDeclaration(name).eval(this::getDeclaration);
     }
 
     @Override

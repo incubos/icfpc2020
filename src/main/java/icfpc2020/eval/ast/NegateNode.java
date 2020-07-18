@@ -4,6 +4,8 @@ import icfpc2020.eval.value.LazyValue;
 import icfpc2020.eval.value.NegateValue;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 /**
  * {@code neg}.
  *
@@ -17,7 +19,7 @@ final class NegateNode implements ASTNode {
 
     @NotNull
     @Override
-    public LazyValue eval() {
+    public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
         return new NegateValue();
     }
 }

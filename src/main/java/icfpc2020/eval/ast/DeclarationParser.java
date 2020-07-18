@@ -44,7 +44,11 @@ public final class DeclarationParser {
             case "add":
                 return new AddNode();
             default:
-                return new ConstantNode(new BigInteger(token));
+                try {
+                    return new ConstantNode(new BigInteger(token));
+                } catch (NumberFormatException e) {
+                    return new VariableNode(token);
+                }
         }
     }
 }

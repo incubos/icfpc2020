@@ -5,6 +5,7 @@ import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
+import java.util.function.Function;
 
 /**
  * {@code const}.
@@ -22,7 +23,7 @@ final class ConstantNode implements ASTNode {
 
     @NotNull
     @Override
-    public LazyValue eval() {
+    public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
         return value;
     }
 

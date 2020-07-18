@@ -103,4 +103,36 @@ public class EvaluatorTest {
     public void neg_1() throws Exception {
         eval("1", "test = ap neg -1");
     }
+
+    @Test
+    public void variables() throws Exception {
+        final String code =
+                "x0 = 1\n" +
+                        "x1 = 2\n" +
+                        "test = ap ap add x0 x1";
+        final Evaluator evaluator =
+                new Evaluator(
+                        new ByteArrayInputStream(
+                                code.getBytes(StandardCharsets.UTF_8)));
+        assertEquals(
+                "3",
+                evaluator.function("test").eval().asConst().toString());
+
+    }
+
+    @Test
+    public void variablesForward() throws Exception {
+        final String code =
+                "test = ap dec x0\n" +
+                "x0 = x1\n" +
+                "x1 = ap inc 42";
+        final Evaluator evaluator =
+                new Evaluator(
+                        new ByteArrayInputStream(
+                                code.getBytes(StandardCharsets.UTF_8)));
+        assertEquals(
+                "42",
+                evaluator.function("test").eval().asConst().toString());
+
+    }
 }
