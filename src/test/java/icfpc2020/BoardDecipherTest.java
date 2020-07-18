@@ -25,10 +25,9 @@ public class BoardDecipherTest {
                         "10 = 10\n" +
                         "11 = 11\n" +
                         ". . . .\n" +
-                        "1 = 1\n" +
-                        "2 = 2\n" +
-                        ". . . .",
-                actual);
+                        "-1 = -1\n" +
+                        "-2 = -2\n" +
+                        ". . . .", actual);
     }
 
 
@@ -46,9 +45,9 @@ public class BoardDecipherTest {
                         "ap inc 300 = 301\n" +
                         "ap inc 301 = 302\n" +
                         ". . . .\n" +
-                        "ap inc 1 = 0\n" +
-                        "ap inc 2 = 1\n" +
-                        "ap inc 3 = 2\n" +
+                        "ap inc -1 = 0\n" +
+                        "ap inc -2 = -1\n" +
+                        "ap inc -3 = -2\n" +
                         ". . . .",
                 actual);
     }
@@ -66,9 +65,9 @@ public class BoardDecipherTest {
                 ". . . .\n" +
                 "ap dec 1024 = 1023\n" +
                 ". . . .\n" +
-                "ap dec 0 = 1\n" +
-                "ap dec 1 = 2\n" +
-                "ap dec 2 = 3\n" +
+                "ap dec 0 = -1\n" +
+                "ap dec -1 = -2\n" +
+                "ap dec -2 = -3\n" +
                 ". . . .", actual);
     }
 
@@ -112,17 +111,17 @@ public class BoardDecipherTest {
         Assert.assertEquals("mod\n" +
                 "ap mod 0 = [0]\n" +
                 "ap mod 1 = [1]\n" +
-                "ap mod 1 = [-1]\n" +
+                "ap mod -1 = [-1]\n" +
                 "ap mod 2 = [2]\n" +
-                "ap mod 2 = [-2]\n" +
+                "ap mod -2 = [-2]\n" +
                 ". . . .\n" +
                 "ap mod 16 = [16]\n" +
-                "ap mod 16 = [-16]\n" +
+                "ap mod -16 = [-16]\n" +
                 ". . . .\n" +
                 "ap mod 255 = [255]\n" +
-                "ap mod 255 = [-255]\n" +
+                "ap mod -255 = [-255]\n" +
                 "ap mod 256 = [256]\n" +
-                "ap mod 256 = [-256]\n" +
+                "ap mod -256 = [-256]\n" +
                 ". . . .", actual);
     }
 

@@ -263,6 +263,11 @@ public class BoardDecipher {
         if (pictogram.getValue(0, 0) != clear) {
             return null;
         }
+        final boolean positiveNumber = pictogram.width == pictogram.height;
+        final boolean negativeNumber = pictogram.width == pictogram.height - 1;
+        if (!positiveNumber && ! negativeNumber) {
+            return null;
+        }
         for (int x = 1; x < pictogram.width; x++) {
             if (pictogram.getValue(x, 0) == clear) {
                 return null;
@@ -275,15 +280,16 @@ public class BoardDecipher {
         }
         int number = 0;
         int power = 1;
-        for (int y = 1; y < pictogram.height; y++) {
-            for (int x = 1; x < pictogram.width; x++) {
+        final int size = Math.min(pictogram.width, pictogram.height);
+        for (int y = 1; y < size; y++) {
+            for (int x = 1; x < size; x++) {
                 if (pictogram.getValue(x, y) != clear) {
                     number += power;
                 }
                 power *= 2;
             }
         }
-        return number;
+        return positiveNumber? number : -number;
     }
 
     @NotNull
