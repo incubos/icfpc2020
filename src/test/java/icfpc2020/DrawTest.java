@@ -1,7 +1,10 @@
 package icfpc2020;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -14,14 +17,31 @@ import java.util.function.Consumer;
 
 public class DrawTest {
 
+    public static final Logger log = LoggerFactory.getLogger(DummyTest.class);
     public final CommandR lPar = new CommandR(Command.ListLPar);
     public final CommandR ap = new CommandR(Command.App);
     public final CommandR vec = new CommandR(Command.Vector);
     public final CommandR comma = new CommandR(Command.ListComma);
     public final CommandR rPar = new CommandR(Command.ListRPar);
+    private static Path tempDirectory;
+
+    @BeforeClass
+    public static void oneTimeSetUp() {
+        try {
+            tempDirectory = Files.createTempDirectory("images");
+            log.info("Writing temp images to {}", tempDirectory.toString());
+            tempDirectory.toFile().deleteOnExit();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private NumberR number(long number) {
         return new NumberR(BigInteger.valueOf(number), new Board(0, 0));
+    }
+
+    private Draw.Coord coord(long x, long y) {
+        return Draw.Coord.of(BigInteger.valueOf(x), BigInteger.valueOf(y));
     }
 
     private static class DrawingBoard implements Consumer<Draw.Coord> {
@@ -38,8 +58,7 @@ public class DrawTest {
         var board = new DrawingBoard();
         Draw.draw(pictograms, board);
         Assert.assertEquals(expectedResult, board.set);
-        Files.createDirectories(Path.of("/tmp/images"));
-        var image = new ImageRenderer("/tmp/images/"+Math.abs(pictograms.hashCode())+".png");
+        var image = new ImageRenderer(tempDirectory.toString() + Math.abs(pictograms.hashCode()) + ".png");
         board.set.forEach(image::putDot);
         image.persist();
     }
@@ -51,19 +70,19 @@ public class DrawTest {
         checkDraw(List.of(lPar, rPar), Set.of());
         // ap draw ( ap ap vec 1 1 )   =   |picture2|
         checkDraw(List.of(lPar, ap, ap, vec, number(1), number(1), rPar),
-                  Set.of(Draw.Coord.of(1, 1)));
+                  Set.of(coord(1, 1)));
         // ap draw ( ap ap vec 1 2 )   =   |picture3|
         checkDraw(List.of(lPar, ap, ap, vec, number(1), number(2), rPar),
-                  Set.of(Draw.Coord.of(1, 2)));
+                  Set.of(coord(1, 2)));
         // ap draw ( ap ap vec 2 5 )   =   |picture4|
         checkDraw(List.of(lPar, ap, ap, vec, number(2), number(5), rPar),
-                  Set.of(Draw.Coord.of(2, 5)));
+                  Set.of(coord(2, 5)));
         // ap draw ( ap ap vec 1 2 , ap ap vec 3 1 )   =   |picture5|
         checkDraw(List.of(lPar,
                           ap, ap, vec, number(1), number(2),
                           ap, ap, vec, number(3), number(1),
                           rPar),
-                  Set.of(Draw.Coord.of(1, 2), Draw.Coord.of(3, 1)));
+                  Set.of(coord(1, 2), coord(3, 1)));
         // ap draw ( ap ap vec 5 3 , ap ap vec 6 3 , ap ap vec 4 4 , ap ap vec 6 4 , ap ap vec 4 5 )   =   |picture6|
         checkDraw(List.of(lPar,
                           ap, ap, vec, number(5), number(3),
@@ -72,10 +91,10 @@ public class DrawTest {
                           ap, ap, vec, number(6), number(4),
                           ap, ap, vec, number(4), number(5),
                           rPar),
-                  Set.of(Draw.Coord.of(5, 3),
-                         Draw.Coord.of(6, 3),
-                         Draw.Coord.of(4, 4),
-                         Draw.Coord.of(6, 4),
-                         Draw.Coord.of(4, 5)));
+                  Set.of(coord(5, 3),
+                         coord(6, 3),
+                         coord(4, 4),
+                         coord(6, 4),
+                         coord(4, 5)));
     }
 }

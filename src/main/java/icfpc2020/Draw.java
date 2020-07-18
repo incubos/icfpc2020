@@ -23,16 +23,21 @@ public class Draw {
 
     private static final Command startToken = Command.Vector;
 
-    public static class Coord {
+    public static final class Coord {
         public final long x;
         public final long y;
 
-        public Coord(final long x, final long y) {
-            this.x = x;
-            this.y = y;
+        private Coord(final BigInteger x, final BigInteger y) {
+            try {
+                this.x = x.longValueExact();
+                this.y = y.longValueExact();
+            } catch (Exception e) {
+                log.error("biginteger outside of long range, x={}, y={}", x, y);
+                throw e;
+            }
         }
 
-        public static Coord of(final long x, final long y) {
+        public static Coord of(final BigInteger x, final BigInteger y) {
             return new Coord(x, y);
         }
 
@@ -94,7 +99,7 @@ public class Draw {
                         throw new UnsupportedOperationException("Draw protocol expects at least " +
                                                                         "two pictograms after 'vec' command");
                     }
-                    drawingBoard.accept(new Coord(x.longValue(), y.longValue()));
+                    drawingBoard.accept(new Coord(x, y));
                 } else {
                     log.error("Found unexpected command when drawing, command={}, position={}commands={}",
                               command,
