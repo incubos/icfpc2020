@@ -72,7 +72,7 @@ public class GalaxyEvalTest {
 
     @Test
     public void testEq() throws IOException {
-        Assert.assertEquals("f", compute("test = ap ap eq t f", "test"));
+        Assert.assertEquals("f()", compute("test = ap ap eq t f", "test"));
     }
 
     @Test
