@@ -43,6 +43,10 @@ public final class DeclarationParser {
                 return DecrementNode.INSTANCE;
             case "cons":
                 return ConsNode.INSTANCE;
+            case "car":
+                return CarNode.INSTANCE;
+            case "cdr":
+                return CdrNode.INSTANCE;
             case "add":
                 return AddNode.INSTANCE;
             case "mul":
