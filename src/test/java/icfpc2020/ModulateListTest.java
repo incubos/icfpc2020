@@ -18,7 +18,7 @@ public class ModulateListTest {
     public final CommandR rPar = new CommandR(Command.ListRPar);
 
     private NumberR number(long number) {
-        return new NumberR(BigInteger.valueOf(number), new Board(0, 0));
+        return new NumberR(BigInteger.valueOf(number), Board.EMPTY);
     }
 
 

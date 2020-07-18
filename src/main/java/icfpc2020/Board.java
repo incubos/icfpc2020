@@ -69,6 +69,8 @@ public class Board {
         }
         return result;
     }
+
+    public static Board EMPTY = new Board(0, 0);
 }
 
 
