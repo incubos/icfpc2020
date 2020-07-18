@@ -17,10 +17,18 @@ public class EvaluatorTest {
 
     @NotNull
     private static LazyValue function(@NotNull final String code) throws Exception {
-        final Evaluator evaluator =
-                new Evaluator(
-                        new ByteArrayInputStream(
-                                (TEST_FUNCTION + " = " + code).getBytes(StandardCharsets.UTF_8)));
+        final Evaluator evaluator;
+        if (!code.contains("\n")) {
+            evaluator =
+                    new Evaluator(
+                            new ByteArrayInputStream(
+                                    (TEST_FUNCTION + " = " + code).getBytes(StandardCharsets.UTF_8)));
+        } else {
+            evaluator =
+                    new Evaluator(
+                            new ByteArrayInputStream(
+                                    code.getBytes(StandardCharsets.UTF_8)));
+        }
         return evaluator.function(TEST_FUNCTION);
     }
 
@@ -67,19 +75,27 @@ public class EvaluatorTest {
 
     @Test
     public void cons() throws Exception {
-        evalVar("ap ap 2 0 1","ap ap ap cons 0 1 2");
-        evalConst("0","ap car ap ap cons 0 1");
-        evalConst("1","ap cdr ap ap cons 0 1");
+        evalVar("ap ap 2 0 1",
+                "x0 = 0\n" +
+                        "x1 = 1\n" +
+                        "x2 = 2\n" +
+                        "test = ap ap ap cons x0 x1 x2");
+        evalConst("0", "ap car ap ap cons 0 1");
+        evalConst("1", "ap cdr ap ap cons 0 1");
     }
 
     @Test
     public void car() throws Exception {
-        evalVar("ap 2 t", "ap car 2");
+        evalVar("ap 2 t",
+                "x2 = 2\n" +
+                        "test = ap car x2");
     }
 
     @Test
     public void cdr() throws Exception {
-        evalVar("ap 2 f", "ap cdr 2");
+        evalVar("ap 2 f",
+                "x2 = 2\n" +
+                        "test = ap cdr x2");
     }
 
     @Test

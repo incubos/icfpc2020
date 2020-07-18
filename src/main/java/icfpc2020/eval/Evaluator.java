@@ -29,6 +29,7 @@ public final class Evaluator {
         while ((line = reader.readLine()) != null) {
             final Declaration declaration = DeclarationParser.parse(line);
             if (declarations.put(declaration.name, declaration.node) != null) {
+                log.error("duplicate declaration for name {}, node {}", declaration.name, declaration.name);
                 throw new IllegalStateException("Duplicate declaration: " + declaration.name);
             }
         }
