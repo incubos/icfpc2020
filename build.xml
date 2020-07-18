@@ -17,8 +17,6 @@
 
     <property name="out.dir" value="out"/>
 
-    <typedef resource="org/jetbrains/kotlin/ant/antlib.xml" classpath="${lib.dir}/kotlin-ant.jar"/>
-
     <target name="init">
         <mkdir dir="${build.dir.main}"/>
         <mkdir dir="${out.dir}"/>
