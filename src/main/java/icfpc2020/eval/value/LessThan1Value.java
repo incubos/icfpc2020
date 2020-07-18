@@ -17,7 +17,7 @@ public class LessThan1Value implements LazyValue {
 
     @NotNull
     @Override
-    public LazyValue apply(final LazyValue arg) {
+    public LazyValue apply(@NotNull final LazyValue arg) {
         final BigInteger l = left.asConst();
         final BigInteger r = arg.asConst();
         if (l.compareTo(r) < 0) {
