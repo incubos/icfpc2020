@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,8 @@ public class Eval {
     private String imageDir;
 
     public Eval() {
-        imageDir = new File(Eval.class.getResource("/images/startpoint.txt").getPath()).getParent();
+        imageDir = Paths.get(Eval.class.getResource("/messages/message2.png").getPath())
+                .getParent().getParent().toString() + "/images";
     }
 
 
@@ -188,7 +190,10 @@ public class Eval {
     private Expr SEND_TO_ALIEN_PROXY(Expr data) {
         final StringBuilder sb = new StringBuilder();
         modulateRec(data, sb);
-        final String response = API.send(sb.toString());
+        final String message = sb.toString();
+        System.out.println("Sending: " + message);
+        final String response = API.send(message);
+        System.out.println("Response: " + response);
         final String demodulate = DemodulateValue.demodulate(response);
         return GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(demodulate.split(" "), 0));
     }
