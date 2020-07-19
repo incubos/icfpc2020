@@ -12,7 +12,7 @@ public class B2Value implements LazyValue {
 
     @NotNull
     @Override
-    public LazyValue apply(final LazyValue arg) {
+    public LazyValue apply(final @NotNull LazyValue arg) {
         return new B1Value(left, arg);
     }
 

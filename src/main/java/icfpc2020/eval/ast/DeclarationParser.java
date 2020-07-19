@@ -81,6 +81,8 @@ public final class DeclarationParser {
                 return NilNode.INSTANCE;
             case "isnil":
                 return IsnilNode.INSTANCE;
+            case "send":
+                return SendNode.INSTANCE;
             default:
                 try {
                     return new ConstantNode(new BigInteger(token));

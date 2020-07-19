@@ -12,7 +12,7 @@ public class C2Value implements LazyValue {
 
     @NotNull
     @Override
-    public LazyValue apply(final LazyValue arg) {
+    public LazyValue apply(final @NotNull LazyValue arg) {
         return new C1Value(left, arg);
     }
 

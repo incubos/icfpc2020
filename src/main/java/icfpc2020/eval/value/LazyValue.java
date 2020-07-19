@@ -4,7 +4,6 @@ import icfpc2020.Message;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * @author incubos

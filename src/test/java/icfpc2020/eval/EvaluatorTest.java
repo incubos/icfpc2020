@@ -1,14 +1,11 @@
 package icfpc2020.eval;
 
-import icfpc2020.ModulateList;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -56,7 +53,7 @@ public class EvaluatorTest {
             @NotNull final String expectedResult,
             @NotNull final String code) throws Exception {
         assertEquals(expectedResult,
-                     function(code).eval().toString());
+                function(code).eval().toString());
     }
 
     private static void isTrue(@NotNull final String code) throws Exception {
@@ -285,7 +282,7 @@ public class EvaluatorTest {
     public void nil() throws Exception {
         evalVar("t",
                 "x0 = 1\n" +
-                      "test = ap nil x0");
+                        "test = ap nil x0");
         evalConst("2", "ap ap ap nil 1 2 3");
         evalConst("3", "ap ap ap nil t 3 4");
         evalConst("4", "ap ap ap nil x0 4 5"); // x0 not defined and throw out
@@ -294,10 +291,10 @@ public class EvaluatorTest {
     @Test
     public void isnil() throws Exception {
         evalVar("t",
-                   "x0 = nil\n" +
+                "x0 = nil\n" +
                         "test = ap isnil x0");
         evalVar("f",
-                   "x0 = ap ap cons 1 2\n" +
+                "x0 = ap ap cons 1 2\n" +
                         "test = ap isnil x0");
         evalVar("f",
                 "x0 = ap ap cons 1 nil\n" +
@@ -306,4 +303,8 @@ public class EvaluatorTest {
         evalConst("2", "ap ap ap isnil 0 1 2");
     }
 
+    @Test
+    public void send() throws Exception {
+        evalConst("1", "ap car ap send ap ap cons 0 nil");
+    }
 }
