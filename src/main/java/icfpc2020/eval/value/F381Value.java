@@ -43,7 +43,7 @@ public class F381Value implements LazyValue {
                                         new ApplyValue(
                                                 Cons2Value.INSTANCE,
                                                 new ApplyValue(
-                                                        new LazyValue() {}, // MultipeDraw
+                                                        MultipledrawValue.INSTANCE,
                                                         new ApplyValue(
                                                                 CarValue.INSTANCE,
                                                                 new ApplyValue(
