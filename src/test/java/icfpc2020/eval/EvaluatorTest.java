@@ -1,11 +1,16 @@
 package icfpc2020.eval;
 
+import icfpc2020.Draw;
+import icfpc2020.eval.ast.ASTNode;
+import icfpc2020.eval.ast.Generator;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -307,5 +312,15 @@ public class EvaluatorTest {
     @Test
     public void send() throws Exception {
         evalConst("1", "ap car ap send ap ap cons 0 nil");
+    }
+
+    @Test
+    public void testGeneratedListParsed() throws IOException {
+        final ASTNode listOfCoords = Generator.createListOfCoords(List.of(Draw.Coord.of(1, 2)));
+        final Evaluator evaluator =
+                new Evaluator(
+                        new ByteArrayInputStream(
+                                (TEST_FUNCTION + " = " + listOfCoords).getBytes(StandardCharsets.UTF_8)));
+        assertEquals("ap ap cons ap ap cons 1 2 nil", evaluator.getValue(TEST_FUNCTION).toString());
     }
 }

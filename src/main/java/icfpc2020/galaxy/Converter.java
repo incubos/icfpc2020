@@ -12,7 +12,7 @@ public class Converter {
 
 
     public static Expr astToGalaxy(final LazyValue value) {
-        return GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(value.eval().toString().split(" "), 0));
+        return GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(value.toString().split(" "), 0));
     }
 
 

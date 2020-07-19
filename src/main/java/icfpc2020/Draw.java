@@ -48,6 +48,11 @@ public class Draw {
             return new Coord(x, y);
         }
 
+        public static Coord of(final int x, final int y) {
+            return new Coord(BigInteger.valueOf(x), BigInteger.valueOf(y));
+        }
+
+
         @Override
         public boolean equals(final Object o) {
             if (this == o) return true;
