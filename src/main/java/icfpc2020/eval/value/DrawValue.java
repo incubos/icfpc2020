@@ -47,7 +47,7 @@ public class DrawValue implements LazyValue {
     public LazyValue apply(@NotNull final LazyValue arg) {
         var acc = new ArrayList<Draw.Coord>();
         applyInternal(arg.force(), acc, new BigInteger[1]);
-        acc.forEach(coord -> log.info("Processed draw for coordinates x={}, y={}", coord.x, coord.y));
+        //acc.forEach(coord -> log.info("Processed draw for coordinates x={}, y={}", coord.x, coord.y));
         return new ImageValue(acc);
     }
 
