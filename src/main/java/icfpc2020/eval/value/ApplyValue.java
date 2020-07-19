@@ -43,6 +43,18 @@ public final class ApplyValue implements LazyValue {
     }
 
     @Override
+    public LazyValue force() {
+        LazyValue previous;
+        LazyValue current = eval();
+        do {
+            previous = current;
+            current = current.eval();
+        } while (previous != current);
+        cachedEval = current;
+        return cachedEval;
+    }
+
+    @Override
     public String toString() {
         return "ap " + function + " " + argument;
     }

@@ -20,7 +20,7 @@ public class APIInteract {
         final Clicker clicker = new RepeatClicker(ClickerRoundabout::new, 1600);
 
         String previousState = "nil";
-        for (int step = 0; step < 8192; step++) {
+        for (int step = 0; step < 16384; step++) {
             final String state = "state" + step;
             final String click = "click" + step;
 
