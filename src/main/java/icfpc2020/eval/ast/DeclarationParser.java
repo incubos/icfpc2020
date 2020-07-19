@@ -53,6 +53,8 @@ public final class DeclarationParser {
                 return ModulateNode.INSTANCE;
             case "dem":
                 return DemodulateNode.INSTANCE;
+            case "modem":
+                return ModemNode.INSTANCE;
             case "mul":
                 return MultiplyNode.INSTANCE;
             case "div":
