@@ -1,5 +1,6 @@
 package icfpc2020;
 
+import icfpc2020.api.PrivateAPIImpl;
 import icfpc2020.operators.Modulate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import java.math.BigInteger;
 import java.net.*;
 import java.net.http.*;
 import java.text.MessageFormat;
+import java.util.List;
 
 class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
@@ -17,15 +19,23 @@ class Main {
         try {
             var serverUrl = args[0];
             var playerKeyString = args[1];
+            boolean local = false;
+            if (args.length > 2) {
+                local = true;
+            }
 
             log.info("Server URL: {}, player key: {}", serverUrl, playerKeyString);
             HttpClient httpClient = HttpClient.newBuilder().build();
-            var alienClient = new AlienMessageClient(httpClient, serverUrl);
-            BigInteger playerKey = new BigInteger(playerKeyString);
-            Message message = new MessageImpl(String.format("11%s11%s00",
-                                                            Modulate.mod(playerKey),
-                                                                Modulate.mod(BigInteger.ZERO)));
-            alienClient.sendMessage(message);
+            PrivateAPIImpl privateAPI = new PrivateAPIImpl(httpClient, local ? serverUrl : serverUrl + "/aliens/send");
+            String send = privateAPI.send(Commands.create());
+            List<Pictogram> dem = DemodulateList.dem(new MessageImpl(send));
+            log.info("Create response={}, dem={}", send, dem);
+            String send1 = privateAPI.send(Commands.join(playerKeyString));
+            log.info("Join command response={}, dem={}", send1, DemodulateList.dem(new MessageImpl(send1)));
+            String send2 = privateAPI.send(Commands.start(playerKeyString, "12", "23", "34", "45"));
+            log.info("Start command response={}, dem={}", send2, DemodulateList.dem(new MessageImpl(send2)));
+
+
         } catch (Exception e) {
             log.error("Unexpected error", e);
             System.exit(1);
@@ -35,9 +45,8 @@ class Main {
 }
 
 /**
- *
  * message sender examples
- *
+ * <p>
  * //            alienClient.sendMessage(new MessageImpl())
  * //            var request = HttpRequest.newBuilder()
  * //                                     .POST(HttpRequest.BodyPublishers.ofString(playerKey))
@@ -55,13 +64,12 @@ class Main {
  * //                throw new RuntimeException("Got unexpected server response code");
  * //            }
  * //            log.info("Server response: {}", responseBody);
- *             // (0,nil)
+ * // (0,nil)
  * //            alienClient.sendMessage(new MessageImpl("1101000"));
- *             // (1,0,nil)
+ * // (1,0,nil)
  * //            alienClient.sendMessage(new MessageImpl("11011000011101000"));
- *             // (1,0,nil)
+ * // (1,0,nil)
  * //            alienClient.sendMessage(new MessageImpl("11011000011101000"));
- *             // random to confirm echo behaviour
+ * // random to confirm echo behaviour
  * //            alienClient.sendMessage(new MessageImpl("11111111111111111111111111111111"));
- *
  */

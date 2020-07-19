@@ -1,6 +1,7 @@
 package icfpc2020;
 
 import icfpc2020.eval.Evaluator;
+import icfpc2020.eval.value.DrawValue;
 import icfpc2020.galaxy.Clicker;
 import icfpc2020.galaxy.ClickerRoundabout;
 import icfpc2020.galaxy.RepeatClicker;
@@ -23,6 +24,7 @@ public class APIInteract {
         for (int step = 0; step < 16384; step++) {
             final String state = "state" + step;
             final String click = "click" + step;
+            DrawValue.renderer = new ImageRenderer("/tmp/images/image"+step+".png");
 
             // Interact
             log.info("Running step #{}...", step);
@@ -41,6 +43,7 @@ public class APIInteract {
 
             // Advance
             previousState = "ap car " + state;
+            DrawValue.renderer.persist();
         }
     }
 }

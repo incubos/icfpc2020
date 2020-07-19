@@ -1,10 +1,12 @@
 package icfpc2020.eval.value;
 
 import icfpc2020.Draw;
+import icfpc2020.ImageRenderer;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,17 @@ import java.util.List;
 public class DrawValue implements LazyValue {
     private static final Logger log = LoggerFactory.getLogger(DrawValue.class);
     public static final LazyValue INSTANCE = new DrawValue();
-//    public static final ImageRenderer renderer = new ImageRenderer("/tmp/image.png");
+    public static ImageRenderer renderer = new ImageRenderer("/tmp/image.png");
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                renderer.persist();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
+    }
 
     private DrawValue() {
     }
@@ -47,7 +59,7 @@ public class DrawValue implements LazyValue {
     public LazyValue apply(@NotNull final LazyValue arg) {
         var acc = new ArrayList<Draw.Coord>();
         applyInternal(arg.force(), acc, new BigInteger[1]);
-        //acc.forEach(coord -> log.info("Processed draw for coordinates x={}, y={}", coord.x, coord.y));
+        acc.forEach(renderer::putDot);
         return new ImageValue(acc);
     }
 
