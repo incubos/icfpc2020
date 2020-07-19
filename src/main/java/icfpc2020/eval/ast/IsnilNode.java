@@ -1,5 +1,6 @@
 package icfpc2020.eval.ast;
 
+import icfpc2020.eval.Universe;
 import icfpc2020.eval.value.IsnilValue;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +23,7 @@ final class IsnilNode implements ASTNode {
 
     @NotNull
     @Override
-    public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
+    public LazyValue eval(@NotNull final Universe universe) {
         return IsnilValue.INSTANCE;
     }
 }

@@ -3,16 +3,16 @@ package icfpc2020.eval;
 import icfpc2020.eval.ast.ASTNode;
 import icfpc2020.eval.ast.Declaration;
 import icfpc2020.eval.ast.DeclarationParser;
-import icfpc2020.eval.ast.UndefinedNode;
 import icfpc2020.eval.value.LazyValue;
+import icfpc2020.eval.value.UndefinedValue;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -20,9 +20,10 @@ import java.util.stream.Collectors;
  *
  * @author incubos
  */
-public final class Evaluator {
+public final class Evaluator implements Universe {
     private static final Logger log = LoggerFactory.getLogger(Evaluator.class);
     private final Map<String, ASTNode> declarations = new HashMap<>();
+    private final Map<String, LazyValue> values = new HashMap<>();
 
     public Evaluator(@NotNull final InputStream is) throws IOException {
         final BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -34,6 +35,10 @@ public final class Evaluator {
                 throw new IllegalStateException("Duplicate declaration: " + declaration.name);
             }
         }
+    }
+
+    public Evaluator(@NotNull final String code) throws IOException {
+        this(new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8)));
     }
 
     public static void main(String[] args) throws IOException {
@@ -52,17 +57,25 @@ public final class Evaluator {
         System.out.println(evaluator);
 
         // Evaluate
-        System.out.println(evaluator.function("test").asConst());
+        System.out.println(evaluator.getValue("test").asConst());
     }
 
-    @NotNull
-    private ASTNode getDeclaration(@NotNull final String name) {
-        return declarations.getOrDefault(name, new UndefinedNode(name));
-    }
+    @Override
+    public @NotNull LazyValue getValue(@NotNull final String name) {
+        final LazyValue cached = values.get(name);
+        if (cached != null) {
+            return cached;
+        }
 
-    @NotNull
-    public LazyValue function(@NotNull final String name) {
-        return getDeclaration(name).eval(this::getDeclaration);
+        final ASTNode node = declarations.get(name);
+        if (node == null) {
+            final LazyValue undefined = new UndefinedValue(name);
+            values.put(name, undefined);
+            return undefined;
+        }
+        final LazyValue result = node.eval(this);
+        values.put(name, result);
+        return result;
     }
 
     @Override

@@ -1,9 +1,8 @@
 package icfpc2020.eval.ast;
 
+import icfpc2020.eval.Universe;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Function;
 
 /**
  * @author incubos
@@ -24,8 +23,8 @@ final class VariableNode implements ASTNode {
 
     @NotNull
     @Override
-    public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
+    public LazyValue eval(@NotNull final Universe universe) {
         // Resolve reference
-        return declarations.apply(name).eval(declarations);
+        return universe.getValue(name);
     }
 }

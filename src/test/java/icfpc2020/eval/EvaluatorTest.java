@@ -1,11 +1,16 @@
 package icfpc2020.eval;
 
+import icfpc2020.Draw;
+import icfpc2020.eval.ast.ASTNode;
+import icfpc2020.eval.ast.Generator;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -30,7 +35,7 @@ public class EvaluatorTest {
                             new ByteArrayInputStream(
                                     code.getBytes(StandardCharsets.UTF_8)));
         }
-        return evaluator.function(TEST_FUNCTION);
+        return evaluator.getValue(TEST_FUNCTION);
     }
 
     private static void evalConst(
@@ -145,6 +150,7 @@ public class EvaluatorTest {
         evalVar("22", "ap dem ap mod 22");
     }
 
+
     @Test
     public void mod() throws Exception {
         evalBinary("1101100001110110001000", "ap mod ap ap cons 1 ap ap cons 2 nil");
@@ -162,7 +168,7 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 "3",
-                evaluator.function("test").asConst().toString());
+                evaluator.getValue("test").asConst().toString());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -176,7 +182,7 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 "3",
-                evaluator.function("test").asConst().toString());
+                evaluator.getValue("test").asConst().toString());
         fail("Have to throw UnsupportedOperationException");
     }
 
@@ -192,7 +198,7 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 "42",
-                evaluator.function("test").asConst().toString());
+                evaluator.getValue("test").asConst().toString());
 
     }
 
@@ -333,5 +339,15 @@ public class EvaluatorTest {
         evalImage("[]", "ap draw nil");
         evalImage("[(x=1, y=2)]", "ap draw ap ap vec 1 2");
         evalImage("[(x=1, y=2), (x=3, y=1)]", "ap draw ap ap cons ap ap vec 1 2 ap ap cons ap ap vec 3 1 nil");
+    }
+
+    @Test
+    public void testGeneratedListParsed() throws IOException {
+        final ASTNode listOfCoords = Generator.createListOfCoords(List.of(Draw.Coord.of(1, 2)));
+        final Evaluator evaluator =
+                new Evaluator(
+                        new ByteArrayInputStream(
+                                (TEST_FUNCTION + " = " + listOfCoords).getBytes(StandardCharsets.UTF_8)));
+        assertEquals("ap ap cons ap ap cons 1 2 nil", evaluator.getValue(TEST_FUNCTION).toString());
     }
 }

@@ -78,6 +78,13 @@ public class EvalTest {
     }
 
     @Test
+    public void testCar() throws IOException {
+        Assert.assertEquals("ap x2 t", compute("x2 = 2\n" +
+                        "test = ap car x2", "test"));
+    }
+
+
+    @Test
     public void testEq() throws IOException {
         Assert.assertEquals("f", compute("test = ap ap eq 0 20", "test"));
     }
@@ -149,5 +156,14 @@ public class EvalTest {
 
     }
 
+    @Test
+    public void testEvalCoordsList() {
+        final Eval eval = new Eval();
+        final Expr coordsList = eval.listOfVectorsExpr(List.of(new Vect(1, 2), new Vect(3, 4), new Vect(5, 6)));
+        eval.eval(coordsList);
+        // NO CONS evaluation in Galaxy evaluation
+        Assert.assertEquals("ap ap cons ap ap cons 1 2 ap ap cons ap ap cons 3 4 ap ap cons ap ap cons 5 6 nil",
+                coordsList.toString());
+    }
 
 }

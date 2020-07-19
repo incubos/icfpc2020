@@ -1,6 +1,5 @@
 package icfpc2020.eval.value;
 
-import icfpc2020.Message;
 import icfpc2020.MessageImpl;
 import icfpc2020.operators.Modulate;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ public class ModulateValue implements LazyValue {
     // nil, "00",
     public void applyInternal(@NotNull final LazyValue arg, final StringBuilder sb) {
         if (arg instanceof ConstantValue) {
-            sb.append(Modulate.mod(arg.asConst()).toString());
+            sb.append(Modulate.modString(arg.asConst()));
         } else if (arg instanceof ApplyValue) {
             ApplyValue applyValue = (ApplyValue) arg;
             applyInternal(applyValue.function, sb);
@@ -33,7 +32,6 @@ public class ModulateValue implements LazyValue {
             log.error("unexpected literal while modulating {}", arg.toString());
             throw new UnsupportedOperationException("modulate argument should be modulateable");
         }
-
     }
 
     @NotNull

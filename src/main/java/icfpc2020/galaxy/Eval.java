@@ -1,7 +1,11 @@
 package icfpc2020.galaxy;
 
+import icfpc2020.API;
 import icfpc2020.Draw;
 import icfpc2020.ImageRenderer;
+import icfpc2020.eval.value.*;
+import icfpc2020.operators.Modulate;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 // Adopted from https://message-from-space.readthedocs.io/en/latest/implementation.html
@@ -120,8 +125,32 @@ public class Eval {
         throw new UnsupportedOperationException();
     }
 
-    private Expr SEND_TO_ALIEN_PROXY(Expr data) {
-        throw new UnsupportedOperationException();
+    // ap, "",
+    // cons, "11",
+    // nil, "00",
+    public void modulateRec(@NotNull final Expr arg, final StringBuilder sb) {
+        if (arg == nil) {
+            sb.append("00");
+        } else if (arg == cons) {
+            sb.append("11");
+        } else if (Pattern.matches("-?//d+", arg.toString())) {
+            sb.append(Modulate.modString(asNum(arg)));
+        } else if (arg instanceof Ap) {
+            modulateRec(((Ap)arg).Fun, sb);
+            modulateRec(((Ap)arg).Arg, sb);
+        } else {
+            log.error("unexpected literal while modulating {}", arg.toString());
+            throw new UnsupportedOperationException("modulate argument should be modulateable");
+        }
+    }
+
+
+        private Expr SEND_TO_ALIEN_PROXY(Expr data) {
+            final StringBuilder sb = new StringBuilder();
+            modulateRec(data, sb);
+            final String response = API.send(sb.toString());
+            final String demodulate = DemodulateValue.demodulate(response);
+            return GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(demodulate.split(" "), 0));
     }
 
 
