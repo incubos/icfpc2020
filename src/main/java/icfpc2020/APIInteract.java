@@ -39,7 +39,5 @@ public class APIInteract {
                         .eval();
 */
 
-
-        final LazyValue interact = galaxy.getValue("interact");
     }
 }
