@@ -1,12 +1,11 @@
 package icfpc2020.eval.ast;
 
+import icfpc2020.eval.Universe;
 import icfpc2020.eval.value.LazyValue;
 import icfpc2020.eval.value.ModulateValue;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
-
-public class ModulateNode implements ASTNode{
+public class ModulateNode implements ASTNode {
     static final ASTNode INSTANCE = new ModulateNode();
 
     private ModulateNode() {
@@ -19,7 +18,7 @@ public class ModulateNode implements ASTNode{
 
     @NotNull
     @Override
-    public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
+    public LazyValue eval(@NotNull final Universe universe) {
         return ModulateValue.INSTANCE;
     }
 }

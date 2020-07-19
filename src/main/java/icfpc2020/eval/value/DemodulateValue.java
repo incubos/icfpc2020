@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class DemodulateValue implements LazyValue {
-    private static final Logger log = LoggerFactory.getLogger(DemodulateValue.class);
     public static final LazyValue INSTANCE = new DemodulateValue();
+    private static final Logger log = LoggerFactory.getLogger(DemodulateValue.class);
     private static String apply = "ap";
     private static String cons = "cons";
     private static String nil = "nil";
@@ -30,20 +30,20 @@ public class DemodulateValue implements LazyValue {
         while (!s.isEmpty()) {
             if (s.startsWith("11")) {
                 result.append(apply)
-                      .append(" ")
-                      .append(apply)
-                      .append(" ")
-                      .append(cons)
-                      .append(" ");
+                        .append(" ")
+                        .append(apply)
+                        .append(" ")
+                        .append(cons)
+                        .append(" ");
                 s = s.substring(2);
             } else if (s.startsWith("00")) {
                 result.append(nil)
-                      .append(" ");
+                        .append(" ");
                 s = s.substring(2);
             } else {
                 var bi = Demodulate.dem(new MessageImpl(s));
                 result.append(bi.toString())
-                      .append(" ");
+                        .append(" ");
                 var modulateLength = Modulate.mod(bi).toString().length();
                 s = s.substring(modulateLength);
             }
@@ -53,7 +53,7 @@ public class DemodulateValue implements LazyValue {
             Evaluator evaluator = new Evaluator(
                     new ByteArrayInputStream(
                             ("demodulated = " + result).getBytes(StandardCharsets.UTF_8)));
-            return evaluator.function("demodulated");
+            return evaluator.getValue("demodulated");
         } catch (IOException e) {
             log.error("Error caught while parsing demodulate result, result=<{}>, modulated=<{}>"
                     , result.toString(), s, e);

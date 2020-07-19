@@ -30,7 +30,7 @@ public class EvaluatorTest {
                             new ByteArrayInputStream(
                                     code.getBytes(StandardCharsets.UTF_8)));
         }
-        return evaluator.function(TEST_FUNCTION);
+        return evaluator.getValue(TEST_FUNCTION);
     }
 
     private static void evalConst(
@@ -153,7 +153,7 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 "3",
-                evaluator.function("test").asConst().toString());
+                evaluator.getValue("test").asConst().toString());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -167,7 +167,7 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 "3",
-                evaluator.function("test").asConst().toString());
+                evaluator.getValue("test").asConst().toString());
         fail("Have to throw UnsupportedOperationException");
     }
 
@@ -183,7 +183,7 @@ public class EvaluatorTest {
                                 code.getBytes(StandardCharsets.UTF_8)));
         assertEquals(
                 "42",
-                evaluator.function("test").asConst().toString());
+                evaluator.getValue("test").asConst().toString());
 
     }
 

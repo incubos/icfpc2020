@@ -18,7 +18,7 @@ class Main {
             var serverUrl = args[0];
             var playerKeyString = args[1];
 
-            log.info("ServerUrl: {}; PlayerKey: {}", serverUrl, playerKeyString);
+            log.info("Server URL: {}, player key: {}", serverUrl, playerKeyString);
             HttpClient httpClient = HttpClient.newBuilder().build();
             var alienClient = new AlienMessageClient(httpClient, serverUrl);
             BigInteger playerKey = new BigInteger(playerKeyString);

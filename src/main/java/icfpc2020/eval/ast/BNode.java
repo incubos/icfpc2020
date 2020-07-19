@@ -1,11 +1,9 @@
 package icfpc2020.eval.ast;
 
+import icfpc2020.eval.Universe;
 import icfpc2020.eval.value.B3Value;
-import icfpc2020.eval.value.C3Value;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Function;
 
 final class BNode implements ASTNode {
     static final ASTNode INSTANCE = new BNode();
@@ -20,7 +18,7 @@ final class BNode implements ASTNode {
 
     @NotNull
     @Override
-    public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
+    public LazyValue eval(@NotNull final Universe universe) {
         return B3Value.INSTANCE;
     }
 }
