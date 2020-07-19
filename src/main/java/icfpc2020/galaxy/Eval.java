@@ -70,9 +70,10 @@ public class Eval {
         try {
             int[] i = new int[]{0};
             consumeList(images, (image) -> {
-                final String imagePath = imageDir + "/" + imageNumber + "_" + i[0] + ".png";
+                i[0]++;
                 final List<Draw.Coord> points = new ArrayList<>();
                 consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
+                final String imagePath = imageDir + "/" + imageNumber + "_" + i[0] + ".png";
                 if (points.size() == 0) {
                     System.err.println("Empty file: " + imagePath);
                     try {
