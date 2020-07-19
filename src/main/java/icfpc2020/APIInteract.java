@@ -2,7 +2,6 @@ package icfpc2020;
 
 import icfpc2020.eval.Evaluator;
 import icfpc2020.eval.value.LazyValue;
-import icfpc2020.eval.value.NilValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +13,14 @@ public class APIInteract {
                 new Evaluator(
                         APIInteract.class.getResourceAsStream("/galaxy.txt"));
         galaxy.add("click0 = ap ap cons 0 0");
-        final LazyValue state0 =
+        System.out.println(
                 galaxy.add("s0 = ap ap ap interact galaxy nil click0")
                         .getValue("s0")
-                        .force();
-        System.out.println(state0);
+                        .force());
+        System.out.println(
+                galaxy.add("s0h = ap car s0")
+                        .getValue("s0h")
+                        .force());
 
 /*
         final LazyValue protocol = galaxy.getValue("galaxy");
