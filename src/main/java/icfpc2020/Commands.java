@@ -46,7 +46,7 @@ public class Commands {
     public static String start(String playerKey, String x0, String x1, String x2, String x3) {
         String s = ModulateList.mod2(List.of(lpar, number(3), comma, number(playerKey), comma,
                                              lpar, number(x0), comma, number(x1), comma, number(x2),
-                                             comma, number(x3))).toString();
+                                             comma, number(x3), rpar, rpar)).toString();
         log.debug("Start command for playerKey={} x0={}, x1={}, x2={}, x3={} command={}",
                   playerKey, x0, x1, x2, x3, s);
         return s;
