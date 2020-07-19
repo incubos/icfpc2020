@@ -43,7 +43,7 @@ public class Eval {
 
     int iteration = 0;
 
-    final int clicksize = 50;
+    final int clicksize = 40;
     final Clicker clicker = new RepeatClicker(ClickerRoundabout::new, clicksize * clicksize);
 
     public void iterate() {
@@ -57,7 +57,7 @@ public class Eval {
             vector = REQUEST_CLICK_FROM_USER();
             state = newState;
             iteration++;
-            if (iteration == clicksize * clicksize * 10) {
+            if (iteration == clicksize * clicksize * 100) {
                 break;
             }
         }
@@ -65,7 +65,6 @@ public class Eval {
 
     public Vect REQUEST_CLICK_FROM_USER() {
         final Vect vect = clicker.nextClick();
-        System.out.println("Click: " + vect.X + "," + vect.Y);
         return vect;
     }
 
@@ -81,9 +80,6 @@ public class Eval {
         consumeList(images, (image) -> {
             consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
         });
-        if (points.size() == 0) {
-            System.err.println("Empty file: " + imagePath);
-        }
         if (points.size() != 0) {
             // Creates and saves
             new ImageRenderer(imagePath, points, 100);
@@ -132,7 +128,10 @@ public class Eval {
     // ( head, tail ) = ap ap cons head tail = ap ( ap ( cons, head ) , tail )
     public static void consumeList(Expr expr, final Consumer<Expr> consumer) {
         try {
-            while (!expr.toString().equals(nil.toString())) {
+            while (true) {
+                if (expr instanceof Atom && ((Atom) expr).Name.equals("nil")) {
+                    break;
+                }
                 final Expr ap = ((Ap) expr).Fun; // ap ( cons, head )
                 final Expr head = ((Ap) ap).Arg; // head
                 final Expr tail = ((Ap) expr).Arg; // tail
@@ -155,11 +154,6 @@ public class Eval {
             this.flag = flag;
             this.newState = newState;
             this.data = data;
-//            try {
-//                consumeList(newState, innerList -> consumeList(innerList, number -> asNum(number)));
-//            } catch (Exception e) {
-//                throw new IllegalStateException("NewState is not list of list of ... numbers: " + newState.toString());
-//            }
         }
     }
 
@@ -184,19 +178,28 @@ public class Eval {
     // cons, "11",
     // nil, "00",
     public void modulateRec(@NotNull final Expr arg, final StringBuilder sb) {
-        if (arg == nil) {
-            sb.append("00");
-        } else if (arg == cons) {
-            sb.append("11");
-        } else if (Pattern.matches("-?//d+", arg.toString())) {
-            sb.append(Modulate.modString(asNum(arg)));
-        } else if (arg instanceof Ap) {
+        if (arg instanceof Ap) {
             modulateRec(((Ap) arg).Fun, sb);
             modulateRec(((Ap) arg).Arg, sb);
-        } else {
-            log.error("unexpected literal while modulating {}", arg.toString());
-            throw new UnsupportedOperationException("modulate argument should be modulateable");
+            return;
         }
+        if (arg instanceof Atom) {
+            final String name = ((Atom) arg).Name;
+            if (name.equals("nil")) {
+                sb.append("00");
+                return;
+            }
+            if (name.equals("cons")) {
+                sb.append("11");
+                return;
+            }
+            if (Pattern.matches("-?\\d+", name)) {
+                sb.append(Modulate.modString(asNum(arg)));
+                return;
+            }
+        }
+        log.error("unexpected literal while modulating {}", arg.toString());
+        throw new UnsupportedOperationException("modulate argument should be modulateable");
     }
 
 
