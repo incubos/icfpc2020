@@ -45,8 +45,8 @@ public class DemodulateValue implements LazyValue {
         }
     }
 
-    private int readNumber(final String s, final int pos, final StringBuilder sb,
-                           final boolean sign) {
+    private static int readNumber(final String s, final int pos, final StringBuilder sb,
+                                  final boolean sign) {
         int currentPosition = pos;
         while (s.charAt(currentPosition) != '0') currentPosition++;
         int n = currentPosition - pos;
@@ -64,6 +64,21 @@ public class DemodulateValue implements LazyValue {
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
         String s = arg.asBinary().toString();
+        final String dem = demodulate(s);
+        try {
+            Evaluator evaluator = new Evaluator(
+                    new ByteArrayInputStream(
+                            ("demodulated = " + dem).getBytes(StandardCharsets.UTF_8)));
+            return evaluator.getValue("demodulated");
+        } catch (IOException e) {
+            log.error("Error caught while parsing demodulate result, result=<{}>, modulated=<{}>"
+                    , dem, s, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    public static String demodulate(String s) {
         StringBuilder result = new StringBuilder();
         int pos = 0;
         while (pos < s.length()) {
@@ -72,11 +87,11 @@ public class DemodulateValue implements LazyValue {
             switch (Token.fromChars(first, second)) {
                 case cons:
                     result.append(apply)
-                          .append(" ")
-                          .append(apply)
-                          .append(" ")
-                          .append(cons)
-                          .append(" ");
+                            .append(" ")
+                            .append(apply)
+                            .append(" ")
+                            .append(cons)
+                            .append(" ");
                     break;
                 case plus: {
                     pos = readNumber(s, pos, result, true);
@@ -88,20 +103,11 @@ public class DemodulateValue implements LazyValue {
                 }
                 case nil:
                     result.append(nil)
-                          .append(" ");
+                            .append(" ");
             }
         }
 
-        try {
-            Evaluator evaluator = new Evaluator(
-                    new ByteArrayInputStream(
-                            ("demodulated = " + result).getBytes(StandardCharsets.UTF_8)));
-            return evaluator.getValue("demodulated");
-        } catch (IOException e) {
-            log.error("Error caught while parsing demodulate result, result=<{}>, modulated=<{}>"
-                    , result.toString(), s, e);
-            throw new RuntimeException(e);
-        }
+        return result.toString();
     }
 
     @Override
