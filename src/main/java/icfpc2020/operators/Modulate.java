@@ -18,6 +18,10 @@ public class Modulate {
     }
 
     public static Message mod(BigInteger number) {
+        return new MessageImpl(modString(number));
+    }
+
+    public static String modString(BigInteger number) {
         StringBuilder sb = new StringBuilder();
         if (number.compareTo(BigInteger.ZERO) < 0)
             sb.append("10");
@@ -33,6 +37,6 @@ public class Modulate {
         } else {
             sb.append("0");
         }
-        return new MessageImpl(sb.toString());
+        return sb.toString();
     }
 }
