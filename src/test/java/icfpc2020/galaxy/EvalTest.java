@@ -173,7 +173,7 @@ public class EvalTest {
         final Eval eval = new Eval();
         final Expr expr = eval.eval(GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(dem.split(" "), 0)));
         final String pp = Eval.ppListOfLists(expr);
-        Assert.assertTrue(pp.contains("E"));
+        Assert.assertTrue(pp.contains("(48,24)"));
     }
 
 }

@@ -241,6 +241,11 @@ public class Eval {
             });
             return "[" + String.join(", ", results) + "]";
         } catch (Throwable t) {
+            final String s = expr.toString();
+            if (s.startsWith("ap ap cons ")) {
+                // Pair hack
+                return "(" + s.substring(11).replace(" ", ",") + ")";
+            }
             return "E"; // Some inner constructions can be invalid, since they won't be used?!?
         }
     }
