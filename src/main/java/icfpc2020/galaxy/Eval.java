@@ -9,7 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.HashMap;
@@ -28,6 +31,11 @@ public class Eval {
     public final static Expr t = new Atom("t");
     public final static Expr f = new Atom("f");
     public final static Expr nil = new Atom("nil");
+    private String imageDir;
+
+    public Eval() {
+        imageDir = new File(Eval.class.getResource("/images/startpoint.txt").getPath()).getParent();
+    }
 
 
     // See https://message-from-space.readthedocs.io/en/latest/message39.html
@@ -35,7 +43,9 @@ public class Eval {
     private Vect vector = new Vect(BigInteger.ZERO, BigInteger.ZERO);
 
     public void iterate() {
+        int iteration = 0;
         while (true) {
+            System.out.println("Iteration " + iteration++);
             Expr click = new Ap(new Ap(cons, new Atom(vector.X)), new Atom(vector.Y));
             final Expr[] res = interact(state, click);
             final Expr newState = res[0];
@@ -47,7 +57,7 @@ public class Eval {
     }
 
     public Vect REQUEST_CLICK_FROM_USER() {
-        return null;
+        return new Vect(42, 42);
     }
 
     private int imageNumber = 1;
@@ -55,15 +65,17 @@ public class Eval {
     // images is a list of pairs, se createListOfVectors
     public void PRINT_IMAGES(Expr images) {
         try {
-            final URL imagesUrl = Eval.class.getResource("/images");
-            final String imagePath = imagesUrl.getPath() + "/image" + imageNumber + ".png";
-            final ImageRenderer renderer = new ImageRenderer(imagePath);
-            consumeListOfVectors(images, (v) -> renderer.putDot(Draw.Coord.of(vector.X, vector.Y)));
-            try {
-                renderer.persist();
-            } catch (IOException e) {
-                log.error("Failed to save to file {}", imagePath);
-            }
+            int[] i = new int[]{0};
+            consumeList(images, (image) -> {
+                final String imagePath = imageDir + "/" + imageNumber + "_" + i[0] + ".png";
+                final ImageRenderer renderer = new ImageRenderer(imagePath);
+                consumeListOfVectors(image, (v) -> renderer.putDot(Draw.Coord.of(vector.X, vector.Y)));
+                try {
+                    renderer.persist();
+                } catch (IOException e) {
+                    log.error("Failed to save to file {}", imagePath);
+                }
+            });
         } finally {
             imageNumber++;
         }
@@ -94,11 +106,16 @@ public class Eval {
 
     public static void consumeListOfVectors(Expr expr, final Consumer<Vect> consumer) {
         consumeList(expr, head -> {
-            // single pair =  ap ( ap ( cons , (ap (ap cons, 0) , 1),  nil)
-            // head = ap (ap cons, 0) , 1
-            final Expr x = ((Ap) ((Ap) head).Fun).Arg;
-            final Expr y = ((Ap) head).Arg;
-            consumer.accept(new Vect(asNum(x), asNum(y)));
+            try {
+                // single pair =  ap ( ap ( cons , (ap (ap cons, 0) , 1),  nil)
+                // head = ap (ap cons, 0) , 1
+                final Expr x = ((Ap) ((Ap) head).Fun).Arg;
+                final Expr y = ((Ap) head).Arg;
+                consumer.accept(new Vect(asNum(x), asNum(y)));
+            } catch (Exception e) {
+                log.error("Illegal coord in consumeListOfVectors: {}", expr);
+                System.err.println();
+            }
         });
     }
 
@@ -106,7 +123,7 @@ public class Eval {
     // ( head, tail ) = ap ap cons head tail = ap ( ap ( cons, head ) , tail )
     public static void consumeList(Expr expr, final Consumer<Expr> consumer) {
         try {
-            while (expr != nil) {
+            while (!expr.toString().equals(nil.toString())) {
                 final Expr ap = ((Ap) expr).Fun; // ap ( cons, head )
                 final Expr head = ((Ap) ap).Arg; // head
                 final Expr tail = ((Ap) expr).Arg; // tail
@@ -114,7 +131,7 @@ public class Eval {
                 expr = tail;
             }
         } catch (Exception e) {
-            log.error("Illegal list of pairs structure {}", expr);
+            log.error("Illegal list structure in consumeList: {}", expr);
             System.err.println();
         }
     }
@@ -271,4 +288,24 @@ public class Eval {
         throw new IllegalStateException("Not a number " + n.toString());
     }
 
+    public static void main(String[] args) throws IOException {
+        final BufferedReader reader =
+                new BufferedReader(new InputStreamReader(GalaxyParser.class.getResourceAsStream("/galaxy.txt")));
+        final GalaxyParser galaxyParser = new GalaxyParser();
+        final Eval eval = new Eval();
+
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            final Assign assign = galaxyParser.parseTextLine(line);
+            eval.functions.put(assign.var.Name, assign.Expr);
+        }
+        final Expr galaxy = eval.eval(eval.functions.get("galaxy"));
+        System.out.println("Galaxy parsed: " + galaxy.toString());
+        System.out.println("Iterating...");
+        System.out.println("Images are here:" + eval.imageDir);
+        eval.iterate();
+    }
 }
