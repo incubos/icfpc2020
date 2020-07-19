@@ -30,6 +30,7 @@ public class Eval {
     public final static Expr f = new Atom("f");
     public final static Expr nil = new Atom("nil");
     private String imageDir;
+    private Vect lastClick;
 
     public Eval() {
         imageDir = Paths.get(Eval.class.getResource("/messages/message2.png").getPath())
@@ -48,7 +49,7 @@ public class Eval {
 
     public void iterate() {
         while (true) {
-            System.out.println("Iteration " + iteration);
+//            System.out.println("Iteration " + iteration);
             Expr click = new Ap(new Ap(cons, new Atom(vector.X)), new Atom(vector.Y));
             final Expr[] res = interact(state, click);
             final Expr newState = res[0];
@@ -64,9 +65,11 @@ public class Eval {
     }
 
     public Vect REQUEST_CLICK_FROM_USER() {
-        final Vect vect = clicker.nextClick();
-        return vect;
+        lastClick = clicker.nextClick();
+        return lastClick;
     }
+
+    private List<Draw.Coord> prevPoints = List.of();
 
     // images is a list of pairs, se createListOfVectors
     public void PRINT_IMAGES(Expr images) {
@@ -80,9 +83,12 @@ public class Eval {
         consumeList(images, (image) -> {
             consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
         });
-        if (points.size() != 0) {
+        if (points.size() != 0 && !points.equals(prevPoints)) {
+            System.out.println("New image on iteration: " + iteration + " Click: "+ lastClick +
+                    " Points: " + points.size());
+            prevPoints = points;
             // Creates and saves
-            new ImageRenderer(imagePath, points, 100);
+            new ImageRenderer(imagePath, points);
         }
     }
 
@@ -204,14 +210,21 @@ public class Eval {
 
 
     private Expr SEND_TO_ALIEN_PROXY(Expr data) {
+        System.out.println("Send iteration: " + iteration);
         final StringBuilder sb = new StringBuilder();
         modulateRec(data, sb);
         final String message = sb.toString();
-        System.out.println("Sending: " + message);
+        System.out.println("Sending: " + data.toString());
+//        System.out.println("Sending: " + message);
         final String response = PublicAPIImpl.INSTANCE.send(message);
-        System.out.println("Response: " + response);
         final String demodulate = DemodulateValue.demodulate(response);
-        return GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(demodulate.split(" "), 0));
+        final Expr expr = GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(demodulate.split(" "), 0));
+//        System.out.println("Response: " + demodulate);
+//        System.out.println("Response: " + expr.toString());
+        final StringBuilder sb2 = new StringBuilder();
+        consumeList(expr, l -> sb2.append(l.toString()).append(" "));
+        System.out.println("Response: " + sb2);
+        return expr;
     }
 
 
