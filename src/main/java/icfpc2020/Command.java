@@ -47,7 +47,6 @@ public enum Command implements Tokens.Token {
     Galaxy("galaxy", 42, 13, 1, 7, 7);
 
     private String code;
-    private Board board;
 
     Command(String code, int message, int size) {
         this(code, message, 1, 1, size, size);
@@ -55,11 +54,6 @@ public enum Command implements Tokens.Token {
 
     Command(String code, int message, int x, int y, int width, int height) {
         this.code = code;
-        try {
-            this.board = PngParser.loadPng("message" + message + ".png", 4, 4).subBoard(x, y, width, height);
-        } catch (IOException e) {
-            System.err.println("Failed to load command " + code + "\n" + e.getStackTrace());
-        }
     }
 
     @Override
@@ -68,7 +62,7 @@ public enum Command implements Tokens.Token {
     }
 
     public Board getBoard() {
-        return board;
+        return null;
     }
 
     public static void main(String[] args) {
