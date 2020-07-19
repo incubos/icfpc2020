@@ -55,6 +55,21 @@ public class ImageRenderer {
         Graphics graphics = bufferedImage.getGraphics();
         graphics.setColor(new Color(0));
         graphics.fillRect(0, 0, width, height);
+        graphics.setColor(new Color(100000));
+        if (maxx - minx > 50) {
+            for (int i = minx; i < maxx; i += (maxx - minx) / 10) {
+                graphics.drawLine(i + xoffset, miny + yoffset, i + xoffset, maxy + yoffset);
+            }
+        } else {
+            graphics.drawLine(xoffset, miny + yoffset, xoffset, maxy + yoffset);
+        }
+        if (maxy - miny > 50) {
+            for (int i = miny; i < maxy; i += (maxy - miny) / 10) {
+                graphics.drawLine(minx + xoffset, i + yoffset, maxx + xoffset, i + yoffset);
+            }
+        } else {
+            graphics.drawLine(minx + xoffset, yoffset, maxx + xoffset, yoffset);
+        }
         graphics.dispose();
         for (Draw.Coord coord : coords) {
             putDot(coord);
@@ -68,12 +83,16 @@ public class ImageRenderer {
 
 
     public void putDot(final Draw.Coord coord) {
-        final int x = (int) coord.x + xoffset;
-        final int y = (int) coord.y + yoffset;
-        if (x < 0 || x > width || y < 0 || y > height) {
-            log.error("Coord is outside canvas, x={}, y={}", coord.x, coord.y);
+        try {
+            final int x = (int) coord.x + xoffset;
+            final int y = (int) coord.y + yoffset;
+            if (x < 0 || x > width || y < 0 || y > height) {
+                log.error("Coord is outside canvas, x={}, y={}", coord.x, coord.y);
+            }
+            bufferedImage.setRGB(x, y, 255);
+        } catch (Exception e) {
+            log.error("exception while writing to buffered image, coord=<{}>", coord);
         }
-        bufferedImage.setRGB(x, y, 255);
     }
 
     public void persist() throws IOException {
