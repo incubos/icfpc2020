@@ -19,7 +19,11 @@ public class B1Value implements LazyValue {
     @Override
     //    ap ap ap b x0 x1 x2   =   ap x0 ap x1 x2
     public LazyValue apply(@NotNull final LazyValue right) {
-        return left.apply(middle.apply(right));
+        return new ApplyValue(
+                left,
+                new ApplyValue(
+                        middle,
+                        right));
     }
 
     @Override

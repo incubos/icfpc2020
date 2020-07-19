@@ -21,7 +21,9 @@ public class S1Value implements LazyValue {
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue right) {
-        return left.apply(right).apply(middle.apply(right));
+        return new ApplyValue(
+                new ApplyValue(left, right),
+                new ApplyValue(middle, right));
     }
 
     @Override
