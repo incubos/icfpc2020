@@ -3,22 +3,19 @@ package icfpc2020.galaxy;
 import icfpc2020.API;
 import icfpc2020.Draw;
 import icfpc2020.ImageRenderer;
-import icfpc2020.eval.value.*;
+import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
-import java.net.URL;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -70,12 +67,19 @@ public class Eval {
             int[] i = new int[]{0};
             consumeList(images, (image) -> {
                 final String imagePath = imageDir + "/" + imageNumber + "_" + i[0] + ".png";
-                final ImageRenderer renderer = new ImageRenderer(imagePath);
-                consumeListOfVectors(image, (v) -> renderer.putDot(Draw.Coord.of(vector.X, vector.Y)));
-                try {
-                    renderer.persist();
-                } catch (IOException e) {
-                    log.error("Failed to save to file {}", imagePath);
+                final List<Draw.Coord> points = new ArrayList<>();
+                consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
+                if (points.size() != 0) {
+                    System.err.println("Nonempty file: " + imagePath);
+                    final ImageRenderer renderer = new ImageRenderer(imagePath);
+                    for (final Draw.Coord coord: points) {
+                        renderer.putDot(coord);
+                    }
+                    try {
+                        renderer.persist();
+                    } catch (IOException e) {
+                        log.error("Failed to save to file {}", imagePath);
+                    }
                 }
             });
         } finally {
@@ -232,8 +236,14 @@ public class Eval {
     private Expr tryEval(Expr expr) {
         if (expr.Evaluated != null)
             return expr.Evaluated;
-        if (expr instanceof Atom && functions.containsKey(((Atom) expr).Name)) {
-            return functions.get(((Atom) expr).Name);
+        if (expr instanceof Atom) {
+            final String name = ((Atom) expr).Name;
+            if (functions.containsKey(name)) {
+                return functions.get(name);
+            }
+            if (Set.of("statelessdraw", "interact", "multipledraw").contains(name)) {
+                throw new UnsupportedOperationException(name);
+            }
         }
         if (expr instanceof Ap) {
             Expr fun = eval(((Ap) expr).Fun);
