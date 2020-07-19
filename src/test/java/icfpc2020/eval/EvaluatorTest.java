@@ -3,6 +3,7 @@ package icfpc2020.eval;
 import icfpc2020.Draw;
 import icfpc2020.eval.ast.ASTNode;
 import icfpc2020.eval.ast.Generator;
+import icfpc2020.eval.value.ConsValue;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -10,7 +11,9 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -62,6 +65,26 @@ public class EvaluatorTest {
                 function(code).eval().asImage().toString());
     }
 
+    private static List<LazyValue> list(LazyValue value, List<LazyValue> acc) {
+        var input = value.force();
+        if (input instanceof ConsValue) {
+            ConsValue consValue = (ConsValue) input;
+            acc.add(consValue.left.force());
+            return list(consValue.right, acc);
+        } else {
+            return acc;
+        }
+    }
+
+    private static void evalImages(
+            @NotNull final String expectedResult,
+            @NotNull final String code) throws Exception {
+        var actualResult = list(function(code).eval(), new ArrayList<>())
+                .stream()
+                .map(v -> v.asImage().toString())
+                .collect(Collectors.joining(",", "[", "]"));
+        assertEquals(expectedResult, actualResult);
+    }
 
     private static void evalVar(
             @NotNull final String expectedResult,
@@ -338,12 +361,16 @@ public class EvaluatorTest {
         evalConst("1", "ap cdr ap ap vec 0 1");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void draw()  throws Exception {
         evalImage("[]", "ap draw nil");
         evalImage("[(x=1, y=2)]", "ap draw ap ap vec 1 2");
         evalImage("[(x=1, y=2), (x=3, y=1)]", "ap draw ap ap cons ap ap vec 1 2 ap ap cons ap ap vec 3 1 nil");
         evalImage("[(x=1, y=2), (x=3, y=1)]", "ap draw ap ap cons ap ap vec ap ap ap if0 0 1 1000 2 ap ap cons ap ap vec 3 1 nil");
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void drawError()  throws Exception {
         evalImage("", "ap draw x0");
         fail("Have to throw UnsupportedOperationException");
     }
@@ -356,5 +383,13 @@ public class EvaluatorTest {
                         new ByteArrayInputStream(
                                 (TEST_FUNCTION + " = " + listOfCoords).getBytes(StandardCharsets.UTF_8)));
         assertEquals("ap ap cons ap ap cons 1 2 nil", evaluator.getValue(TEST_FUNCTION).toString());
+    }
+
+    @Test
+    public void multipledraw()  throws Exception {
+        evalImages("[]", "ap multipledraw nil");
+        evalImages("[[(x=1, y=2)]]", "ap multipledraw ap ap cons ap ap vec 1 2 nil");
+        evalImages("[[(x=1, y=2)],[(x=3, y=4)]]", "ap multipledraw ap ap cons ap ap vec 1 2 ap ap cons ap ap vec 3 4 nil");
+        evalImages("[[(x=1, y=2), (x=3, y=1)]]", "ap multipledraw ap ap cons ap ap cons ap ap vec ap ap ap if0 0 1 1000 2 ap ap cons ap ap vec 3 1 nil nil");
     }
 }

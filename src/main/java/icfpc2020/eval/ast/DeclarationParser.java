@@ -93,6 +93,8 @@ public final class DeclarationParser {
                 return InteractNode.INSTANCE;
             case "f38":
                 return F38Node.INSTANCE;
+            case "multipledraw":
+                return MultipledrawNode.INSTANCE;
             default:
                 try {
                     return new ConstantNode(new BigInteger(token));
