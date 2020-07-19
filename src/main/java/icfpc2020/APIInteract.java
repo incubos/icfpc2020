@@ -10,14 +10,17 @@ public class APIInteract {
     private static final Logger log = LoggerFactory.getLogger(APIInteract.class);
 
     public static void main(String[] args) throws Exception {
+        final Evaluator galaxy =
+                new Evaluator(
+                        APIInteract.class.getResourceAsStream("/galaxy.txt"));
+        final LazyValue protocol = galaxy.getValue("galaxy");
+        LazyValue state = NilValue.INSTANCE;
         final LazyValue click =
                 new Evaluator("click = ap ap cons 0 0")
                         .getValue("click")
                         .eval();
-        LazyValue state = NilValue.INSTANCE;
-        final LazyValue protocol =
-                new Evaluator(
-                        APIInteract.class.getResourceAsStream("/galaxy.txt"))
-                        .getValue("galaxy");
+
+        
+        final LazyValue interact = galaxy.getValue("interact");
     }
 }

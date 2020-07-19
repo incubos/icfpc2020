@@ -6,7 +6,7 @@ public class F381Value implements LazyValue {
     @NotNull
     private final LazyValue left;
 
-    public F381Value(final LazyValue left) {
+    public F381Value(@NotNull final LazyValue left) {
         this.left = left;
     }
 
