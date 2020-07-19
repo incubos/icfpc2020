@@ -33,12 +33,6 @@ public interface LazyValue {
     }
 
     default BigInteger asConst() {
-        LazyValue previous;
-        LazyValue current = this;
-        do {
-            previous = current;
-            current = current.eval();
-        } while (previous != current);
-        return current.asConst();
+        return force().asConst();
     }
 }

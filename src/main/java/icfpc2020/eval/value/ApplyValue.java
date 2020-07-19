@@ -27,7 +27,7 @@ public final class ApplyValue implements LazyValue {
 
     @Override
     public Message asBinary() {
-        return eval().asBinary();
+        return force().asBinary();
     }
 
     @NotNull
