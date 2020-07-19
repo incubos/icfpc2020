@@ -12,16 +12,12 @@ public class ModulateValue implements LazyValue {
     public static final LazyValue INSTANCE = new ModulateValue();
 
 
-//    Command.App, "",
-//    Command.Cons, "11",
-//    Command.Nil, "00",
-//    Command.ListLPar, "11",
-//    Command.ListComma, "11",
-//    Command.ListRPar, "00"
-
     private ModulateValue() {
     }
 
+    // ap, "",
+    // cons, "11",
+    // nil, "00",
     public void applyInternal(@NotNull final LazyValue arg, final StringBuilder sb) {
         if (arg instanceof ConstantValue) {
             sb.append(Modulate.mod(arg.asConst()).toString());
@@ -33,13 +29,8 @@ public class ModulateValue implements LazyValue {
             sb.append("00");
         } else if (arg instanceof Cons2Value) {
             sb.append("11");
-        }
-        // HOOK list lPar,comma,rPar
-//        else if (nilValue) {
-//
-//        }
-        else {
-            log.error(arg.toString());
+        } else {
+            log.error("unexpected literal while modulating {}", arg.toString());
             throw new UnsupportedOperationException("modulate argument should be modulateable");
         }
 
@@ -50,9 +41,6 @@ public class ModulateValue implements LazyValue {
     public LazyValue apply(@NotNull final LazyValue arg) {
         final StringBuilder sb = new StringBuilder();
         applyInternal(arg, sb);
-//        else if (nilValue) {
-//
-//        }
         return new BinaryValue(new MessageImpl(sb.toString()));
     }
 

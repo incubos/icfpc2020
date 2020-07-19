@@ -132,16 +132,10 @@ public class EvaluatorTest {
         evalConst("1", "ap neg -1");
     }
 
-//            Assert.assertEquals(ModulateList.mod(List.of(ap,
-//    ap,
-//    cons,
-//    number(1),
-//    ap,
-//    ap,
-//    cons,
-//    number(2),
-//    nil)).toString(),
-
+    @Test
+    public void dem() throws Exception {
+        evalVar("ap ap cons 1 ap ap cons 2 nil", "ap dem ap mod ap ap cons 1 ap ap cons 2 nil");
+    }
 
     @Test
     public void mod() throws Exception {

@@ -2,6 +2,7 @@ package icfpc2020.eval.ast;
 
 import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.eval.value.LazyValue;
+import icfpc2020.eval.value.ModulateValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -14,7 +15,7 @@ public class DemodulateNode implements ASTNode {
 
     @Override
     public String toString() {
-        return "mod";
+        return "dem";
     }
 
     @NotNull
