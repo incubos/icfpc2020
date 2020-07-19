@@ -22,7 +22,7 @@ public final class ApplyValue implements LazyValue {
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
-        return eval().apply(arg);
+        return ValueCache.eval(this).apply(arg);
     }
 
     @Override

@@ -15,9 +15,11 @@ public class APIInteract {
                         .getValue("click")
                         .eval();
         LazyValue state = NilValue.INSTANCE;
+        long l = System.nanoTime();
         final LazyValue protocol =
                 new Evaluator(
                         APIInteract.class.getResourceAsStream("/galaxy.txt"))
                         .getValue("galaxy");
+        System.out.println(System.nanoTime() - l);
     }
 }
