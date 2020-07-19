@@ -11,6 +11,10 @@ public class Vect extends Expr {
         this.Y = y;
     }
 
+    Vect(final int x, final int y) {
+        this(BigInteger.valueOf(x), BigInteger.valueOf(y));
+    }
+
     @Override
     public String toString() {
         return X + ", " + Y;

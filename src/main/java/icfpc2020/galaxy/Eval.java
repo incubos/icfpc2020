@@ -1,8 +1,13 @@
 package icfpc2020.galaxy;
 
+import icfpc2020.ImageRenderer;
+
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // Adopted from https://message-from-space.readthedocs.io/en/latest/implementation.html
 public class Eval {
@@ -29,12 +34,39 @@ public class Eval {
         }
     }
 
-    private Vect REQUEST_CLICK_FROM_USER() {
+    public Vect REQUEST_CLICK_FROM_USER() {
         return null;
     }
 
-    private void PRINT_IMAGES(Expr images) {
+    private int imageNumer = 1;
+    public void PRINT_IMAGES(Expr images) {
+        final URL imagesUrl = Eval.class.getResource("/images");
+        final String imagePath = imagesUrl.getPath() + "/image" + imageNumer + ".png";
+        final ImageRenderer renderer = new ImageRenderer(imagePath);
 
+
+    }
+
+    public Expr createListOfVectors(final List<Vect> coordinates) {
+        // Empty
+        if (coordinates.size() == 0) {
+            return nil;
+        }
+        final List<Expr> pairs = coordinates.stream()
+                .map(v -> evalCons(new Atom(v.X), new Atom(v.Y)))
+                .collect(Collectors.toList());
+        // Head and emtpy tail
+        // ( x0 ) = ap ap cons x0 nil
+        if (coordinates.size() == 1) {
+            return new Ap(new Ap(cons, pairs.get(0)), nil);
+        }
+        // Construction from the tail = ( ) = nil
+        Expr result = nil;
+        for (int i = pairs.size() - 1; i >= 0; i--) {
+            final Expr head = pairs.get(i);
+            result = new Ap(new Ap(cons, head), result);
+        }
+        return result;
     }
 
     // flag, newState, data

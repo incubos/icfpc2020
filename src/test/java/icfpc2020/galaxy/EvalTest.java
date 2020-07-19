@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.math.BigInteger;
+import java.util.List;
 
 public class EvalTest {
     private static String compute(final String program, final String variable) throws IOException {
@@ -111,6 +113,24 @@ public class EvalTest {
         final Expr galaxy = eval.eval(eval.functions.get("galaxy"));
         System.err.println(galaxy);
         Assert.assertNotNull(galaxy.toString());
+    }
+
+
+    @Test
+    public void testListOfPairs() {
+// ( )   =   nil
+//( x0 )   =   ap ap cons x0 nil
+//( x0 , x1 )   =   ap ap cons x0 ap ap cons x1 nil
+//( x0 , x1 , x2 )   =   ap ap cons x0 ap ap cons x1 ap ap cons x2 nil
+//( x0 , x1 , x2 , x5 )   =   ap ap cons x0 ap ap cons x1 ap ap cons x2 ap ap cons x5 nil
+        final Eval eval = new Eval();
+        Assert.assertEquals("nil",
+                eval.createListOfVectors(List.of()).toString());
+        Assert.assertEquals("ap ap cons ap ap cons 0 1 nil",
+                eval.createListOfVectors(List.of(new Vect(0, 1))).toString());
+        Assert.assertEquals("ap ap cons ap ap cons 1 2 ap ap cons ap ap cons 3 4 ap ap cons ap ap cons 5 6 nil",
+                eval.createListOfVectors(List.of(new Vect(1, 2), new Vect(3, 4), new Vect(5, 6))).toString());
+
     }
 
 }
