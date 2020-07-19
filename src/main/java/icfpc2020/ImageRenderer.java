@@ -98,8 +98,8 @@ public class ImageRenderer {
     }
 
     public void persist() throws IOException {
-        log.info("persisting image=<{}>, width=<{}>, height=<{}>, xoffset=<{}>, yoffset=<{}>",
-                 file, width, height, minx, miny);
+//        log.info("persisting image=<{}>, width=<{}>, height=<{}>, xoffset=<{}>, yoffset=<{}>",
+//                 file, width, height, minx, miny);
         bufferedImage.setRGB(-minx, -miny, 0xFFFFFF);
         ImageIO.write(bufferedImage, "PNG", new File(file));
     }
