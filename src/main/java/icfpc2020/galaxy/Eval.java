@@ -84,7 +84,8 @@ public class Eval {
             consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
         });
         if (points.size() != 0 && !points.equals(prevPoints)) {
-            System.out.println("New image on iteration: " + iteration + " Click: "+ lastClick);
+            System.out.println("New image on iteration: " + iteration + " Click: "+ lastClick +
+                    " Points: " + points.size());
             prevPoints = points;
             // Creates and saves
             new ImageRenderer(imagePath, points);
