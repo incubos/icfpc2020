@@ -1,7 +1,9 @@
 package icfpc2020;
 
 import icfpc2020.api.PrivateAPIImpl;
+import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,10 @@ class Main {
             if (args.length > 2) {
                 local = true;
             }
+            String role = "";
+            if (args.length > 3) {
+                role = args[3];
+            }
 
             log.info("Server URL: {}, player key: {}", serverUrl, playerKeyString);
             HttpClient httpClient = HttpClient.newBuilder().build();
@@ -30,19 +36,19 @@ class Main {
             if (local) {
                 String send = privateAPI.send(Commands.create());
                 log.info("Create response={}", send);
-                List<Pictogram> dem = DemodulateList.dem(new MessageImpl(send));
+                @NotNull String dem = DemodulateValue.demodulate(send);
                 log.info("dem={}", dem);
-                Pictogram attackerKey = dem.get(17);
-                log.info("attackerKey={}", attackerKey);
-                playerKeyString = ((NumberR)attackerKey).n.toString();
+                String key = role.equals("attack") ? dem.split(" ")[17] : dem.split(" ")[29];
+                log.info("{}}={}", role, key);
+                playerKeyString = key;
             }
 
             String send1 = privateAPI.send(Commands.join(playerKeyString));
             log.info("Join command response={}}", send1);
-            log.info("dem={}", DemodulateList.dem(new MessageImpl(send1)));
+            log.info("dem={}", DemodulateValue.demodulate(send1));
             String send2 = privateAPI.send(Commands.start(playerKeyString, "12", "23", "34", "45"));
             log.info("Start command response={}", send2);
-            log.info("dem={}", DemodulateList.dem(new MessageImpl(send2)));
+            log.info("dem={}", DemodulateValue.demodulate(send2));
 
 
         } catch (Exception e) {

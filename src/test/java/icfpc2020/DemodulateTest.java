@@ -1,5 +1,6 @@
 package icfpc2020;
 
+import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Demodulate;
 import icfpc2020.operators.Modulate;
 import org.junit.Assert;
@@ -23,5 +24,11 @@ public class DemodulateTest {
             System.out.println(ca + " = [" + s + "]");
             Assert.assertEquals(ca, Demodulate.dem(new MessageImpl(s)));
         }
+    }
+
+    @Test
+    public void test2() {
+        DemodulateValue.demodulate(
+                "1101100001110101111011110000100000000110110000111110111100001110000001101100001110111001000000001111011100001000011011101000000000110000110000");
     }
 }
