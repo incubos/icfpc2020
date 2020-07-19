@@ -141,10 +141,14 @@ public class EvaluatorTest {
         evalVar("22", "ap dem ap mod 22");
     }
 
-
     @Test
     public void mod() throws Exception {
         evalBinary("1101100001110110001000", "ap mod ap ap cons 1 ap ap cons 2 nil");
+    }
+
+    @Test
+    public void modem() throws Exception {
+        evalVar("ap dem ap mod ap ap cons 1 ap ap cons 2 nil", "ap modem ap ap cons 1 ap ap cons 2 nil");
     }
 
     @Test
