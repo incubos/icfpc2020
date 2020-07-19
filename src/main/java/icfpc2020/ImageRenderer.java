@@ -21,8 +21,8 @@ public class ImageRenderer {
 
 
     public ImageRenderer(String file) {
-        this.width = 1000;
-        this.height = 1000;
+        this.width = 300;
+        this.height = 300;
         this.minx = - width / 2;
         this.miny = - height / 2;
         this.file = file;
@@ -59,7 +59,7 @@ public class ImageRenderer {
         Graphics graphics = bufferedImage.getGraphics();
         graphics.setColor(new Color(0));
         graphics.fillRect(0, 0, width, height);
-        graphics.setColor(new Color(100000));
+        graphics.setColor(new Color(0x333333));
         if (width > 50) {
             for (int x = minx; x < maxx; x += this.width / 10) {
                 final int xgrid = x - minx;
@@ -87,6 +87,9 @@ public class ImageRenderer {
         }
     }
 
+    Color myWhite = new Color(255, 128, 255); // Color white
+    int rgb = myWhite.getRGB();
+
 
     public void putDot(final Draw.Coord coord) {
         final int x = (int) coord.x - minx;
@@ -95,7 +98,7 @@ public class ImageRenderer {
             log.error("Coord is outside canvas, x={}, y={}", coord.x, coord.y);
         }
         try {
-            bufferedImage.setRGB(x, y, 255);
+            bufferedImage.setRGB(x, y, rgb);
         } catch (Exception e) {
             log.error("exception while writing to buffered image, x={} y={}, coord=<{}>", x, y, coord);
         }
