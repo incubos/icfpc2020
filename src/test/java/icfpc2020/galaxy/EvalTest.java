@@ -6,8 +6,6 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.math.BigInteger;
 import java.util.List;
 
 public class EvalTest {
@@ -125,12 +123,31 @@ public class EvalTest {
 //( x0 , x1 , x2 , x5 )   =   ap ap cons x0 ap ap cons x1 ap ap cons x2 ap ap cons x5 nil
         final Eval eval = new Eval();
         Assert.assertEquals("nil",
-                eval.createListOfVectors(List.of()).toString());
+                eval.listOfVectorsExpr(List.of()).toString());
         Assert.assertEquals("ap ap cons ap ap cons 0 1 nil",
-                eval.createListOfVectors(List.of(new Vect(0, 1))).toString());
+                eval.listOfVectorsExpr(List.of(new Vect(0, 1))).toString());
         Assert.assertEquals("ap ap cons ap ap cons 1 2 ap ap cons ap ap cons 3 4 ap ap cons ap ap cons 5 6 nil",
-                eval.createListOfVectors(List.of(new Vect(1, 2), new Vect(3, 4), new Vect(5, 6))).toString());
+                eval.listOfVectorsExpr(List.of(new Vect(1, 2), new Vect(3, 4), new Vect(5, 6))).toString());
 
     }
+
+
+    @Test
+    public void testConsumeList() {
+// ( )   =   nil
+//( x0 )   =   ap ap cons x0 nil
+//( x0 , x1 )   =   ap ap cons x0 ap ap cons x1 nil
+//( x0 , x1 , x2 )   =   ap ap cons x0 ap ap cons x1 ap ap cons x2 nil
+//( x0 , x1 , x2 , x5 )   =   ap ap cons x0 ap ap cons x1 ap ap cons x2 ap ap cons x5 nil
+        final StringBuilder result = new StringBuilder();
+        final Eval eval = new Eval();
+        Eval.consumeListOfVectors(
+                eval.listOfVectorsExpr(List.of(new Vect(1, 2), new Vect(3, 4), new Vect(5, 6))),
+                v -> result.append(v.X).append(",").append(v.Y).append(";")
+        );
+        Assert.assertEquals("1,2;3,4;5,6;", result.toString());
+
+    }
+
 
 }

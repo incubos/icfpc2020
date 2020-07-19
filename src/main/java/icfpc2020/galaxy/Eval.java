@@ -1,16 +1,23 @@
 package icfpc2020.galaxy;
 
+import icfpc2020.Draw;
 import icfpc2020.ImageRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 // Adopted from https://message-from-space.readthedocs.io/en/latest/implementation.html
 public class Eval {
+
+    private static final Logger log = LoggerFactory.getLogger(Eval.class);
 
     public final static Expr cons = new Atom("cons");
     public final static Expr t = new Atom("t");
@@ -38,16 +45,21 @@ public class Eval {
         return null;
     }
 
-    private int imageNumer = 1;
+    private int imageNumber = 1;
+    // images is a list of pairs, se createListOfVectors
     public void PRINT_IMAGES(Expr images) {
         final URL imagesUrl = Eval.class.getResource("/images");
-        final String imagePath = imagesUrl.getPath() + "/image" + imageNumer + ".png";
+        final String imagePath = imagesUrl.getPath() + "/image" + imageNumber + ".png";
         final ImageRenderer renderer = new ImageRenderer(imagePath);
-
-
+        consumeListOfVectors(images, (v) -> renderer.putDot(Draw.Coord.of(vector.X, vector.Y)));
+        try {
+            renderer.persist();
+        } catch (IOException e) {
+            log.error("Failed to save to file {}", imagePath);
+        }
     }
 
-    public Expr createListOfVectors(final List<Vect> coordinates) {
+    public Expr listOfVectorsExpr(final List<Vect> coordinates) {
         // Empty
         if (coordinates.size() == 0) {
             return nil;
@@ -67,6 +79,30 @@ public class Eval {
             result = new Ap(new Ap(cons, head), result);
         }
         return result;
+    }
+
+
+    // Head and emtpy tail
+    // ( head, tail ) = ap ap cons head tail = ap ( ap ( cons, head ) , tail )
+    public static void consumeListOfVectors(Expr expr, final Consumer<Vect> consumer) {
+        try {
+            while (expr != nil) {
+                final Expr ap = ((Ap) expr).Fun; // ap ( cons, head )
+                final Expr head = ((Ap) ap).Arg; // head
+                final Expr tail = ((Ap) expr).Arg; // tail
+
+                // single pair =  ap ( ap ( cons , (ap (ap cons, 0) , 1),  nil)
+                // head = ap (ap cons, 0) , 1
+                final Expr x = ((Ap)((Ap) head).Fun).Arg;
+                final Expr y = ((Ap) head).Arg;
+                consumer.accept(new Vect(asNum(x), asNum(y)));
+                expr = tail;
+            }
+        } catch (Exception e) {
+            log.error("Illegal list of pairs structure {}", expr);
+            System.err.println();
+        }
+
     }
 
     // flag, newState, data
@@ -175,7 +211,7 @@ public class Eval {
         return res;
     }
 
-    private BigInteger asNum(Expr n) {
+    private static BigInteger asNum(Expr n) {
         if (n instanceof Atom) {
             return new BigInteger(((Atom) n).Name);
         }

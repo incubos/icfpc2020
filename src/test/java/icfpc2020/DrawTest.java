@@ -1,5 +1,8 @@
 package icfpc2020;
 
+import icfpc2020.galaxy.Eval;
+import icfpc2020.galaxy.Expr;
+import icfpc2020.galaxy.Vect;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -63,6 +66,16 @@ public class DrawTest {
         image.persist();
     }
 
+    private void checkDraw(Expr images, Set<Draw.Coord> expectedResult) throws IOException {
+        var board = new DrawingBoard();
+        Draw.draw(images, board);
+        Assert.assertEquals(expectedResult, board.set);
+        var image = new ImageRenderer(tempDirectory.toString() + Math.abs(images.hashCode()) + ".png");
+        board.set.forEach(image::putDot);
+        image.persist();
+    }
+
+
     @Test
     public void testDraw() throws IOException {
 
@@ -97,4 +110,37 @@ public class DrawTest {
                          coord(6, 4),
                          coord(4, 5)));
     }
+
+    @Test
+    public void testDrawWithCommands() throws IOException {
+        final Eval eval = new Eval();
+
+        // ap draw ( )   =   |picture1|
+        checkDraw(eval.listOfVectorsExpr(List.of()), Set.of());
+        // ap draw ( ap ap vec 1 1 )   =   |picture2|
+        checkDraw(eval.listOfVectorsExpr(List.of(new Vect(1, 1))),
+                Set.of(coord(1, 1)));
+        // ap draw ( ap ap vec 1 2 )   =   |picture3|
+        checkDraw(eval.listOfVectorsExpr(List.of(new Vect(1, 2))),
+                Set.of(coord(1, 2)));
+        // ap draw ( ap ap vec 2 5 )   =   |picture4|
+        checkDraw(eval.listOfVectorsExpr(List.of(new Vect(2, 5))),
+                Set.of(coord(2, 5)));
+        // ap draw ( ap ap vec 1 2 , ap ap vec 3 1 )   =   |picture5|
+        checkDraw(eval.listOfVectorsExpr(List.of(new Vect(1, 2), new Vect(3, 1))),
+                Set.of(coord(1, 2), coord(3, 1)));
+        // ap draw ( ap ap vec 5 3 , ap ap vec 6 3 , ap ap vec 4 4 , ap ap vec 6 4 , ap ap vec 4 5 )   =   |picture6|
+        checkDraw(eval.listOfVectorsExpr(List.of(
+                new Vect(5, 3),
+                new Vect(6, 3),
+                new Vect(4, 4),
+                new Vect(6, 4),
+                new Vect(4, 5))),
+                Set.of(coord(5, 3),
+                        coord(6, 3),
+                        coord(4, 4),
+                        coord(6, 4),
+                        coord(4, 5)));
+    }
+
 }

@@ -1,14 +1,18 @@
 package icfpc2020;
 
+import icfpc2020.galaxy.Expr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import static icfpc2020.galaxy.Eval.consumeListOfVectors;
 
 public class Draw {
     private static final Logger log = LoggerFactory.getLogger(Draw.class);
@@ -67,6 +71,11 @@ public class Draw {
         } else {
             throw new UnsupportedOperationException("Draw protocol expects two number after 'vec' command");
         }
+    }
+
+    // image as list of pairs
+    public static void draw(Expr image, Consumer<Coord> drawingBoard) {
+        consumeListOfVectors(image, (v) -> drawingBoard.accept(Draw.Coord.of(v.X, v.Y)));
     }
 
     public static void draw(List<Pictogram> commands, Consumer<Coord> drawingBoard) {
