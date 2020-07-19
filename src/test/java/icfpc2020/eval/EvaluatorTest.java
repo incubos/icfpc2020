@@ -307,4 +307,15 @@ public class EvaluatorTest {
     public void send() throws Exception {
         evalConst("1", "ap car ap send ap ap cons 0 nil");
     }
+
+    @Test
+    public void vec() throws Exception {
+        evalVar("ap ap 2 0 1",
+                "x0 = 0\n" +
+                        "x1 = 1\n" +
+                        "x2 = 2\n" +
+                        "test = ap ap ap vec x0 x1 x2");
+        evalConst("0", "ap car ap ap vec 0 1");
+        evalConst("1", "ap cdr ap ap vec 0 1");
+    }
 }
