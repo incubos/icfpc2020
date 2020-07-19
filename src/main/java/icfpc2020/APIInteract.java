@@ -13,17 +13,21 @@ public class APIInteract {
                 new Evaluator(
                         APIInteract.class.getResourceAsStream("/galaxy.txt"));
         galaxy.add("click0 = ap ap cons 0 0");
-        System.out.println(
+        System.out.println("Running: " +
                 galaxy.add("s0 = ap ap ap interact galaxy nil click0")
                         .getValue("s0")
                         .force());
-        System.out.println(
+        System.out.println("car s0: " +
                 galaxy.add("s0h = ap car s0")
                         .getValue("s0h")
                         .force());
-        System.out.println(
+        System.out.println("cdr s0: " +
                 galaxy.add("s0t = ap cdr s0")
                         .getValue("s0t")
+                        .force());
+        System.out.println("car cdr s0: " +
+                galaxy.add("s0th = ap car s0t")
+                        .getValue("s0th")
                         .force());
 
 /*

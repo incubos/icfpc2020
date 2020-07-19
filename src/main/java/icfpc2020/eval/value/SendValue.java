@@ -1,6 +1,6 @@
 package icfpc2020.eval.value;
 
-import icfpc2020.API;
+import icfpc2020.api.PublicAPIImpl;
 import icfpc2020.MessageImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public final class SendValue implements LazyValue {
                         .eval()
                         .asBinary()
                         .toString();
-        final String response = API.send(request);
+        final String response = PublicAPIImpl.INSTANCE.send(request);
         return new ApplyValue(
                 DemodulateValue.INSTANCE,
                 new BinaryValue(

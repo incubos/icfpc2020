@@ -1,6 +1,6 @@
 package icfpc2020.galaxy;
 
-import icfpc2020.API;
+import icfpc2020.api.PublicAPIImpl;
 import icfpc2020.Draw;
 import icfpc2020.ImageRenderer;
 import icfpc2020.eval.value.DemodulateValue;
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -195,7 +194,7 @@ public class Eval {
         modulateRec(data, sb);
         final String message = sb.toString();
         System.out.println("Sending: " + message);
-        final String response = API.send(message);
+        final String response = PublicAPIImpl.INSTANCE.send(message);
         System.out.println("Response: " + response);
         final String demodulate = DemodulateValue.demodulate(response);
         return GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(demodulate.split(" "), 0));
