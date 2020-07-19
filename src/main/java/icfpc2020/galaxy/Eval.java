@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -59,7 +60,7 @@ public class Eval {
     }
 
     public Vect REQUEST_CLICK_FROM_USER() {
-        return new Vect(0, 0);
+        return new Vect(1, 1);
     }
 
     private int imageNumber = 1;
@@ -81,15 +82,8 @@ public class Eval {
                     }
                 }
                 if (points.size() != 0) {
-                    final ImageRenderer renderer = new ImageRenderer(imagePath);
-                    for (final Draw.Coord coord: points) {
-                        renderer.putDot(coord);
-                    }
-                    try {
-                        renderer.persist();
-                    } catch (IOException e) {
-                        log.error("Failed to save to file {}", imagePath);
-                    }
+                    // Creates and saves
+                    new ImageRenderer(imagePath, points);
                 }
             });
         } finally {
