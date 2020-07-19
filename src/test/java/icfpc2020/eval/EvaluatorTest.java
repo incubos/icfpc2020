@@ -121,7 +121,7 @@ public class EvaluatorTest {
 
     @Test
     public void cons() throws Exception {
-        evalVar("ap ap x2 x0 x1",
+        evalVar("ap ap x2 0 1",
                 "x0 = 0\n" +
                         "x1 = 1\n" +
                         "x2 = 2\n" +
@@ -352,7 +352,7 @@ public class EvaluatorTest {
 
     @Test
     public void vec() throws Exception {
-        evalVar("ap ap x2 x0 x1",
+        evalVar("ap ap x2 0 1",
                 "x0 = 0\n" +
                         "x1 = 1\n" +
                         "x2 = 2\n" +

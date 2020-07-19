@@ -13,7 +13,7 @@ public class Cons1Value implements LazyValue {
     @NotNull
     @Override
     public LazyValue apply(final @NotNull LazyValue arg) {
-        return new ConsValue(left, arg);
+        return new ConsValue(left.force(), arg.force());
     }
 
     @Override

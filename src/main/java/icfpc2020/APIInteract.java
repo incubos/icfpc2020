@@ -27,6 +27,7 @@ public class APIInteract {
             final String result = galaxy.add(interact).getValue(state).force().toString();
             log.info("Step #{} result: {}", step, result);
 
+/*
             // Draw
             final String draw = "draw" + step;
             final String print =
@@ -37,6 +38,7 @@ public class APIInteract {
                     "Step #{} draw: {}",
                     step,
                     galaxy.add(print).getValue(draw).force().toString());
+*/
 
             // Advance
             previousState = "ap car " + state;
