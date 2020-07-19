@@ -1,7 +1,6 @@
 package icfpc2020;
 
 import icfpc2020.eval.Evaluator;
-import icfpc2020.eval.value.LazyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,32 +11,32 @@ public class APIInteract {
         final Evaluator galaxy =
                 new Evaluator(
                         APIInteract.class.getResourceAsStream("/galaxy.txt"));
-        galaxy.add("click0 = ap ap cons 0 0");
-        System.out.println("Running: " +
-                galaxy.add("s0 = ap ap ap interact galaxy nil click0")
-                        .getValue("s0")
-                        .force());
-        System.out.println("car s0: " +
-                galaxy.add("s0h = ap car s0")
-                        .getValue("s0h")
-                        .force());
-        System.out.println("cdr s0: " +
-                galaxy.add("s0t = ap cdr s0")
-                        .getValue("s0t")
-                        .force());
-        System.out.println("car cdr s0: " +
-                galaxy.add("s0th = ap car s0t")
-                        .getValue("s0th")
-                        .force());
+        final String click0 = "click0";
+        galaxy.add(click0 + " = ap ap cons 0 0");
 
-/*
-        final LazyValue protocol = galaxy.getValue("galaxy");
-        LazyValue state = NilValue.INSTANCE;
-        final LazyValue click =
-                new Evaluator("click = ap ap cons 0 0")
-                        .getValue("click")
-                        .eval();
-*/
+        String previousState = "nil";
+        for (int step = 0; step < 10; step++) {
+            final String state = "state" + step;
 
+            // Interact
+            log.info("Running step #{}...", step);
+            final String interact =
+                    String.format(
+                            "%s = ap ap ap interact galaxy %s %s",
+                            state, previousState, click0);
+            final String result = galaxy.add(interact).getValue(state).force().toString();
+            log.info("Step #{} result: {}", step, result);
+
+            // Draw
+            final String draw = "draw" + step;
+            final String print =
+                    String.format(
+                            "%s = ap cdr %s",
+                            draw, state);
+            galaxy.add(print).getValue(draw).force();
+
+            // Advance
+            previousState = "ap car " + state;
+        }
     }
 }
