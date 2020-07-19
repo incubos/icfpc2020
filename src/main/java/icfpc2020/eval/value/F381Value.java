@@ -64,7 +64,7 @@ public class F381Value implements LazyValue {
                 new ApplyValue(
                         new ApplyValue(
                                 new ApplyValue(
-                                        new LazyValue() {}, // Interact
+                                        Interact03Value.INSTANCE,
                                         x2
                                 ),
                                 new ApplyValue(
