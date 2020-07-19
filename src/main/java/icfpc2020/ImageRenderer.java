@@ -30,12 +30,12 @@ public class ImageRenderer {
     }
 
     public void putDot(final Draw.Coord coord) {
-        if (coord.x > width || coord.y > height) {
+        if (Math.abs(coord.x) > width / 2 || Math.abs(coord.y) > height / 2) {
             log.error("Coord is outside canvas, x={}, y={}", coord.x, coord.y);
         }
-        bufferedImage.setRGB((int) coord.x,
-                             (int) coord.y,
-                             Integer.MAX_VALUE);
+        bufferedImage.setRGB((int) coord.x + width / 2,
+                             (int) coord.y + width / 2,
+                             255);
     }
 
     public void persist() throws IOException {
