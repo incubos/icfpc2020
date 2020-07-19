@@ -43,7 +43,7 @@ public class Eval {
 
     int iteration = 0;
 
-    final Clicker clicker = new RepeatClicker(ClickerRoundabout::new, 400); // 400 is enough for 20x20
+    final Clicker clicker = new RepeatClicker(ClickerRoundabout::new, 1600); // 400 is enough for 20x20
 
     public void iterate() {
         while (true) {
@@ -56,17 +56,16 @@ public class Eval {
             vector = REQUEST_CLICK_FROM_USER();
             state = newState;
             iteration++;
-            if (iteration == 10) {
+            if (iteration == 1600 * 10) {
                 break;
             }
         }
     }
 
     public Vect REQUEST_CLICK_FROM_USER() {
-        return new Vect(0, 0);
-//        final Vect vect = clicker.nextClick();
-//        System.out.println("Click: " + vect.X + "," + vect.Y);
-//        return vect;
+        final Vect vect = clicker.nextClick();
+        System.out.println("Click: " + vect.X + "," + vect.Y);
+        return vect;
     }
 
     // images is a list of pairs, se createListOfVectors
