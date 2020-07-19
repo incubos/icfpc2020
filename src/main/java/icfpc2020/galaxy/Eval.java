@@ -43,6 +43,8 @@ public class Eval {
 
     int iteration = 0;
 
+    final Clicker clicker = new RepeatClicker(ClickerRoundabout::new, 400); // 400 is enough for 20x20
+
     public void iterate() {
         while (true) {
             System.out.println("Iteration " + iteration);
@@ -54,45 +56,38 @@ public class Eval {
             vector = REQUEST_CLICK_FROM_USER();
             state = newState;
             iteration++;
-            if (iteration == 20) {
+            if (iteration == 10) {
                 break;
             }
         }
     }
 
-    private final Vect[] KNOWN_CLICKS = new Vect[]{
-            new Vect(1, 1),
-            new Vect(3, 4)
-    };
-
     public Vect REQUEST_CLICK_FROM_USER() {
-        if (iteration < KNOWN_CLICKS.length) {
-            return KNOWN_CLICKS[iteration];
-        }
-        return new Vect(1, 1);
+        return new Vect(0, 0);
+//        final Vect vect = clicker.nextClick();
+//        System.out.println("Click: " + vect.X + "," + vect.Y);
+//        return vect;
     }
 
     // images is a list of pairs, se createListOfVectors
     public void PRINT_IMAGES(Expr images) {
-        int[] i = new int[]{0};
+        final List<Draw.Coord> points = new ArrayList<>();
+        final String imagePath = imageDir + "/" + iteration + ".png";
+        try {
+            Files.deleteIfExists(Paths.get(imagePath));
+        } catch (IOException e) {
+            // Ignore
+        }
         consumeList(images, (image) -> {
-            i[0]++;
-            final List<Draw.Coord> points = new ArrayList<>();
             consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
-            final String imagePath = imageDir + "/" + iteration + "_" + i[0] + ".png";
-            if (points.size() == 0) {
-                System.err.println("Empty file: " + imagePath);
-                try {
-                    Files.deleteIfExists(Paths.get(imagePath));
-                } catch (IOException e) {
-                    // Ignore
-                }
-            }
-            if (points.size() != 0) {
-                // Creates and saves
-                new ImageRenderer(imagePath, points);
-            }
         });
+        if (points.size() == 0) {
+            System.err.println("Empty file: " + imagePath);
+        }
+        if (points.size() != 0) {
+            // Creates and saves
+            new ImageRenderer(imagePath, points);
+        }
     }
 
     public Expr generateCoordList(final List<Vect> coordinates) {
@@ -150,7 +145,6 @@ public class Eval {
         }
     }
 
-
     // flag, newState, data
     class FlagStateData {
         public Expr flag;
@@ -161,6 +155,11 @@ public class Eval {
             this.flag = flag;
             this.newState = newState;
             this.data = data;
+//            try {
+//                consumeList(newState, innerList -> consumeList(innerList, number -> asNum(number)));
+//            } catch (Exception e) {
+//                throw new IllegalStateException("NewState is not list of list of ... numbers: " + newState.toString());
+//            }
         }
     }
 

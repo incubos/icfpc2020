@@ -12,6 +12,9 @@ public final class ApplyValue implements LazyValue {
     @NotNull
     public final LazyValue argument;
 
+    // Cache
+    private LazyValue cachedEval = null;
+
     public ApplyValue(
             @NotNull final LazyValue function,
             @NotNull final LazyValue argument) {
@@ -33,14 +36,10 @@ public final class ApplyValue implements LazyValue {
     @NotNull
     @Override
     public LazyValue eval() {
-//        return function.apply(argument);
-        LazyValue lazyValue = ValueCache.get(this);
-        if (lazyValue == null) {
-            LazyValue result = function.apply(argument);
-            ValueCache.put(this, result);
-            return result;
+        if (cachedEval == null) {
+            cachedEval = function.apply(argument);
         }
-        return lazyValue;
+        return cachedEval;
     }
 
     @Override

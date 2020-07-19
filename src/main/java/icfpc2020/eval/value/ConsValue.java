@@ -13,11 +13,6 @@ public class ConsValue implements LazyValue {
         this.right = right;
     }
 
-    @Override
-    public LazyValue eval() {
-        return this;
-    }
-
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {

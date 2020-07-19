@@ -17,7 +17,7 @@ public interface LazyValue {
     }
 
     default LazyValue eval() {
-        throw new UnsupportedOperationException();
+        return this;
     }
 
     default Message asBinary() {
@@ -39,6 +39,11 @@ public interface LazyValue {
     }
 
     default BigInteger asConst() {
-        return force().asConst();
+        final LazyValue forced = force();
+        if (forced instanceof ConstantValue) {
+            return forced.asConst();
+        } else {
+            throw new IllegalStateException();
+        }
     }
 }

@@ -13,11 +13,6 @@ public class ImageValue implements LazyValue {
         this.value = value;
     }
 
-    @Override
-    public LazyValue eval() {
-        return this;
-    }
-
     public List<Draw.Coord> asImage() {
         return value;
     }

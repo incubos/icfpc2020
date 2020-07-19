@@ -16,6 +16,8 @@ public final class LazyNodeValue implements LazyValue {
     @NotNull
     private final ASTNode node;
 
+    private LazyValue cachedEval = null;
+
     public LazyNodeValue(
             @NotNull final Universe universe,
             @NotNull final ASTNode node) {
@@ -26,22 +28,25 @@ public final class LazyNodeValue implements LazyValue {
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
-        return node.eval(universe).apply(arg);
+        return eval().apply(arg);
     }
 
     @Override
     public LazyValue eval() {
-        return node.eval(universe);
+        if (cachedEval == null) {
+            cachedEval = node.eval(universe);
+        }
+        return cachedEval;
     }
 
     @Override
     public Message asBinary() {
-        return node.eval(universe).asBinary();
+        return eval().asBinary();
     }
 
     @Override
     public BigInteger asConst() {
-        return node.eval(universe).asConst();
+        return eval().asConst();
     }
 
     @Override

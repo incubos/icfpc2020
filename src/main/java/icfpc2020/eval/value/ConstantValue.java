@@ -17,11 +17,6 @@ public final class ConstantValue implements LazyValue {
     }
 
     @Override
-    public LazyValue eval() {
-        return this;
-    }
-
-    @Override
     public BigInteger asConst() {
         return value;
     }
