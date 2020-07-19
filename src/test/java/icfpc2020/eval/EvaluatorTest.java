@@ -1,11 +1,14 @@
 package icfpc2020.eval;
 
+import icfpc2020.ModulateList;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -39,6 +42,14 @@ public class EvaluatorTest {
         assertEquals(
                 expectedResult,
                 function(code).asConst().toString());
+    }
+
+    private static void evalBinary(
+            @NotNull final String expectedResult,
+            @NotNull final String code) throws Exception {
+        assertEquals(
+                expectedResult,
+                function(code).eval().asBinary().toString());
     }
 
     private static void evalVar(
@@ -119,6 +130,18 @@ public class EvaluatorTest {
         evalConst("0", "ap neg 0");
         evalConst("-1", "ap neg 1");
         evalConst("1", "ap neg -1");
+    }
+
+    @Test
+    public void dem() throws Exception {
+        evalVar("ap ap cons 1 ap ap cons 2 nil", "ap dem ap mod ap ap cons 1 ap ap cons 2 nil");
+        evalVar("nil", "ap dem ap mod nil");
+        evalVar("22", "ap dem ap mod 22");
+    }
+
+    @Test
+    public void mod() throws Exception {
+        evalBinary("1101100001110110001000", "ap mod ap ap cons 1 ap ap cons 2 nil");
     }
 
     @Test

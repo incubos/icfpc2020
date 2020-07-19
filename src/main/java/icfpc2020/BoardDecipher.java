@@ -132,7 +132,7 @@ class ModulationR extends Pictogram {
             b.append(board.getValue(x, 0));
         }
         try {
-            return "[" + new Demodulate(b.toString()).dem() + "]";
+            return "[" +Demodulate.dem(new MessageImpl(b.toString())) + "]";
         } catch (Exception e) {
             // Demodulation error?
             return "[???]";
