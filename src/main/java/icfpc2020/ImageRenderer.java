@@ -47,9 +47,9 @@ public class ImageRenderer {
         this.file = file;
         this.width = maxx - minx + 10;
         this.height = maxy - miny + 10;
-        this.xoffset = width / 2;
-        this.yoffset = height / 2;
-        System.out.println("w,h,x,y: "+ this.width+ "," + this.height + "," + this.xoffset + "," + this.yoffset);
+        this.xoffset = -minx + 5;
+        this.yoffset = -miny + 5;
+//        System.out.println("w,h,x,y: "+ this.width+ "," + this.height + "," + this.xoffset + "," + this.yoffset);
 
         this.bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = bufferedImage.getGraphics();
@@ -68,12 +68,12 @@ public class ImageRenderer {
 
 
     public void putDot(final Draw.Coord coord) {
-        if (Math.abs(coord.x) > width / 2 || Math.abs(coord.y) > height / 2) {
+        final int x = (int) coord.x + xoffset;
+        final int y = (int) coord.y + yoffset;
+        if (x < 0 || x > width || y < 0 || y > height) {
             log.error("Coord is outside canvas, x={}, y={}", coord.x, coord.y);
         }
-        bufferedImage.setRGB((int) coord.x + xoffset,
-                             (int) coord.y + yoffset,
-                             255);
+        bufferedImage.setRGB(x, y, 255);
     }
 
     public void persist() throws IOException {
