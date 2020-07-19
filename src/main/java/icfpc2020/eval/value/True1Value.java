@@ -13,6 +13,11 @@ public class True1Value implements LazyValue {
         this.left = left;
     }
 
+    @Override
+    public LazyValue eval() {
+        return this;
+    }
+
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {

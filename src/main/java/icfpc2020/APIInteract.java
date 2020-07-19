@@ -15,7 +15,7 @@ public class APIInteract {
         galaxy.add(click0 + " = ap ap cons 0 0");
 
         String previousState = "nil";
-        for (int step = 0; step < 10; step++) {
+        for (int step = 0; step < 256; step++) {
             final String state = "state" + step;
 
             // Interact
@@ -28,12 +28,17 @@ public class APIInteract {
             log.info("Step #{} result: {}", step, result);
 
             // Draw
+/*
             final String draw = "draw" + step;
             final String print =
                     String.format(
-                            "%s = ap cdr %s",
+                            "%s = ap car ap cdr %s",
                             draw, state);
-            galaxy.add(print).getValue(draw).force();
+            log.info(
+                    "Step #{} draw: {}",
+                    step,
+                    galaxy.add(print).getValue(draw).force().toString());
+*/
 
             // Advance
             previousState = "ap car " + state;

@@ -11,6 +11,11 @@ public class True2Value implements LazyValue {
     private True2Value() {
     }
 
+    @Override
+    public LazyValue eval() {
+        return this;
+    }
+
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
