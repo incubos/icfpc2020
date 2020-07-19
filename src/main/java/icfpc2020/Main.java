@@ -19,13 +19,20 @@ class Main {
         try {
             var serverUrl = args[0];
             var playerKeyString = args[1];
+            boolean local = false;
+            if (args.length > 2) {
+                local = true;
+            }
 
             log.info("Server URL: {}, player key: {}", serverUrl, playerKeyString);
             HttpClient httpClient = HttpClient.newBuilder().build();
-            PrivateAPIImpl privateAPI = new PrivateAPIImpl(httpClient, serverUrl);
-            String send = privateAPI.send(Commands.create());
-            log.info("Create response={}", send);
-            log.info("dem={}", DemodulateList.dem(new MessageImpl(send)));
+            PrivateAPIImpl privateAPI = new PrivateAPIImpl(httpClient, local ? serverUrl : serverUrl + "/aliens/send");
+            if (local) {
+                String send = privateAPI.send(Commands.create());
+                log.info("Create response={}", send);
+                log.info("dem={}", DemodulateList.dem(new MessageImpl(send)));
+            }
+
             String send1 = privateAPI.send(Commands.join(playerKeyString));
             log.info("Join command response={}}", send1);
             log.info("dem={}", DemodulateList.dem(new MessageImpl(send1)));
