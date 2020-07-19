@@ -41,6 +41,25 @@ public final class Evaluator implements Universe {
         this(new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8)));
     }
 
+    @NotNull
+    public Evaluator add(@NotNull final String code) throws IOException {
+        final BufferedReader reader =
+                new BufferedReader(
+                        new InputStreamReader(
+                                new ByteArrayInputStream(
+                                        code.getBytes(StandardCharsets.UTF_8))));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            final Declaration declaration = DeclarationParser.parse(line);
+            if (declarations.put(declaration.name, declaration.node) != null) {
+                log.error("duplicate declaration for name {}, node {}", declaration.name, declaration.name);
+                throw new IllegalStateException("Duplicate declaration: " + declaration.name);
+            }
+        }
+
+        return this;
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             throw new IllegalArgumentException("File name expected as an argument");
@@ -60,8 +79,9 @@ public final class Evaluator implements Universe {
         System.out.println(evaluator.getValue("test").asConst());
     }
 
+    @NotNull
     @Override
-    public @NotNull LazyValue getValue(@NotNull final String name) {
+    public LazyValue getValue(@NotNull final String name) {
         final LazyValue cached = values.get(name);
         if (cached != null) {
             return cached;

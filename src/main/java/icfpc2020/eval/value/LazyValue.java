@@ -22,6 +22,16 @@ public interface LazyValue {
         throw new UnsupportedOperationException();
     }
 
+    default LazyValue force() {
+        LazyValue previous;
+        LazyValue current = this;
+        do {
+            previous = current;
+            current = current.eval();
+        } while (previous != current);
+        return current;
+    }
+
     default BigInteger asConst() {
         LazyValue previous;
         LazyValue current = this;
