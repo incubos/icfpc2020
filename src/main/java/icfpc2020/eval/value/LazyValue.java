@@ -28,13 +28,17 @@ public interface LazyValue {
         throw new UnsupportedOperationException();
     }
 
-    default BigInteger asConst() {
+    default LazyValue force() {
         LazyValue previous;
         LazyValue current = this;
         do {
             previous = current;
             current = current.eval();
         } while (previous != current);
-        return current.asConst();
+        return current;
+    }
+
+    default BigInteger asConst() {
+        return force().asConst();
     }
 }
