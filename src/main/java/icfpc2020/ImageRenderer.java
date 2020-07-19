@@ -33,7 +33,7 @@ public class ImageRenderer {
         graphics.dispose();
     }
 
-    public ImageRenderer(String file, final java.util.List<Draw.Coord> coords) {
+    public ImageRenderer(String file, final java.util.List<Draw.Coord> coords, int minsize) {
         // 0, 0 point should be explicitly included!
         int minx = 0;
         int maxx = 0;
@@ -45,13 +45,17 @@ public class ImageRenderer {
             miny = Math.min(miny, (int) coord.y);
             maxy = Math.max(maxy, (int) coord.y);
         }
-        this.file = file;
         this.width = maxx - minx + 1;
         this.height = maxy - miny + 1;
+        this.file = file;
         this.minx = minx;
         this.miny = miny;
 
         this.bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        // Too small
+        if (width < minsize || height < minsize) {
+            return;
+        }
         Graphics graphics = bufferedImage.getGraphics();
         graphics.setColor(new Color(0));
         graphics.fillRect(0, 0, width, height);
