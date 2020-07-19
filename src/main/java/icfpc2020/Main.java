@@ -17,6 +17,16 @@ import java.util.List;
 class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
+    /**
+     * To run locally:
+     * One process creates a game:
+     * ./run.sh https://icfpc2020-api.testkontur.ru/aliens/send?apiKey=3132acdb670045d3b93482f7e0b65359 1 local create
+     * in its logs it'll show two player key and which one does it pick and which one should go
+     * to the counterparth (watch for OTHER_PLAYER_KEY_SHOULD_BE in logs).
+     * Other process should run following, with a player key in parameters:
+     * ./run.sh https://icfpc2020-api.testkontur.ru/aliens/send?apiKey=3132acdb670045d3b93482f7e0b65359 1 local <other player key>
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             var serverUrl = args[0];
@@ -25,22 +35,32 @@ class Main {
             if (args.length > 2) {
                 local = true;
             }
-            String role = "";
+            String localPlayerKey = "";
+            boolean create = false;
             if (args.length > 3) {
-                role = args[3];
+                if (args[3].equals("create")) {
+                    create = true;
+                } else {
+                    localPlayerKey = args[3];
+                    log.info("localPlayerKey={}",localPlayerKey);
+                }
             }
 
             log.info("Server URL: {}, player key: {}", serverUrl, playerKeyString);
             HttpClient httpClient = HttpClient.newBuilder().build();
             PrivateAPIImpl privateAPI = new PrivateAPIImpl(httpClient, local ? serverUrl : serverUrl + "/aliens/send");
             if (local) {
-                String send = privateAPI.send(Commands.create());
-                log.info("Create response={}", send);
-                @NotNull String dem = DemodulateValue.demodulate(send);
-                log.info("dem={}", dem);
-                String key = role.equals("attack") ? dem.split(" ")[17] : dem.split(" ")[29];
-                log.info("{}}={}", role, key);
-                playerKeyString = key;
+                if (create) {
+                    String send = privateAPI.send(Commands.create());
+                    log.info("Create response={}", send);
+                    @NotNull String dem = DemodulateValue.demodulate(send);
+                    log.info("dem={}", dem);
+                    playerKeyString = dem.split(" ")[17];
+                    log.info("OTHER_PLAYER_KEY_SHOULD_BE {}",dem.split(" ")[29]);
+                } else {
+                    playerKeyString = localPlayerKey;
+                }
+                log.info("playerKey={}", playerKeyString);
             }
 
             String send1 = privateAPI.send(Commands.join(playerKeyString));
