@@ -15,6 +15,7 @@ public class Commands {
     public static final Command lpar = Command.ListLPar;
     public static final Command comma = Command.ListComma;
     public static final Command rpar = Command.ListRPar;
+    public static final Command nil = Command.Nil;
 
     public static String create() {
         String s = ModulateList.mod2(List.of(lpar, number(1),
@@ -37,7 +38,7 @@ public class Commands {
 
     // Should accpet unknown list later
     public static String join(String playerKey) {
-        String s = ModulateList.mod2(List.of(lpar, number(2), comma, number(playerKey), comma, lpar, rpar, rpar)).toString();
+        String s = ModulateList.mod2(List.of(lpar, number(2), comma, number(playerKey), comma, nil, rpar)).toString();
         log.debug("Join command for playerKey={} command={}", playerKey, s);
         return s;
     }

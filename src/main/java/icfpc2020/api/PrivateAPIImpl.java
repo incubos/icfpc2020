@@ -46,6 +46,7 @@ public class PrivateAPIImpl extends API {
 
         if (response.statusCode() != HttpURLConnection.HTTP_OK) {
             log.error("Bad server response: {}", response);
+            log.error("Bad server response: {}", response.body());
             throw new RuntimeException("Bad response");
         }
 

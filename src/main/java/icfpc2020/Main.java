@@ -30,7 +30,11 @@ class Main {
             if (local) {
                 String send = privateAPI.send(Commands.create());
                 log.info("Create response={}", send);
-                log.info("dem={}", DemodulateList.dem(new MessageImpl(send)));
+                List<Pictogram> dem = DemodulateList.dem(new MessageImpl(send));
+                log.info("dem={}", dem);
+                Pictogram attackerKey = dem.get(17);
+                log.info("attackerKey={}", attackerKey);
+                playerKeyString = ((NumberR)attackerKey).n.toString();
             }
 
             String send1 = privateAPI.send(Commands.join(playerKeyString));
