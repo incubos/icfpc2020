@@ -135,6 +135,8 @@ public class EvaluatorTest {
     @Test
     public void dem() throws Exception {
         evalVar("ap ap cons 1 ap ap cons 2 nil", "ap dem ap mod ap ap cons 1 ap ap cons 2 nil");
+        evalVar("nil", "ap dem ap mod nil");
+        evalVar("22", "ap dem ap mod 22");
     }
 
     @Test
