@@ -49,6 +49,15 @@ public class EvaluatorTest {
                 function(code).eval().asBinary().toString());
     }
 
+    private static void evalImage(
+            @NotNull final String expectedResult,
+            @NotNull final String code) throws Exception {
+        assertEquals(
+                expectedResult,
+                function(code).eval().asImage().toString());
+    }
+
+
     private static void evalVar(
             @NotNull final String expectedResult,
             @NotNull final String code) throws Exception {
@@ -317,5 +326,12 @@ public class EvaluatorTest {
                         "test = ap ap ap vec x0 x1 x2");
         evalConst("0", "ap car ap ap vec 0 1");
         evalConst("1", "ap cdr ap ap vec 0 1");
+    }
+
+    @Test
+    public void draw()  throws Exception {
+        evalImage("[]", "ap draw nil");
+        evalImage("[(x=1, y=2)]", "ap draw ap ap vec 1 2");
+        evalImage("[(x=1, y=2), (x=3, y=1)]", "ap draw ap ap cons ap ap vec 1 2 ap ap cons ap ap vec 3 1 nil");
     }
 }

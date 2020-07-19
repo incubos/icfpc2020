@@ -85,6 +85,8 @@ public final class DeclarationParser {
                 return SendNode.INSTANCE;
             case "vec":
                 return VecNode.INSTANCE;
+            case "draw":
+                return DrawNode.INSTANCE;
             default:
                 try {
                     return new ConstantNode(new BigInteger(token));

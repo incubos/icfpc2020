@@ -1,6 +1,6 @@
 package icfpc2020.eval.ast;
 
-import icfpc2020.eval.value.Cons2Value;
+import icfpc2020.eval.value.DrawValue;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +23,6 @@ final class DrawNode implements ASTNode {
     @NotNull
     @Override
     public LazyValue eval(@NotNull final Function<String, ASTNode> declarations) {
-        return Cons2Value.INSTANCE;
+        return DrawValue.INSTANCE;
     }
 }
