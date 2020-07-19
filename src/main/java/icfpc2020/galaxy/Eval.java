@@ -42,9 +42,10 @@ public class Eval {
     private Vect vector = new Vect(BigInteger.ZERO, BigInteger.ZERO);
 
     int iteration = 0;
+
     public void iterate() {
         while (true) {
-            System.out.println("Iteration " + iteration++);
+            System.out.println("Iteration " + iteration);
             Expr click = new Ap(new Ap(cons, new Atom(vector.X)), new Atom(vector.Y));
             final Expr[] res = interact(state, click);
             final Expr newState = res[0];
@@ -52,13 +53,22 @@ public class Eval {
             PRINT_IMAGES(images);
             vector = REQUEST_CLICK_FROM_USER();
             state = newState;
+            iteration++;
             if (iteration == 20) {
                 break;
             }
         }
     }
 
+    private final Vect[] KNOWN_CLICKS = new Vect[]{
+            new Vect(1, 1),
+            new Vect(3, 4)
+    };
+
     public Vect REQUEST_CLICK_FROM_USER() {
+        if (iteration < KNOWN_CLICKS.length) {
+            return KNOWN_CLICKS[iteration];
+        }
         return new Vect(1, 1);
     }
 
@@ -164,6 +174,8 @@ public class Eval {
                 res[1] = v;
             } else if (res[2] == null) {
                 res[2] = v;
+            } else {
+                throw new UnsupportedOperationException("GET_LIST_ITEMS_FROM_EXPR too many values: " + expr.toString());
             }
         });
         return new FlagStateData(res[0], res[1], res[2]);
