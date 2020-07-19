@@ -43,7 +43,7 @@ public class Eval {
 
     int iteration = 0;
 
-    final Clicker clicker = new Clicker();
+    final Clicker clicker = new RepeatClicker(ClickerRoundabout::new, 400); // 400 is enough for 20x20
 
     public void iterate() {
         while (true) {
@@ -56,7 +56,7 @@ public class Eval {
             vector = REQUEST_CLICK_FROM_USER();
             state = newState;
             iteration++;
-            if (iteration == 100) {
+            if (iteration == 1000) {
                 break;
             }
         }
