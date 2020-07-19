@@ -69,7 +69,7 @@ public class EvaluatorTest {
         var input = value.force();
         if (input instanceof ConsValue) {
             ConsValue consValue = (ConsValue) input;
-            acc.add(consValue.left.force());
+            acc.add(consValue.left);
             return list(consValue.right, acc);
         } else {
             return acc;

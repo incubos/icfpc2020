@@ -17,7 +17,7 @@ public class MultipledrawValue implements LazyValue {
         } else if (input instanceof ConsValue) {
             ConsValue consValue = (ConsValue) input;
             return new ConsValue(
-                    new ApplyValue(DrawValue.INSTANCE, consValue.left),
+                    new ApplyValue(DrawValue.INSTANCE, consValue.left).force(),
                     apply(consValue.right)
             );
         } else {
