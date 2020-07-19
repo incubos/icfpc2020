@@ -15,19 +15,28 @@ public class DrawValue implements LazyValue {
 
     public void applyInternal(@NotNull final LazyValue arg,
                               final List<Draw.Coord> acc,
-                              final Stack<BigInteger> stack) {
+                              final BigInteger[] arr) {
         final LazyValue input = arg.eval();
         if (input instanceof ConstantValue) {
             BigInteger bi = arg.eval().asConst();
-            if (stack.isEmpty())
-                stack.push(bi);
+            if (arr[0] == null)
+                arr[0] = bi;
             else {
-                acc.add(Draw.Coord.of(stack.pop(), bi));
+                acc.add(Draw.Coord.of(arr[0], bi));
+                arr[0] = null;
             }
         } else if (input instanceof ApplyValue) {
             ApplyValue applyValue = (ApplyValue) input;
-            applyInternal(applyValue.function, acc, stack);
-            applyInternal(applyValue.argument, acc, stack);
+            applyInternal(applyValue.function, acc, arr);
+            applyInternal(applyValue.argument, acc, arr);
+        } else if (input instanceof NilValue) {
+            if (arr[0] != null)
+                throw new IllegalArgumentException("draw can't operate non-pairs");
+        } else if (input instanceof Cons2Value) {
+            if (arr[0] != null)
+                throw new IllegalArgumentException("draw can't operate non-pairs");
+        } else {
+            throw new UnsupportedOperationException("draw only support list of vecs");
         }
     }
 
@@ -35,7 +44,7 @@ public class DrawValue implements LazyValue {
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
         var acc = new ArrayList<Draw.Coord>();
-        applyInternal(arg, acc, new Stack<>());
+        applyInternal(arg, acc, new BigInteger[1]);
         return new ImageValue(acc);
     }
 
