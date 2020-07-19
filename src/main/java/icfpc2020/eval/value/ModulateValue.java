@@ -18,19 +18,17 @@ public class ModulateValue implements LazyValue {
     // cons, "11",
     // nil, "00",
     public void applyInternal(@NotNull final LazyValue arg, final StringBuilder sb) {
-        final LazyValue input = arg.eval();
-        if (input instanceof ConstantValue) {
-            sb.append(Modulate.modString(input.asConst()));
-        } else if (input instanceof ApplyValue) {
-            ApplyValue applyValue = (ApplyValue) input;
-            applyInternal(applyValue.function, sb);
-            applyInternal(applyValue.argument, sb);
-        } else if (input instanceof NilValue) {
+        if (arg instanceof ConstantValue) {
+            sb.append(Modulate.modString(arg.asConst()));
+        } else if (arg instanceof NilValue) {
             sb.append("00");
-        } else if (input instanceof Cons2Value) {
+        } else if (arg instanceof ConsValue) {
+            ConsValue consValue = (ConsValue) arg;
             sb.append("11");
+            applyInternal(consValue.left.force(), sb);
+            applyInternal(consValue.right.force(), sb);
         } else {
-            log.error("unexpected literal while modulating {}", input.toString());
+            log.error("unexpected literal while modulating {}", arg.toString());
             throw new UnsupportedOperationException("modulate argument should be modulateable");
         }
     }
@@ -39,7 +37,7 @@ public class ModulateValue implements LazyValue {
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
         final StringBuilder sb = new StringBuilder();
-        applyInternal(arg, sb);
+        applyInternal(arg.force(), sb);
         return new BinaryValue(new MessageImpl(sb.toString()));
     }
 

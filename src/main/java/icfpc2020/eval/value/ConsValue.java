@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class ConsValue implements LazyValue {
     @NotNull
-    private final LazyValue left;
+    public final LazyValue left;
     @NotNull
-    private final LazyValue right;
+    public final LazyValue right;
 
     public ConsValue(@NotNull final LazyValue left, @NotNull final LazyValue right) {
         this.left = left;

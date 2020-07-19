@@ -143,7 +143,7 @@ public class EvaluatorTest {
 
     @Test
     public void mod() throws Exception {
-        evalBinary("1101100001110110001000", "ap mod ap ap cons 1 ap ap cons 2 nil");
+        evalBinary("1101100001110110001000", "ap mod ap ap cons ap ap ap if0 0 1 1000 ap ap cons 2 nil");
     }
 
     @Test
