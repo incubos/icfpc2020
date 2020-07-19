@@ -15,11 +15,6 @@ public class C1Value implements LazyValue {
         this.middle = middle;
     }
 
-    @Override
-    public LazyValue eval() {
-        return this;
-    }
-
     @NotNull
     @Override
     //    ap ap ap c x0 x1 x2   =   ap ap x0 x2 x1

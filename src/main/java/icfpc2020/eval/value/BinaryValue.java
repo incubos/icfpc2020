@@ -12,11 +12,6 @@ public class BinaryValue implements LazyValue {
     }
 
     @Override
-    public LazyValue eval() {
-        return this;
-    }
-
-    @Override
     public Message asBinary() {
         return value;
     }
