@@ -20,8 +20,8 @@ public class ImageRenderer {
 
     public ImageRenderer(String file) {
         this.file = file;
-        this.width = 1024;
-        this.height = 1024;
+        this.width = 300;
+        this.height = 300;
         this.bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = bufferedImage.getGraphics();
         graphics.setColor(new Color(0));
