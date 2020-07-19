@@ -52,6 +52,7 @@ public class DemodulateValue implements LazyValue {
         int n = currentPosition - pos;
         if (n == 0) {
             sb.append("0 ");
+            return pos + 1;
         }
         int endIndex = currentPosition + 1 + (n * 4);
         String d = s.substring(currentPosition + 1, endIndex);
