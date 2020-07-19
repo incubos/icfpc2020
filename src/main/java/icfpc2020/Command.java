@@ -3,22 +3,23 @@ package icfpc2020;
 import icfpc2020.galaxy.Expr;
 
 import java.io.IOException;
-
+import java.util.List;
+import java.util.Map;
 
 public enum Command {
     Equality("=", 4, 3),
-    Successor("inc", 5, 4),
-    Predecessor("dec", 6, 4),
-    Sum("add", 7, 4),
-    Product("mul", 9, 4),
-    IntegerDivision("div", 10, 4),
+    Successor("inc", 5, 4) ,
+    Predecessor("dec", 6, 4) ,
+    Sum("add", 7, 4) ,
+    Product("mul", 9, 4) ,
+    IntegerDivision("div", 10, 4) ,
     EqualityBooleans("eq", 11, 4),
-    StrictLessThan("lt", 12, 4),
+    StrictLessThan("lt", 12, 4) ,
     Modulate("mod", 13, 4),
     Demodulate("dem", 14, 4),
     Send("send", 15, 3, 3, 4, 4),
     Negate("neg", 16, 3),
-    App("ap", 17, 2),
+    App("ap", 17, 2) ,
     S("s", 18, 3),
     C("c", 19, 3),
     B("b", 20, 3),
