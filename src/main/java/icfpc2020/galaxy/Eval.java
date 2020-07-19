@@ -44,7 +44,7 @@ public class Eval {
 
     int iteration = 0;
 
-    final int clicksize = 40;
+    final int clicksize = 200;
     final Clicker clicker = new RepeatClicker(ClickerRoundabout::new, clicksize * clicksize);
 
     public void iterate() {
@@ -84,7 +84,7 @@ public class Eval {
             consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
         });
         if (points.size() != 0 && !points.equals(prevPoints)) {
-            System.out.println("New image on iteration: " + iteration + " Click: "+ lastClick +
+            System.out.println("New image on iteration: " + iteration + " Click: " + lastClick +
                     " Points: " + points.size());
             prevPoints = points;
             // Creates and saves
@@ -124,8 +124,7 @@ public class Eval {
                 final Expr y = ((Ap) head).Arg;
                 consumer.accept(new Vect(asNum(x), asNum(y)));
             } catch (Exception e) {
-                log.error("Illegal coord in consumeListOfVectors: {}", expr);
-                System.err.println();
+                throw new IllegalStateException("Illegal coord in consumeListOfVectors: " + expr, e);
             }
         });
     }
@@ -145,8 +144,7 @@ public class Eval {
                 expr = tail;
             }
         } catch (Exception e) {
-            log.error("Illegal list structure in consumeList: {}", expr, e);
-            System.err.println();
+            throw new IllegalStateException("Illegal list structure in consumeList: " + expr, e);
         }
     }
 
@@ -214,17 +212,37 @@ public class Eval {
         final StringBuilder sb = new StringBuilder();
         modulateRec(data, sb);
         final String message = sb.toString();
-        System.out.println("Sending: " + data.toString());
+//        System.out.println("Sending: " + data.toString());
+        System.out.println("Sending: " + ppListOfLists(data));
 //        System.out.println("Sending: " + message);
         final String response = PublicAPIImpl.INSTANCE.send(message);
         final String demodulate = DemodulateValue.demodulate(response);
         final Expr expr = GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(demodulate.split(" "), 0));
 //        System.out.println("Response: " + demodulate);
 //        System.out.println("Response: " + expr.toString());
-        final StringBuilder sb2 = new StringBuilder();
-        consumeList(expr, l -> sb2.append(l.toString()).append(" "));
-        System.out.println("Response: " + sb2);
+        System.out.println("Response: " + ppListOfLists(expr));
         return expr;
+    }
+
+    public static String ppListOfLists(Expr expr) {
+        try {
+            final List<String> results = new ArrayList<>();
+            if (expr instanceof Atom) {
+                return ((Atom) expr).Name;
+            }
+            consumeList(expr, l -> {
+                if (l instanceof Atom) {
+                    results.add(((Atom) l).Name);
+                } else if (l instanceof Ap) {
+                    results.add(ppListOfLists(l));
+                } else {
+                    results.add(l.toString());
+                }
+            });
+            return "[" + String.join(", ", results) + "]";
+        } catch (Throwable t) {
+            return "E"; // Some inner constructions can be invalid, since they won't be used?!?
+        }
     }
 
 
