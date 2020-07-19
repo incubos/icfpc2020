@@ -31,7 +31,7 @@ public final class LazyNodeValue implements LazyValue {
 
     @Override
     public LazyValue eval() {
-        return node.eval(universe).eval();
+        return node.eval(universe);
     }
 
     @Override
