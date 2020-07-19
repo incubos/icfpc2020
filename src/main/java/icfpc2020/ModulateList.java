@@ -34,4 +34,21 @@ public class ModulateList {
         });
         return new MessageImpl(sb.toString());
     }
+
+    public static Message mod2(List<Tokens.Token> parseResults) {
+        var sb = new StringBuilder();
+        parseResults.forEach(o -> {
+            if (o instanceof Command) {
+                var command = ((Command) o);
+                if (!modulateDict.containsKey(command)) {
+                    throw new UnsupportedOperationException("can only modulate lists");
+                }
+                sb.append(modulateDict.get(command));
+            } else if (o instanceof Tokens.Number) {
+                var number = ((Tokens.Number) o).number;
+                sb.append(Modulate.mod(number));
+            }
+        });
+        return new MessageImpl(sb.toString());
+    }
 }

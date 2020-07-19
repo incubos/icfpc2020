@@ -1,12 +1,8 @@
 package icfpc2020;
 
-import icfpc2020.galaxy.Expr;
-
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
-public enum Command {
+public enum Command implements Tokens.Token {
     Equality("=", 4, 3),
     Successor("inc", 5, 4) ,
     Predecessor("dec", 6, 4) ,
