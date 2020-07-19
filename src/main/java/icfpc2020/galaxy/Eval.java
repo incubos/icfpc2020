@@ -141,7 +141,7 @@ public class Eval {
                 expr = tail;
             }
         } catch (Exception e) {
-            log.error("Illegal list structure in consumeList: {}", expr);
+            log.error("Illegal list structure in consumeList: {}", expr, e);
             System.err.println();
         }
     }
