@@ -3,7 +3,7 @@
 build/
 dist/
 out/
-
+src/main/resources/images/
 Dockerfile
 
 *.iml

@@ -51,20 +51,25 @@ public class Eval {
     }
 
     private int imageNumber = 1;
+
     // images is a list of pairs, se createListOfVectors
     public void PRINT_IMAGES(Expr images) {
-        final URL imagesUrl = Eval.class.getResource("/images");
-        final String imagePath = imagesUrl.getPath() + "/image" + imageNumber + ".png";
-        final ImageRenderer renderer = new ImageRenderer(imagePath);
-        consumeListOfVectors(images, (v) -> renderer.putDot(Draw.Coord.of(vector.X, vector.Y)));
         try {
-            renderer.persist();
-        } catch (IOException e) {
-            log.error("Failed to save to file {}", imagePath);
+            final URL imagesUrl = Eval.class.getResource("/images");
+            final String imagePath = imagesUrl.getPath() + "/image" + imageNumber + ".png";
+            final ImageRenderer renderer = new ImageRenderer(imagePath);
+            consumeListOfVectors(images, (v) -> renderer.putDot(Draw.Coord.of(vector.X, vector.Y)));
+            try {
+                renderer.persist();
+            } catch (IOException e) {
+                log.error("Failed to save to file {}", imagePath);
+            }
+        } finally {
+            imageNumber++;
         }
     }
 
-    public Expr listOfVectorsExpr(final List<Vect> coordinates) {
+    public Expr generateCoordList(final List<Vect> coordinates) {
         // Empty
         if (coordinates.size() == 0) {
             return nil;
@@ -87,42 +92,60 @@ public class Eval {
     }
 
 
+    public static void consumeListOfVectors(Expr expr, final Consumer<Vect> consumer) {
+        consumeList(expr, head -> {
+            // single pair =  ap ( ap ( cons , (ap (ap cons, 0) , 1),  nil)
+            // head = ap (ap cons, 0) , 1
+            final Expr x = ((Ap) ((Ap) head).Fun).Arg;
+            final Expr y = ((Ap) head).Arg;
+            consumer.accept(new Vect(asNum(x), asNum(y)));
+        });
+    }
+
     // Head and emtpy tail
     // ( head, tail ) = ap ap cons head tail = ap ( ap ( cons, head ) , tail )
-    public static void consumeListOfVectors(Expr expr, final Consumer<Vect> consumer) {
+    public static void consumeList(Expr expr, final Consumer<Expr> consumer) {
         try {
             while (expr != nil) {
                 final Expr ap = ((Ap) expr).Fun; // ap ( cons, head )
                 final Expr head = ((Ap) ap).Arg; // head
                 final Expr tail = ((Ap) expr).Arg; // tail
-
-                // single pair =  ap ( ap ( cons , (ap (ap cons, 0) , 1),  nil)
-                // head = ap (ap cons, 0) , 1
-                final Expr x = ((Ap)((Ap) head).Fun).Arg;
-                final Expr y = ((Ap) head).Arg;
-                consumer.accept(new Vect(asNum(x), asNum(y)));
+                consumer.accept(head);
                 expr = tail;
             }
         } catch (Exception e) {
             log.error("Illegal list of pairs structure {}", expr);
             System.err.println();
         }
-
     }
+
 
     // flag, newState, data
     class FlagStateData {
         public Expr flag;
         public Expr newState;
         public Expr data;
+
         public FlagStateData(Expr flag, Expr newState, Expr data) {
             this.flag = flag;
             this.newState = newState;
             this.data = data;
         }
     }
-    private FlagStateData GET_LIST_ITEMS_FROM_EXPR(Expr res) {
-        throw new UnsupportedOperationException();
+
+    private FlagStateData GET_LIST_ITEMS_FROM_EXPR(Expr expr) {
+        // Assume that we are store there in list
+        final Expr[] res = new Expr[3];
+        consumeList(expr, v -> {
+            if (res[0] == null) {
+                res[0] = v;
+            } else if (res[1] == null) {
+                res[1] = v;
+            } else if (res[2] == null) {
+                res[2] = v;
+            }
+        });
+        return new FlagStateData(res[0], res[1], res[2]);
     }
 
     // ap, "",
@@ -136,8 +159,8 @@ public class Eval {
         } else if (Pattern.matches("-?//d+", arg.toString())) {
             sb.append(Modulate.modString(asNum(arg)));
         } else if (arg instanceof Ap) {
-            modulateRec(((Ap)arg).Fun, sb);
-            modulateRec(((Ap)arg).Arg, sb);
+            modulateRec(((Ap) arg).Fun, sb);
+            modulateRec(((Ap) arg).Arg, sb);
         } else {
             log.error("unexpected literal while modulating {}", arg.toString());
             throw new UnsupportedOperationException("modulate argument should be modulateable");
@@ -145,12 +168,12 @@ public class Eval {
     }
 
 
-        private Expr SEND_TO_ALIEN_PROXY(Expr data) {
-            final StringBuilder sb = new StringBuilder();
-            modulateRec(data, sb);
-            final String response = API.send(sb.toString());
-            final String demodulate = DemodulateValue.demodulate(response);
-            return GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(demodulate.split(" "), 0));
+    private Expr SEND_TO_ALIEN_PROXY(Expr data) {
+        final StringBuilder sb = new StringBuilder();
+        modulateRec(data, sb);
+        final String response = API.send(sb.toString());
+        final String demodulate = DemodulateValue.demodulate(response);
+        return GalaxyParser.parseCommand(new GalaxyParser.ParseTokens(demodulate.split(" "), 0));
     }
 
 
@@ -160,9 +183,9 @@ public class Eval {
         Expr expr = new Ap(new Ap(new Atom("galaxy"), state), event);
         Expr res = eval(expr);
         // Note: res will be modulatable here (consists of cons, nil and numbers only)
-        final FlagStateData fsd =  GET_LIST_ITEMS_FROM_EXPR(res);
+        final FlagStateData fsd = GET_LIST_ITEMS_FROM_EXPR(res);
         if (asNum(fsd.flag).equals(BigInteger.ZERO)) {
-            return new Expr[] {fsd.newState, fsd.data};
+            return new Expr[]{fsd.newState, fsd.data};
         }
         return interact(fsd.newState, SEND_TO_ALIEN_PROXY(fsd.data));
     }
@@ -187,12 +210,12 @@ public class Eval {
     private Expr tryEval(Expr expr) {
         if (expr.Evaluated != null)
             return expr.Evaluated;
-        if (expr instanceof Atom && functions.containsKey(((Atom)expr).Name)) {
-            return functions.get(((Atom)expr).Name);
+        if (expr instanceof Atom && functions.containsKey(((Atom) expr).Name)) {
+            return functions.get(((Atom) expr).Name);
         }
         if (expr instanceof Ap) {
-            Expr fun = eval(((Ap)expr).Fun);
-            Expr x = ((Ap)expr).Arg;
+            Expr fun = eval(((Ap) expr).Fun);
+            Expr x = ((Ap) expr).Arg;
             if (fun instanceof Atom) {
                 if (((Atom) fun).Name.equals("neg")) return new Atom(asNum(eval(x)).negate());
                 if (((Atom) fun).Name.equals("i")) return x;
@@ -206,8 +229,8 @@ public class Eval {
             }
 
             if (fun instanceof Ap) {
-                Expr fun2 = eval(((Ap)fun).Fun);
-                Expr y = ((Ap)fun).Arg;
+                Expr fun2 = eval(((Ap) fun).Fun);
+                Expr y = ((Ap) fun).Arg;
                 if (fun2 instanceof Atom) {
                     if (((Atom) fun2).Name.equals("t")) return y;
                     if (((Atom) fun2).Name.equals("f")) return x;
@@ -220,14 +243,15 @@ public class Eval {
                 }
 
                 if (fun2 instanceof Ap) {
-                    Expr fun3 = eval(((Ap)fun2).Fun);
-                    Expr z = ((Ap)fun2).Arg;
+                    Expr fun3 = eval(((Ap) fun2).Fun);
+                    Expr z = ((Ap) fun2).Arg;
                     if (fun3 instanceof Atom) {
                         if (((Atom) fun3).Name.equals("s")) return new Ap(new Ap(z, x), new Ap(y, x));
                         if (((Atom) fun3).Name.equals("c")) return new Ap(new Ap(z, x), y);
                         if (((Atom) fun3).Name.equals("b")) return new Ap(z, new Ap(y, x));
                         if (((Atom) fun3).Name.equals("cons")) return new Ap(new Ap(x, z), y);
-                    };
+                    }
+                    ;
                 }
             }
         }
