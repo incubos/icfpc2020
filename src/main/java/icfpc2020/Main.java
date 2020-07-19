@@ -66,7 +66,7 @@ class Main {
             String send1 = privateAPI.send(Commands.join(playerKeyString));
             log.info("Join command response={}}", send1);
             log.info("dem={}", DemodulateValue.demodulate(send1));
-            String send2 = privateAPI.send(Commands.start(playerKeyString, "12", "23", "34", "45"));
+            String send2 = privateAPI.send(Commands.startNil(playerKeyString));
             log.info("Start command response={}", send2);
             log.info("dem={}", DemodulateValue.demodulate(send2));
 
