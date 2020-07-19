@@ -16,15 +16,16 @@ public class DrawValue implements LazyValue {
     public void applyInternal(@NotNull final LazyValue arg,
                               final List<Draw.Coord> acc,
                               final Stack<BigInteger> stack) {
-        if (arg instanceof ConstantValue) {
-            BigInteger bi = arg.asConst();
+        final LazyValue input = arg.eval();
+        if (input instanceof ConstantValue) {
+            BigInteger bi = arg.eval().asConst();
             if (stack.isEmpty())
                 stack.push(bi);
             else {
                 acc.add(Draw.Coord.of(stack.pop(), bi));
             }
-        } else if (arg instanceof ApplyValue) {
-            ApplyValue applyValue = (ApplyValue) arg;
+        } else if (input instanceof ApplyValue) {
+            ApplyValue applyValue = (ApplyValue) input;
             applyInternal(applyValue.function, acc, stack);
             applyInternal(applyValue.argument, acc, stack);
         }

@@ -325,7 +325,7 @@ public class EvaluatorTest {
 
     @Test
     public void vec() throws Exception {
-        evalVar("ap ap 2 0 1",
+        evalVar("ap ap x2 x0 x1",
                 "x0 = 0\n" +
                         "x1 = 1\n" +
                         "x2 = 2\n" +
