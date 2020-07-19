@@ -43,6 +43,8 @@ public class Eval {
 
     int iteration = 0;
 
+    final Clicker clicker = new Clicker();
+
     public void iterate() {
         while (true) {
             System.out.println("Iteration " + iteration);
@@ -54,22 +56,16 @@ public class Eval {
             vector = REQUEST_CLICK_FROM_USER();
             state = newState;
             iteration++;
-            if (iteration == 20) {
+            if (iteration == 100) {
                 break;
             }
         }
     }
 
-    private final Vect[] KNOWN_CLICKS = new Vect[]{
-            new Vect(1, 1),
-            new Vect(3, 4)
-    };
-
     public Vect REQUEST_CLICK_FROM_USER() {
-        if (iteration < KNOWN_CLICKS.length) {
-            return KNOWN_CLICKS[iteration];
-        }
-        return new Vect(1, 1);
+        final Vect vect = clicker.nextClick();
+        System.out.println("Click: " + vect.X + "," + vect.Y);
+        return vect;
     }
 
     // images is a list of pairs, se createListOfVectors
@@ -149,7 +145,6 @@ public class Eval {
             System.err.println();
         }
     }
-
 
     // flag, newState, data
     class FlagStateData {

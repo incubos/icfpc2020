@@ -20,4 +20,16 @@ public class Vect extends Expr {
         return X + ", " + Y;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vect)) return false;
+        Vect vect = (Vect) o;
+        return X.equals(vect.X) && Y.equals(vect.Y);
+    }
+
+    public Vect d(int dx, int dy) {
+        return new Vect(X.add(BigInteger.valueOf(dx)), Y.add(BigInteger.valueOf(dy)));
+    }
+
 }
