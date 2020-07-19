@@ -21,6 +21,10 @@ public class APIInteract {
                 galaxy.add("s0h = ap car s0")
                         .getValue("s0h")
                         .force());
+        System.out.println(
+                galaxy.add("s0t = ap cdr s0")
+                        .getValue("s0t")
+                        .force());
 
 /*
         final LazyValue protocol = galaxy.getValue("galaxy");
