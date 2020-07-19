@@ -63,33 +63,27 @@ public class Eval {
         return new Vect(1, 1);
     }
 
-    private int imageNumber = 1;
-
     // images is a list of pairs, se createListOfVectors
     public void PRINT_IMAGES(Expr images) {
-        try {
-            int[] i = new int[]{0};
-            consumeList(images, (image) -> {
-                i[0]++;
-                final List<Draw.Coord> points = new ArrayList<>();
-                consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
-                final String imagePath = imageDir + "/" + imageNumber + "_" + i[0] + ".png";
-                if (points.size() == 0) {
-                    System.err.println("Empty file: " + imagePath);
-                    try {
-                        Files.deleteIfExists(Paths.get(imagePath));
-                    } catch (IOException e) {
-                        // Ignore
-                    }
+        int[] i = new int[]{0};
+        consumeList(images, (image) -> {
+            i[0]++;
+            final List<Draw.Coord> points = new ArrayList<>();
+            consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
+            final String imagePath = imageDir + "/" + iteration + "_" + i[0] + ".png";
+            if (points.size() == 0) {
+                System.err.println("Empty file: " + imagePath);
+                try {
+                    Files.deleteIfExists(Paths.get(imagePath));
+                } catch (IOException e) {
+                    // Ignore
                 }
-                if (points.size() != 0) {
-                    // Creates and saves
-                    new ImageRenderer(imagePath, points);
-                }
-            });
-        } finally {
-            imageNumber++;
-        }
+            }
+            if (points.size() != 0) {
+                // Creates and saves
+                new ImageRenderer(imagePath, points);
+            }
+        });
     }
 
     public Expr generateCoordList(final List<Vect> coordinates) {
