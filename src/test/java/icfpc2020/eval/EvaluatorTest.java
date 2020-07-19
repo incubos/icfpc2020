@@ -343,6 +343,7 @@ public class EvaluatorTest {
         evalImage("[]", "ap draw nil");
         evalImage("[(x=1, y=2)]", "ap draw ap ap vec 1 2");
         evalImage("[(x=1, y=2), (x=3, y=1)]", "ap draw ap ap cons ap ap vec 1 2 ap ap cons ap ap vec 3 1 nil");
+        evalImage("[(x=1, y=2), (x=3, y=1)]", "ap draw ap ap cons ap ap vec ap ap ap if0 0 1 1000 2 ap ap cons ap ap vec 3 1 nil");
         evalImage("", "ap draw x0");
         fail("Have to throw UnsupportedOperationException");
     }

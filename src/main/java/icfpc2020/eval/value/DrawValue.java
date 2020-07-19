@@ -42,7 +42,7 @@ public class DrawValue implements LazyValue {
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
         var acc = new ArrayList<Draw.Coord>();
-        applyInternal(arg, acc, new BigInteger[1]);
+        applyInternal(arg.force(), acc, new BigInteger[1]);
         return new ImageValue(acc);
     }
 
