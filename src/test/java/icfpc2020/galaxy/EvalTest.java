@@ -78,6 +78,13 @@ public class EvalTest {
     }
 
     @Test
+    public void testCar() throws IOException {
+        Assert.assertEquals("ap x2 t", compute("x2 = 2\n" +
+                        "test = ap car x2", "test"));
+    }
+
+
+    @Test
     public void testEq() throws IOException {
         Assert.assertEquals("f", compute("test = ap ap eq 0 20", "test"));
     }
