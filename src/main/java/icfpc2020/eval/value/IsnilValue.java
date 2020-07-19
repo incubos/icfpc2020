@@ -14,7 +14,7 @@ public final class IsnilValue implements LazyValue {
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
-        if (arg instanceof NilValue) {
+        if (arg.eval() instanceof NilValue) {
             return True2Value.INSTANCE;
         } else {
             return False2Value.INSTANCE;

@@ -2,6 +2,7 @@ package icfpc2020.eval.ast;
 
 import icfpc2020.eval.Universe;
 import icfpc2020.eval.value.ApplyValue;
+import icfpc2020.eval.value.LazyNodeValue;
 import icfpc2020.eval.value.LazyValue;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +31,7 @@ final class ApplyNode implements ASTNode {
     @Override
     public LazyValue eval(@NotNull final Universe universe) {
         return new ApplyValue(
-                function.eval(universe),
-                argument.eval(universe));
+                new LazyNodeValue(universe, function),
+                new LazyNodeValue(universe, argument));
     }
 }

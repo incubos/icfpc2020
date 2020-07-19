@@ -11,6 +11,11 @@ public final class NilValue implements LazyValue {
     private NilValue() {
     }
 
+    @Override
+    public LazyValue eval() {
+        return this;
+    }
+
     @NotNull
     @Override
     public LazyValue apply(@NotNull final LazyValue arg) {
