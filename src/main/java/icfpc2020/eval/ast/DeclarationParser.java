@@ -85,6 +85,10 @@ public final class DeclarationParser {
                 return IsnilNode.INSTANCE;
             case "send":
                 return SendNode.INSTANCE;
+            case "vec":
+                return VecNode.INSTANCE;
+            case "draw":
+                return DrawNode.INSTANCE;
             case "interact":
                 return InteractNode.INSTANCE;
             case "f38":

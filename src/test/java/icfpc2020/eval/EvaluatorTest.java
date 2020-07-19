@@ -54,6 +54,15 @@ public class EvaluatorTest {
                 function(code).eval().asBinary().toString());
     }
 
+    private static void evalImage(
+            @NotNull final String expectedResult,
+            @NotNull final String code) throws Exception {
+        assertEquals(
+                expectedResult,
+                function(code).eval().asImage().toString());
+    }
+
+
     private static void evalVar(
             @NotNull final String expectedResult,
             @NotNull final String code) throws Exception {
@@ -316,6 +325,27 @@ public class EvaluatorTest {
     @Test
     public void send() throws Exception {
         evalConst("1", "ap car ap send ap ap cons 0 nil");
+    }
+
+    @Test
+    public void vec() throws Exception {
+        evalVar("ap ap x2 x0 x1",
+                "x0 = 0\n" +
+                        "x1 = 1\n" +
+                        "x2 = 2\n" +
+                        "test = ap ap ap vec x0 x1 x2");
+        evalConst("0", "ap car ap ap vec 0 1");
+        evalConst("1", "ap cdr ap ap vec 0 1");
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void draw()  throws Exception {
+        evalImage("[]", "ap draw nil");
+        evalImage("[(x=1, y=2)]", "ap draw ap ap vec 1 2");
+        evalImage("[(x=1, y=2), (x=3, y=1)]", "ap draw ap ap cons ap ap vec 1 2 ap ap cons ap ap vec 3 1 nil");
+        evalImage("[(x=1, y=2), (x=3, y=1)]", "ap draw ap ap cons ap ap vec ap ap ap if0 0 1 1000 2 ap ap cons ap ap vec 3 1 nil");
+        evalImage("", "ap draw x0");
+        fail("Have to throw UnsupportedOperationException");
     }
 
     @Test
