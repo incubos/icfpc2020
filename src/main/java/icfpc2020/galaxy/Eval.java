@@ -43,7 +43,7 @@ public class Eval {
 
     int iteration = 0;
 
-    final int clicksize = 20;
+    final int clicksize = 50;
     final Clicker clicker = new RepeatClicker(ClickerRoundabout::new, clicksize * clicksize);
 
     public void iterate() {
