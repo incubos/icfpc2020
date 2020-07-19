@@ -18,18 +18,19 @@ public class ModulateValue implements LazyValue {
     // cons, "11",
     // nil, "00",
     public void applyInternal(@NotNull final LazyValue arg, final StringBuilder sb) {
-        if (arg instanceof ConstantValue) {
-            sb.append(Modulate.modString(arg.asConst()));
-        } else if (arg instanceof ApplyValue) {
-            ApplyValue applyValue = (ApplyValue) arg;
+        final LazyValue input = arg.eval();
+        if (input instanceof ConstantValue) {
+            sb.append(Modulate.modString(input.asConst()));
+        } else if (input instanceof ApplyValue) {
+            ApplyValue applyValue = (ApplyValue) input;
             applyInternal(applyValue.function, sb);
             applyInternal(applyValue.argument, sb);
-        } else if (arg instanceof NilValue) {
+        } else if (input instanceof NilValue) {
             sb.append("00");
-        } else if (arg instanceof Cons2Value) {
+        } else if (input instanceof Cons2Value) {
             sb.append("11");
         } else {
-            log.error("unexpected literal while modulating {}", arg.toString());
+            log.error("unexpected literal while modulating {}", input.toString());
             throw new UnsupportedOperationException("modulate argument should be modulateable");
         }
     }

@@ -98,7 +98,7 @@ public class EvaluatorTest {
 
     @Test
     public void cons() throws Exception {
-        evalVar("ap ap 2 0 1",
+        evalVar("ap ap x2 x0 x1",
                 "x0 = 0\n" +
                         "x1 = 1\n" +
                         "x2 = 2\n" +
@@ -109,14 +109,14 @@ public class EvaluatorTest {
 
     @Test
     public void car() throws Exception {
-        evalVar("ap 2 t",
+        evalVar("ap x2 t",
                 "x2 = 2\n" +
                         "test = ap car x2");
     }
 
     @Test
     public void cdr() throws Exception {
-        evalVar("ap 2 f",
+        evalVar("ap x2 f",
                 "x2 = 2\n" +
                         "test = ap cdr x2");
     }
