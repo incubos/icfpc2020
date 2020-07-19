@@ -6,7 +6,6 @@ import icfpc2020.ImageRenderer;
 import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
@@ -41,8 +41,8 @@ public class Eval {
     private Expr state = nil;
     private Vect vector = new Vect(BigInteger.ZERO, BigInteger.ZERO);
 
+    int iteration = 0;
     public void iterate() {
-        int iteration = 0;
         while (true) {
             System.out.println("Iteration " + iteration++);
             Expr click = new Ap(new Ap(cons, new Atom(vector.X)), new Atom(vector.Y));
@@ -52,11 +52,14 @@ public class Eval {
             PRINT_IMAGES(images);
             vector = REQUEST_CLICK_FROM_USER();
             state = newState;
+            if (iteration == 20) {
+                break;
+            }
         }
     }
 
     public Vect REQUEST_CLICK_FROM_USER() {
-        return new Vect(42, 42);
+        return new Vect(0, 0);
     }
 
     private int imageNumber = 1;
@@ -69,8 +72,15 @@ public class Eval {
                 final String imagePath = imageDir + "/" + imageNumber + "_" + i[0] + ".png";
                 final List<Draw.Coord> points = new ArrayList<>();
                 consumeListOfVectors(image, (v) -> points.add(Draw.Coord.of(v.X, v.Y)));
+                if (points.size() == 0) {
+                    System.err.println("Empty file: " + imagePath);
+                    try {
+                        Files.deleteIfExists(Paths.get(imagePath));
+                    } catch (IOException e) {
+                        // Ignore
+                    }
+                }
                 if (points.size() != 0) {
-                    System.err.println("Nonempty file: " + imagePath);
                     final ImageRenderer renderer = new ImageRenderer(imagePath);
                     for (final Draw.Coord coord: points) {
                         renderer.putDot(coord);
