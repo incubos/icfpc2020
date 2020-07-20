@@ -4,6 +4,7 @@ import icfpc2020.api.GameResponse;
 import icfpc2020.api.GameStage;
 import icfpc2020.api.PrivateAPIImpl;
 import icfpc2020.api.Role;
+import icfpc2020.api.StaticGameMaxParams;
 import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
 import icfpc2020.strategy.RandomAccelerateStrategy;
@@ -81,9 +82,27 @@ class Main {
             log.info("dem={}", DemodulateValue.demodulate(send1));
             log.info("Join demList={}", DemodulateValue.eval(send1));
 
-            List<Object> joinResponse = DemodulateValue.eval(send1);
+            final GameResponse joinResponse = new GameResponse(DemodulateValue.eval(send1));
 
-            String send2 = privateAPI.send(Commands.start(playerKeyString, "10", "20", "10", "20"));
+            // Initial ship parameters
+            final String x0;
+            final String x1;
+            final String x2;
+            final String x3;
+            if (joinResponse.staticGameInfo.maxParams.isEmpty()) {
+                x0 = "10";
+                x1 = "20";
+                x2 = "10";
+                x3 = "20";
+            } else {
+                final StaticGameMaxParams params = joinResponse.staticGameInfo.maxParams.get();
+                x0 = params.x0.toString();
+                x1 = params.x1.toString();
+                x2 = params.x2.toString();
+                x3 = params.x3.toString();
+            }
+
+            String send2 = privateAPI.send(Commands.start(playerKeyString, x0, x1, x2, x3));
             log.info("Start command response={}", send2);
             log.info("dem={}", DemodulateValue.demodulate(send2));
             log.info("Start demList={}", DemodulateValue.eval(send2));

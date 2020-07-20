@@ -31,7 +31,7 @@ public class GameResponseTest {
                 new GameResponse(DemodulateValue.eval(
                         "110110000111010111101111000010000000011010111101111000100000000011011000011101110010000000011110111000010000110111010000000001111011000011101100010110110000111011000100000110000"));
         Assert.assertEquals(
-                "GameResponse{success=true, gameStage=NOT_STARTED, staticGameInfo=StaticGameInfo{role=ATTACKER}, gameState=null}",
+                "GameResponse{success=true, gameStage=NOT_STARTED, staticGameInfo=StaticGameInfo{role=ATTACKER, maxParams=Optional[StaticGameMaxParams{x0=1, x1=2, x2=1, x3=2}]}, gameState=null}",
                 gameResponse.toString());
     }
 
@@ -41,7 +41,7 @@ public class GameResponseTest {
                 new GameResponse(DemodulateValue.eval(
                         "11011000011101100010111101111000010000000011010111101111000100000000011011000011101110010000000011110111000010000110111010000000001111011000011101100010110110000111011000100000110000"));
         Assert.assertEquals(
-                "GameResponse{success=true, gameStage=FINISHED, staticGameInfo=StaticGameInfo{role=ATTACKER}, gameState=null}",
+                "GameResponse{success=true, gameStage=FINISHED, staticGameInfo=StaticGameInfo{role=ATTACKER, maxParams=Optional[StaticGameMaxParams{x0=1, x1=2, x2=1, x3=2}]}, gameState=null}",
                 gameResponse.toString());
     }
 
@@ -51,7 +51,7 @@ public class GameResponseTest {
                 new GameResponse(DemodulateValue.eval(
                         "110110000111011000101111011110000100000000110110000111110111100001110000001101100001110111001000000001111011100001000011011101000000000110000110000"));
         Assert.assertEquals(
-                "GameResponse{success=true, gameStage=FINISHED, staticGameInfo=StaticGameInfo{role=DEFENDER}, gameState=null}",
+                "GameResponse{success=true, gameStage=NOT_STARTED, staticGameInfo=StaticGameInfo{role=ATTACKER, maxParams=Optional[StaticGameMaxParams{x0=1, x1=2, x2=1, x3=2}]}, gameState=null}",
                 gameResponse.toString());
     }
 }
