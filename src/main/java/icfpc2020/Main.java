@@ -108,7 +108,7 @@ class Main {
             GameResponse gameResponse = new GameResponse(startResponse);
 
             boolean gameEnded = gameResponse.gameStage == GameStage.FINISHED;
-            var strategy = new CompositeStrategy(List.of(new AlwaysShootStrategy(),
+            var strategy = new CompositeStrategy(List.of(new SplitStrategy(),
                                                          new MovementStrategy()));
             while (!gameEnded) {
                 String commands = Commands.commands(playerKeyString, strategy.next(gameResponse));

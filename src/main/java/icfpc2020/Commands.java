@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -101,12 +102,20 @@ public class Commands {
     }
 
     public static List<Tokens.Token> split(String shipId, int maybeFuel, int maybeAmmo,
+                                           int something,
                                            int maybeHealth) {
-        List<Tokens.Token> commands = List.of(Commands.lpar, number(3), comma, number(shipId),
+        List<Tokens.Token> commands = List.of(Commands.lpar, number(3), comma,
+                                              number(shipId), lpar,
                                               comma, number(maybeFuel), comma, number(maybeAmmo),
-                                              comma, number(maybeHealth), rpar);
+                                              comma, number(something),
+                                              comma, number(maybeHealth), rpar, rpar);
         log.trace("Split command for shipId={}, fuel={}, ammo={}, health={} command={}",
                   shipId, maybeFuel, maybeAmmo, maybeHealth, commands);
+        try {
+            System.out.println(DemodulateValue.eval(ModulateList.mod2(commands).toString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return commands;
     }
 
