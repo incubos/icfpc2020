@@ -81,14 +81,14 @@ class Main {
             //           log.info("Start command response={}", send2);
             //          log.info("dem={}", DemodulateValue.demodulate(send2));
             //           log.info("gameResponse={}", new GameResponse(DemodulateList.demMList(new MessageImpl(send2))));
-            log.info("demList={}", DemodulateValue.eval(send1));
+            log.info("Join demList={}", DemodulateValue.eval(send1));
 
             List<Object> joinResponse = DemodulateValue.eval(send1);
 
             String send2 = privateAPI.send(Commands.start(playerKeyString, "10", "20", "10", "20"));
             log.info("Start command response={}", send2);
             log.info("dem={}", DemodulateValue.demodulate(send2));
-            log.info("demList={}", DemodulateValue.eval(send2));
+            log.info("Start demList={}", DemodulateValue.eval(send2));
             List<Object> startResponse = DemodulateValue.eval(send2);
             GameResponse gameResponse = new GameResponse(startResponse);
             Role role = gameResponse.staticGameInfo.role;
