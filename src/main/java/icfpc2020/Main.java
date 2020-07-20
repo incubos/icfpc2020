@@ -9,9 +9,11 @@ import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
 import icfpc2020.strategy.AlwaysShootStrategy;
 import icfpc2020.strategy.CompositeStrategy;
+import icfpc2020.strategy.MovementStrategy;
 import icfpc2020.strategy.NoopStragety;
 import icfpc2020.strategy.RandomAccelerateStrategy;
 import icfpc2020.strategy.RandomCommandStrategy;
+import icfpc2020.strategy.SplitStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,8 +114,8 @@ class Main {
             GameResponse gameResponse = new GameResponse(startResponse);
 
             boolean gameEnded = gameResponse.gameStage == GameStage.FINISHED;
-            var strategy = new CompositeStrategy(List.of(new AlwaysShootStrategy(),
-                                                         new RandomAccelerateStrategy()));
+            var strategy = new CompositeStrategy(List.of(new MovementStrategy(),
+                                                         new SplitStrategy()));
             while (!gameEnded) {
                 String commands = Commands.commands(playerKeyString, strategy.next(gameResponse));
                 log.info("Sending to server {}", DemodulateValue.eval(commands));

@@ -13,6 +13,7 @@ public class GameState {
     public Map<Ship, List<Command>> shipsAndCommands;
 
     public GameState(List<Object> list) {
+        System.out.println(list);
         gameTick = ((BigInteger) list.get(0));
         shipsAndCommands = new HashMap<>();
         ((List<Object>) list.get(2)).forEach(l -> {
