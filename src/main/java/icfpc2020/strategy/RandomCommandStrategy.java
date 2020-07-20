@@ -50,7 +50,7 @@ public class RandomCommandStrategy implements Strategy {
                     .findFirst()
                     .get();
             List<List<Tokens.Token>> variants = new ArrayList<>();
-            variants.add(Commands.accelerate(myShipId.toString(), coords[step.intValue() % 4]));
+            variants.addAll(new RandomAccelerateStrategy().next(gameResponse));
             if (role == Role.ATTACKER) {
                 variants.add(Commands.shoot(enemyShip.shipId.toString(), enemyShip.position, "0"));
             }
