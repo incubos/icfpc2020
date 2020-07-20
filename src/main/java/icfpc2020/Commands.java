@@ -86,7 +86,7 @@ public class Commands {
         }
         result.add(rpar);
         String s = ModulateList.mod2(result).toString();
-        log.debug("Commands command for playerKey={}, commands={}", playerKey, commands);
+        log.debug("Commands command for playerKey={}, commands={} command={}", playerKey, commands, s);
         return s;
     }
 
