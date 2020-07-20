@@ -1,8 +1,10 @@
 package icfpc2020;
 
 import icfpc2020.api.GameResponse;
+import icfpc2020.api.GameStage;
 import icfpc2020.api.PrivateAPIImpl;
 import icfpc2020.api.Role;
+import icfpc2020.api.Ship;
 import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
 import org.jetbrains.annotations.NotNull;
@@ -19,11 +21,12 @@ import java.util.List;
 
 class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
+    private static PrivateAPIImpl privateAPI;
 
     /**
      * Use this one-liner to run game locally: run_local.sh
      * It will log all the outputs to games/1.log and games/2.log;
-     *
+     * <p>
      * To run locally:
      * One process creates a game:
      * ./run.sh https://icfpc2020-api.testkontur.ru/aliens/send?apiKey=3132acdb670045d3b93482f7e0b65359 1 local create
@@ -58,7 +61,7 @@ class Main {
 
             log.info("Server URL: {}, player key: {}", serverUrl, playerKeyString);
             HttpClient httpClient = HttpClient.newBuilder().build();
-            PrivateAPIImpl privateAPI = new PrivateAPIImpl(httpClient, local ? serverUrl : serverUrl + "/aliens/send");
+            privateAPI = new PrivateAPIImpl(httpClient, local ? serverUrl : serverUrl + "/aliens/send");
             if (local) {
                 if (create) {
                     String send = privateAPI.send(Commands.create());
@@ -92,12 +95,12 @@ class Main {
             List<Object> startResponse = DemodulateValue.eval(send2);
             GameResponse gameResponse = new GameResponse(startResponse);
             Role role = gameResponse.staticGameInfo.role;
-            BigInteger shipId =
-                    gameResponse.gameState.shipsAndCommands.entrySet()
-                                                           .stream()
-                                                           .filter(o -> o.getKey().role.equals(role))
-                                                           .findFirst().get()
-                                                           .getKey().shipId;
+            Ship myShip = gameResponse.gameState.shipsAndCommands.entrySet()
+                                                                 .stream()
+                                                                 .filter(o -> o.getKey().role.equals(role))
+                                                                 .findFirst().get()
+                                                                 .getKey();
+            BigInteger shipId = myShip.shipId;
             boolean gameEnded = false;
             Draw.Coord[] coords = new Draw.Coord[]{Draw.Coord.of(1, 1),
                     Draw.Coord.of(1, -1), Draw.Coord.of(-1, -1), Draw.Coord.of(-1, 1)};
@@ -106,18 +109,20 @@ class Main {
                 String commands = Commands.commands(playerKeyString,
                                                     List.of(Commands.accelerate(shipId.toString()
                                                             , coords[step % 4])));
-                log.info("Sending to server {}", DemodulateValue.eval(commands));
-                String send = privateAPI.send(commands);
-                log.info("Command command response={}}", send);
-//                log.info("dem={}", DemodulateValue.demodulate(send));
-                log.info("Command command response demList={}", DemodulateValue.eval(send));
-
-                gameEnded = gameEnded(DemodulateValue.eval(send));
+                gameResponse = makeTurn(commands);
+                gameEnded = gameResponse.gameStage == GameStage.FINISHED;
             }
         } catch (Exception e) {
             log.error("Unexpected error", e);
             System.exit(1);
         }
+    }
+
+    private static GameResponse makeTurn(String commands) throws IOException {
+        String send = privateAPI.send(commands);
+        log.info("Command command response={}}", send);
+        log.info("Command command response demList={}", DemodulateValue.eval(send));
+        return new GameResponse(DemodulateValue.eval(send));
     }
 
     private static boolean gameEnded(List<Object> serverResponse) {
