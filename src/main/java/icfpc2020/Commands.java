@@ -1,7 +1,6 @@
 package icfpc2020;
 
 import icfpc2020.eval.value.DemodulateValue;
-import icfpc2020.eval.value.ModulateValue;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ public class Commands {
                                              comma,
                                              number(0),
                                              rpar)).toString();
-        log.debug("create command={}", s);
+        log.trace("create command={}", s);
         return s;
     }
 
@@ -41,8 +40,8 @@ public class Commands {
     // Should accpet unknown list later
     public static String join(String playerKey) {
         String s = ModulateList.mod2(List.of(lpar, number(2), comma, number(playerKey), comma, nil, rpar)).toString();
-        log.debug("Join command for playerKey={} command={}", playerKey, s);
-        log.debug("Join command for playerKey={} commands={}", playerKey,
+        log.trace("Join command for playerKey={} command={}", playerKey, s);
+        log.trace("Join command for playerKey={} commands={}", playerKey,
                   DemodulateValue.demodulate(s));
         return s;
     }
@@ -51,17 +50,17 @@ public class Commands {
         String s = ModulateList.mod2(List.of(lpar, number(3), comma, number(playerKey), comma,
                                              lpar, number(x0), comma, number(x1), comma, number(x2),
                                              comma, number(x3), rpar, rpar)).toString();
-        log.debug("Start command for playerKey={} x0={}, x1={}, x2={}, x3={} command={}",
+        log.trace("Start command for playerKey={} x0={}, x1={}, x2={}, x3={} command={}",
                   playerKey, x0, x1, x2, x3, s);
-        log.debug("Start command for playerKey={} commands={}", playerKey,
+        log.trace("Start command for playerKey={} commands={}", playerKey,
                   DemodulateValue.demodulate(s));
         return s;
     }
 
     public static String startNil(String playerKey) {
         String s = ModulateList.mod2(List.of(Commands.lpar, number(3), comma, number(playerKey), comma, nil, rpar)).toString();
-        log.debug("Start command for playerKey={} command={}", playerKey, s);
-        log.debug("Start command for playerKey={} commands={}", playerKey,
+        log.trace("Start command for playerKey={} command={}", playerKey, s);
+        log.trace("Start command for playerKey={} commands={}", playerKey,
                   DemodulateValue.demodulate(s));
         return s;
     }
@@ -86,21 +85,20 @@ public class Commands {
         }
         result.add(rpar);
         String s = ModulateList.mod2(result).toString();
-        log.debug("Commands command for playerKey={}, commands={} command={}", playerKey, commands, s);
+        log.trace("Commands command for playerKey={}, commands={} command={}", playerKey, commands, s);
         return s;
     }
 
     public static List<Tokens.Token> accelerate(String shipId, Draw.Coord vector) {
         List<Tokens.Token> commands = List.of(Commands.lpar, number(0), comma, number(shipId), comma, cons,
                                               number(vector.x), number(vector.y), rpar);
-        log.debug("Accelerate command for shipId={} vector.x={}, vector.y={} command={}",
-                  shipId, vector.x, vector.y, commands);
+        log.trace("Accelerate command for shipId={} vector.x={}, vector.y={} command={}", shipId, vector.x, vector.y, commands);
         return commands;
     }
 
     public static List<Tokens.Token> detonate(String shipId) {
         List<Tokens.Token> commands = List.of(Commands.lpar, number(2), comma, number(shipId), rpar);
-        log.debug("Detonate command for shipId={} command={}", shipId, commands);
+        log.trace("Detonate command for shipId={} command={}", shipId, commands);
         return commands;
     }
 

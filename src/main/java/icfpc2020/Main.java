@@ -25,7 +25,7 @@ class Main {
     /**
      * Use this one-liner to run game locally: run_local.sh
      * It will log all the outputs to games/1.log and games/2.log;
-     *
+     * <p>
      * To run locally:
      * One process creates a game:
      * ./run.sh https://icfpc2020-api.testkontur.ru/aliens/send?apiKey=3132acdb670045d3b93482f7e0b65359 1 local create
@@ -78,11 +78,6 @@ class Main {
             String send1 = privateAPI.send(Commands.join(playerKeyString));
             log.info("Join command response={}}", send1);
             log.info("dem={}", DemodulateValue.demodulate(send1));
-            //           log.info("gameResponse={}", new GameResponse(DemodulateList.demMList(new MessageImpl(send1))));
-            //           String send2 = privateAPI.send(Commands.start(playerKeyString, "12", "23", "34", "45"));
-            //           log.info("Start command response={}", send2);
-            //          log.info("dem={}", DemodulateValue.demodulate(send2));
-            //           log.info("gameResponse={}", new GameResponse(DemodulateList.demMList(new MessageImpl(send2))));
             log.info("Join demList={}", DemodulateValue.eval(send1));
 
             List<Object> joinResponse = DemodulateValue.eval(send1);
@@ -94,14 +89,13 @@ class Main {
             List<Object> startResponse = DemodulateValue.eval(send2);
             GameResponse gameResponse = new GameResponse(startResponse);
 
-            boolean gameEnded = false;
+            boolean gameEnded = gameResponse.gameStage == GameStage.FINISHED;
             var strategy = new RandomAccelerateStrategy();
             while (!gameEnded) {
                 String commands = Commands.commands(playerKeyString, strategy.next(gameResponse));
                 log.info("Sending to server {}", DemodulateValue.eval(commands));
                 String send = privateAPI.send(commands);
                 log.info("Command command response={}}", send);
-//                log.info("dem={}", DemodulateValue.demodulate(send));
                 log.info("Command command response demList={}", DemodulateValue.eval(send));
                 gameResponse = new GameResponse(DemodulateValue.eval(send));
                 log.info("Command game response={}}", gameResponse);
