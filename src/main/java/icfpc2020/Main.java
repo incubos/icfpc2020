@@ -77,10 +77,10 @@ class Main {
                 log.info("playerKey={}", playerKeyString);
             }
 
-            String send1 = privateAPI.send(Commands.join(playerKeyString));
-            log.info("Join command response={}}", send1);
-            log.info("dem={}", DemodulateValue.demodulate(send1));
-            log.info("Join demList={}", DemodulateValue.eval(send1));
+            String join = Commands.join(playerKeyString);
+            log.info("Sending join request {}", DemodulateValue.eval(join));
+            String send1 = privateAPI.send(join);
+            log.info("Join response={}", DemodulateValue.eval(send1));
 
             final GameResponse joinResponse = new GameResponse(DemodulateValue.eval(send1));
 
@@ -90,7 +90,7 @@ class Main {
             final String x2;
             final String x3;
             if (joinResponse.staticGameInfo.maxParams.isEmpty()) {
-                x0 = "10";
+                x0 = "40";
                 x1 = "20";
                 x2 = "10";
                 x3 = "20";
@@ -102,11 +102,10 @@ class Main {
                 x3 = params.x3.toString();
             }
 
-            String send2 = privateAPI.send(Commands.start(playerKeyString, x0, x1, x2, x3));
-            log.info("Start command response={}", send2);
-            log.info("dem={}", DemodulateValue.demodulate(send2));
-            log.info("Start demList={}", DemodulateValue.eval(send2));
-            List<Object> startResponse = DemodulateValue.eval(send2);
+            String start = Commands.start(playerKeyString, x0, x1, x2, x3);
+            log.info("Sending start request {}", DemodulateValue.eval(start));
+            List<Object> startResponse = DemodulateValue.eval(privateAPI.send(start));
+            log.info("Start response {}", startResponse);
             GameResponse gameResponse = new GameResponse(startResponse);
 
             boolean gameEnded = gameResponse.gameStage == GameStage.FINISHED;
@@ -114,12 +113,12 @@ class Main {
             while (!gameEnded) {
                 String commands = Commands.commands(playerKeyString, strategy.next(gameResponse));
                 log.info("Sending to server {}", DemodulateValue.eval(commands));
-                String send = privateAPI.send(commands);
-                log.info("Command command response={}}", send);
-                log.info("Command command response demList={}", DemodulateValue.eval(send));
-                gameResponse = new GameResponse(DemodulateValue.eval(send));
-                log.info("Command game response={}}", gameResponse);
+                List<Object> response = DemodulateValue.eval(privateAPI.send(commands));
+                log.info("Command command response {}", response);
+                gameResponse = new GameResponse(response);
+//                log.info("Command game response={}}", gameResponse);
                 gameEnded = !gameResponse.success || gameResponse.gameStage == GameStage.FINISHED;
+                log.info("======== Tick {} ========", gameResponse.gameState.gameTick);
             }
         } catch (Exception e) {
             log.error("Unexpected error", e);
