@@ -7,6 +7,7 @@ import icfpc2020.api.Role;
 import icfpc2020.api.StaticGameMaxParams;
 import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
+import icfpc2020.strategy.NoopStragety;
 import icfpc2020.strategy.RandomAccelerateStrategy;
 import icfpc2020.strategy.RandomCommandStrategy;
 import org.jetbrains.annotations.NotNull;

@@ -73,14 +73,18 @@ public class Commands {
         result.add(comma);
         result.add(number(playerKey));
         result.add(comma);
-        Iterator<List<Tokens.Token>> iter = commands.iterator();
-        while (iter.hasNext()) {
-            var command = iter.next();
-            result.add(lpar);
-            result.addAll(command);
-            result.add(rpar);
-            if (iter.hasNext()) {
-                result.add(comma);
+        if (commands.isEmpty()) {
+            result.add(nil);
+        } else {
+            Iterator<List<Tokens.Token>> iter = commands.iterator();
+            while (iter.hasNext()) {
+                var command = iter.next();
+                result.add(lpar);
+                result.addAll(command);
+                result.add(rpar);
+                if (iter.hasNext()) {
+                    result.add(comma);
+                }
             }
         }
         result.add(rpar);
@@ -104,9 +108,9 @@ public class Commands {
 
     public static List<Tokens.Token> shoot(String shipId, Draw.Coord target, String x3) {
         List<Tokens.Token> commands = List.of(Commands.lpar,
-                                                number(2),
-                                                comma,
-                                                 number(shipId), comma, cons,
+                                              number(2),
+                                              comma,
+                                              number(shipId), comma, cons,
                                               number(target.x),
                                               number(target.y), comma, number(x3), rpar);
         log.trace("Shoot command for shipId={} target.x={}, target.y={} x3={} command={}",
