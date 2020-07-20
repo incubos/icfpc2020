@@ -34,7 +34,7 @@ public class PrivateAPIImpl extends API {
                                  .version(HttpClient.Version.HTTP_1_1)
                                  .POST(HttpRequest.BodyPublishers.ofString(body))
                                  .build();
-        log.info("Sending request: {}", request);
+//        log.info("Sending request: {}", request);
 
         final HttpResponse<String> response;
         try {
