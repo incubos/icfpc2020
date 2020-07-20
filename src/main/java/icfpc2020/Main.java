@@ -70,11 +70,14 @@ class Main {
             String send1 = privateAPI.send(Commands.join(playerKeyString));
             log.info("Join command response={}}", send1);
             log.info("dem={}", DemodulateValue.demodulate(send1));
+            log.info("demList={}", DemodulateValue.eval(send1));
+
             List<Object> joinResponse = DemodulateValue.eval(send1);
 
             String send2 = privateAPI.send(Commands.start(playerKeyString, "1", "2", "1", "2"));
             log.info("Start command response={}", send2);
             log.info("dem={}", DemodulateValue.demodulate(send2));
+            log.info("demList={}", DemodulateValue.eval(send2));
             List<Object> startResponse = DemodulateValue.eval(send2);
             BigInteger shipId = getShipId(startResponse);
             boolean gameEnded = false;
@@ -83,6 +86,8 @@ class Main {
                                                                 List.of(Commands.accelerate(shipId.toString(), Draw.Coord.of(0, 0)))));
                 log.info("Join command response={}}", send);
                 log.info("dem={}", DemodulateValue.demodulate(send));
+                log.info("demList={}", DemodulateValue.eval(send));
+
                 gameEnded = gameEnded(DemodulateValue.eval(send));
             }
 

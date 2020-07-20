@@ -1,17 +1,13 @@
 package icfpc2020.eval.value;
 
 import icfpc2020.Draw;
-import icfpc2020.MessageImpl;
 import icfpc2020.eval.Evaluator;
-import icfpc2020.operators.Demodulate;
-import icfpc2020.operators.Modulate;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

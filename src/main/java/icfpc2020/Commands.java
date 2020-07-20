@@ -70,6 +70,8 @@ public class Commands {
     public static String commands(String playerKey, List<List<Tokens.Token>> commands) {
         List<Tokens.Token> result = new ArrayList<>();
         result.add(lpar);
+        result.add(number(4));
+        result.add(comma);
         result.add(number(playerKey));
         result.add(comma);
         Iterator<List<Tokens.Token>> iter = commands.iterator();
