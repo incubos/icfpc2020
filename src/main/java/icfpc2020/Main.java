@@ -25,6 +25,10 @@ class Main {
      * to the counterparth (watch for OTHER_PLAYER_KEY_SHOULD_BE in logs).
      * Other process should run following, with a player key in parameters:
      * ./run.sh https://icfpc2020-api.testkontur.ru/aliens/send?apiKey=3132acdb670045d3b93482f7e0b65359 1 local <other player key>
+     * <p>
+     * role 0 attack
+     * role 1 defend
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -42,7 +46,7 @@ class Main {
                     create = true;
                 } else {
                     localPlayerKey = args[3];
-                    log.info("localPlayerKey={}",localPlayerKey);
+                    log.info("localPlayerKey={}", localPlayerKey);
                 }
             }
 
@@ -56,7 +60,7 @@ class Main {
                     @NotNull String dem = DemodulateValue.demodulate(send);
                     log.info("dem={}", dem);
                     playerKeyString = dem.split(" ")[17];
-                    log.info("OTHER_PLAYER_KEY_SHOULD_BE {}",dem.split(" ")[29]);
+                    log.info("OTHER_PLAYER_KEY_SHOULD_BE {}", dem.split(" ")[29]);
                 } else {
                     playerKeyString = localPlayerKey;
                 }
@@ -66,15 +70,67 @@ class Main {
             String send1 = privateAPI.send(Commands.join(playerKeyString));
             log.info("Join command response={}}", send1);
             log.info("dem={}", DemodulateValue.demodulate(send1));
+            List<Object> joinResponse = DemodulateValue.eval(send1);
+
             String send2 = privateAPI.send(Commands.start(playerKeyString, "1", "2", "1", "2"));
             log.info("Start command response={}", send2);
             log.info("dem={}", DemodulateValue.demodulate(send2));
+            List<Object> startResponse = DemodulateValue.eval(send2);
+            BigInteger shipId = getShipId(startResponse);
+            boolean gameEnded = false;
+            while (!gameEnded) {
+                String send = privateAPI.send(Commands.commands(playerKeyString,
+                                                                List.of(Commands.accelerate(shipId.toString(), Draw.Coord.of(0, 0)))));
+                log.info("Join command response={}}", send);
+                log.info("dem={}", DemodulateValue.demodulate(send));
+                gameEnded = gameEnded(DemodulateValue.eval(send));
+            }
 
 
         } catch (Exception e) {
             log.error("Unexpected error", e);
             System.exit(1);
         }
+    }
+
+    private static boolean gameEnded(List<Object> serverResponse) {
+        return serverResponse.get(1).toString().equals("2");
+    }
+
+    /**
+     * Example model
+     * [
+     * 1, // success
+     * 1, // game state (1=started
+     * [256, 1, [448, 1, 64], [16, 128], null], // staticGameInfo;  1 = role
+     * [
+     * 0,
+     * [16, 128],
+     * [
+     * [
+     * [1, 0, (48,5), (0,0), [1, 2, 1, 2], 0, 64, 1],
+     * nil],
+     * [
+     * [0, 1, (-48,-5), (0,0), [190, 4, 4, 10], 0, 64, 1], nil]]
+     * ]
+     * ]
+     */
+    private static BigInteger getShipId(List<Object> startResponse) {
+        BigInteger role = new BigInteger(((List<Object>) startResponse.get(2)).get(1).toString());
+        List<Object> firstShip =
+                (List<Object>) ((List<Object>) ((List<Object>) ((List<Object>) startResponse.get(3)).get(2)).get(0)).get(0);
+        List<Object> secondShip =
+                (List<Object>) ((List<Object>) ((List<Object>) ((List<Object>) startResponse.get(3)).get(2)).get(1)).get(0);
+        if (new BigInteger(firstShip.get(0).toString()).equals(role)) {
+            return new BigInteger(firstShip.get(1).toString());
+        } else {
+            return new BigInteger(secondShip.get(1).toString());
+        }
+    }
+
+    private static boolean isAttack(List<Object> serverResponse, String playerKey) {
+        BigInteger o = (BigInteger) ((List<Object>) ((List<Object>) serverResponse.get(1)).get(0)).get(1);
+        return new BigInteger(playerKey).equals(o);
     }
 
 }
