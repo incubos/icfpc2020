@@ -8,26 +8,28 @@ import icfpc2020.geom.Geometer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class MovementStrategy implements Strategy {
 
-    /**
-     * 0 - 32 - run from the sun
-     * // Accelerate in between
-     * 64 - 128 - run towards the sun
-     */
     private final int run;
     private final int towards;
     private final int maxVelocity;
+    private BigInteger initialShipId = null;
 
     private static final Logger log = LoggerFactory.getLogger(MovementStrategy.class);
 
     // Check last 3 points to detect clockwise/counterclockwise
     private final List<Draw.Coord> trace = new ArrayList<>();
 
+    /**
+     * 0 - 32 - run from the sun
+     * // Accelerate in between
+     * 64 - 128 - run towards the sun
+     */
     public MovementStrategy() {
         this(32, 128, 10);
     }
@@ -41,14 +43,23 @@ public class MovementStrategy implements Strategy {
     @Override
     public List<List<Tokens.Token>> next(GameResponse gameResponse) {
         try {
-            var step = gameResponse.gameState.gameTick;
             var role = gameResponse.staticGameInfo.role;
+
             var myShip = gameResponse
                     .gameState
                     .shipsAndCommands
                     .keySet()
                     .stream()
                     .filter(s -> s.role == role)
+                    .filter(s -> {
+                        // Side effect hack, I know
+                        if (initialShipId == null) {
+                            initialShipId = s.shipId;
+                            return true;
+                        } else {
+                            return initialShipId.equals(s.shipId);
+                        }
+                    })
                     .findFirst()
                     .get();
 
