@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,45 +74,57 @@ public class MovementStrategy implements Strategy {
             long y = myShip.position.y;
             long vx = myShip.velocity.x;
             long vy = myShip.velocity.y;
-            long ax;
-            long ay;
-            long xMirrow = x < 0 ? -1 : 1;
-            if (xMirrow == -1) {
-                clockWise = !clockWise;
-                vx = -vx;
+            long[] axy = axy(x, y, vx, vy, clockWise, run, towards, maxVelocity);
+            if (axy == null) {
+                return Collections.emptyList();
             }
-            long yMirrow = y < 0 ? -1 : 1;
-            if (yMirrow == -1) {
-                clockWise = !clockWise;
-                vy = -vy;
-            }
-            // Now that we are in positive quadrant try to figure out the strategy
-            // Run from
-            if (x < run && y < run) {
-                // TODO: do not ignore velocity!
-                ax = -x;
-                ay = -y;
-            } else if (x < towards && y < towards) { // Run parallel
-                if (Math.abs(vx) + Math.abs(vy) > maxVelocity) {
-                    // Ignore, we are fine!
-                    return Collections.emptyList();
-                }
-                if (x > run) {
-                    ay = 0;
-                    ax = clockWise ? -1 : 1;
-                } else {
-                    ax = 0;
-                    ay = clockWise ? -1 : 1;
-                }
-            } else { // Run towards
-                ax = x;
-                ay = y;
-            }
-            // Apply mirrows back to the decision
-            return List.of(Commands.accelerate(myShip.shipId.toString(), Draw.Coord.of(ax * xMirrow, ay * yMirrow)));
+            return List.of(Commands.accelerate(myShip.shipId.toString(), Draw.Coord.of(axy[0], axy[1])));
         } catch (Throwable t) {
             log.error("Unexpected error", t);
             return Collections.emptyList();
         }
     }
+
+    public static long[] axy(long x, long y, long vx, long vy, boolean clockWise, int run, int towards, int maxVelocity) {
+        long ax;
+        long ay;
+        long xMirrow = x < 0 ? -1 : 1;
+        if (xMirrow == -1) {
+            clockWise = !clockWise;
+            x = -x;
+            vx = -vx;
+        }
+        long yMirrow = y < 0 ? -1 : 1;
+        if (yMirrow == -1) {
+            clockWise = !clockWise;
+            y = -y;
+            vy = -vy;
+        }
+        // Now that we are in positive quadrant try to figure out the strategy
+        // Run from
+        if (x < run && y < run) {
+            // TODO: do not ignore velocity!
+            ax = -x;
+            ay = -y;
+        } else if (x < towards && y < towards) { // Run parallel
+            if (Math.abs(vx) + Math.abs(vy) > maxVelocity) {
+                // Ignore, we are fine!
+                return null;
+            }
+            if (x > run) {
+                ax = 0;
+                ay = clockWise ? -1 : 1;
+            } else {
+                ay = 0;
+                ax = clockWise ? 1 : -1;
+            }
+        } else { // Run towards
+            ax = x;
+            ay = y;
+        }
+        final long[] res = {ax * xMirrow, ay * yMirrow};
+//        System.err.println(Arrays.toString(res));
+        return res;
+    }
+
 }
