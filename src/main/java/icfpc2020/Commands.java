@@ -77,15 +77,15 @@ public class Commands {
             result.add(nil);
         } else {
             Iterator<List<Tokens.Token>> iter = commands.iterator();
+            result.add(lpar);
             while (iter.hasNext()) {
                 var command = iter.next();
-                result.add(lpar);
                 result.addAll(command);
-                result.add(rpar);
                 if (iter.hasNext()) {
                     result.add(comma);
                 }
             }
+            result.add(rpar);
         }
         result.add(rpar);
         String s = ModulateList.mod2(result).toString();
