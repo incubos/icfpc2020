@@ -1,6 +1,7 @@
 package icfpc2020;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import static icfpc2020.BoardDecipher.dumpCommands;
 
+@Ignore
 public class BoardDecipherTest {
 
     @Test

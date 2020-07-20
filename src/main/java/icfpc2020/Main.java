@@ -109,6 +109,7 @@ class Main {
 
             boolean gameEnded = gameResponse.gameStage == GameStage.FINISHED;
             var strategy = new CompositeStrategy(List.of(new SplitStrategy(),
+                                                         new AlwaysShootStrategy(),
                                                          new MovementStrategy()));
             while (!gameEnded) {
                 String commands = Commands.commands(playerKeyString, strategy.next(gameResponse));
@@ -116,9 +117,10 @@ class Main {
                 List<Object> response = DemodulateValue.eval(privateAPI.send(commands));
                 log.info("Command command response {}", response);
                 gameResponse = new GameResponse(response);
-//                log.info("Command game response={}}", gameResponse);
+                log.info("Command game response={}}", gameResponse);
                 gameEnded = !gameResponse.success || gameResponse.gameStage == GameStage.FINISHED;
-                log.info("======== Tick {} ========", gameResponse.gameState.gameTick);
+                if (!gameEnded)
+                    log.info("======== Tick {} ========", gameResponse.gameState.gameTick);
             }
         } catch (Exception e) {
             log.error("Unexpected error", e);

@@ -31,5 +31,6 @@ public class Command {
 enum CommandType {
     ACCELERATE,
     DETONATE,
-    SHOOT
+    SHOOT,
+    CLONE
 }
