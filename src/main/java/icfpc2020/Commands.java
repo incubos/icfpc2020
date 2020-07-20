@@ -100,6 +100,16 @@ public class Commands {
         return commands;
     }
 
+    public static List<Tokens.Token> split(String shipId, int maybeFuel, int maybeAmmo,
+                                           int maybeHealth) {
+        List<Tokens.Token> commands = List.of(Commands.lpar, number(3), comma, number(shipId),
+                                              comma, number(maybeFuel), comma, number(maybeAmmo),
+                                              comma, number(maybeHealth), rpar);
+        log.trace("Split command for shipId={}, fuel={}, ammo={}, health={} command={}",
+                  shipId, maybeFuel, maybeAmmo, maybeHealth, commands);
+        return commands;
+    }
+
     public static List<Tokens.Token> detonate(String shipId) {
         List<Tokens.Token> commands = List.of(Commands.lpar, number(1), comma, number(shipId), rpar);
         log.debug("Detonate command for shipId={} command={}", shipId, commands);
