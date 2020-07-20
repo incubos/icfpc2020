@@ -49,6 +49,11 @@ public class Draw {
             return new Coord(BigInteger.valueOf(x), BigInteger.valueOf(y));
         }
 
+        public static Coord of(final long x, final long y) {
+            return new Coord(BigInteger.valueOf(x), BigInteger.valueOf(y));
+        }
+
+
 
         @Override
         public boolean equals(final Object o) {
