@@ -3,7 +3,7 @@ package icfpc2020;
 import java.math.BigInteger;
 
 public class Tokens {
-    interface Token {
+    public interface Token {
     }
 
     public static class Number implements Token {
