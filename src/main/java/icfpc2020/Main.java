@@ -21,6 +21,9 @@ class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     /**
+     * Use this one-liner to run game locally: run_local.sh
+     * It will log all the outputs to games/1.log and games/2.log;
+     *
      * To run locally:
      * One process creates a game:
      * ./run.sh https://icfpc2020-api.testkontur.ru/aliens/send?apiKey=3132acdb670045d3b93482f7e0b65359 1 local create
