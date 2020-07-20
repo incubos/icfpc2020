@@ -1,10 +1,12 @@
 package icfpc2020;
 
 import icfpc2020.api.GameResponse;
+import icfpc2020.api.GameStage;
 import icfpc2020.api.PrivateAPIImpl;
 import icfpc2020.api.Role;
 import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
+import icfpc2020.strategy.RandomAccelerateStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,29 +93,19 @@ class Main {
             log.info("Start demList={}", DemodulateValue.eval(send2));
             List<Object> startResponse = DemodulateValue.eval(send2);
             GameResponse gameResponse = new GameResponse(startResponse);
-            Role role = gameResponse.staticGameInfo.role;
-            BigInteger shipId =
-                    gameResponse.gameState.shipsAndCommands.entrySet()
-                                                           .stream()
-                                                           .filter(o -> o.getKey().role.equals(role))
-                                                           .findFirst().get()
-                                                           .getKey().shipId;
+
             boolean gameEnded = false;
-            Draw.Coord[] coords = new Draw.Coord[]{Draw.Coord.of(1, 1),
-                    Draw.Coord.of(1, -1), Draw.Coord.of(-1, -1), Draw.Coord.of(-1, 1)};
-            int step = 0;
+            var strategy = new RandomAccelerateStrategy();
             while (!gameEnded) {
-                String commands = Commands.commands(playerKeyString,
-                                                    List.of(Commands.accelerate(shipId.toString()
-                                                            , coords[step % 4])));
+                String commands = Commands.commands(playerKeyString, strategy.next(gameResponse));
                 log.info("Sending to server {}", DemodulateValue.eval(commands));
                 String send = privateAPI.send(commands);
                 log.info("Command command response={}}", send);
 //                log.info("dem={}", DemodulateValue.demodulate(send));
                 log.info("Command command response demList={}", DemodulateValue.eval(send));
-                // Increment step
-                step += 1;
-                gameEnded = gameEnded(DemodulateValue.eval(send));
+                gameResponse = new GameResponse(DemodulateValue.eval(send));
+                log.info("Command game response={}}", gameResponse);
+                gameEnded = !gameResponse.success || gameResponse.gameStage == GameStage.FINISHED;
             }
         } catch (Exception e) {
             log.error("Unexpected error", e);

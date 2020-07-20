@@ -49,7 +49,7 @@ public class GameResponse {
         } else {
             success = true;
             gameStage =
-                    GameStage.values()[((BigInteger) list.get(0)).intValue()];
+                    GameStage.values()[((BigInteger) list.get(1)).intValue()];
             if (list.get(2) != null) {
                 staticGameInfo = new StaticGameInfo((List<Object>) list.get(2));
             }
