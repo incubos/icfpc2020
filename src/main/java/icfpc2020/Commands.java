@@ -73,15 +73,19 @@ public class Commands {
         result.add(comma);
         result.add(number(playerKey));
         result.add(comma);
-        Iterator<List<Tokens.Token>> iter = commands.iterator();
-        while (iter.hasNext()) {
-            var command = iter.next();
+        if (commands.isEmpty()) {
+            result.add(nil);
+        } else {
+            Iterator<List<Tokens.Token>> iter = commands.iterator();
             result.add(lpar);
-            result.addAll(command);
-            result.add(rpar);
-            if (iter.hasNext()) {
-                result.add(comma);
+            while (iter.hasNext()) {
+                var command = iter.next();
+                result.addAll(command);
+                if (iter.hasNext()) {
+                    result.add(comma);
+                }
             }
+            result.add(rpar);
         }
         result.add(rpar);
         String s = ModulateList.mod2(result).toString();
@@ -96,6 +100,16 @@ public class Commands {
         return commands;
     }
 
+    public static List<Tokens.Token> split(String shipId, int maybeFuel, int maybeAmmo,
+                                           int maybeHealth) {
+        List<Tokens.Token> commands = List.of(Commands.lpar, number(3), comma, number(shipId),
+                                              comma, number(maybeFuel), comma, number(maybeAmmo),
+                                              comma, number(maybeHealth), rpar);
+        log.trace("Split command for shipId={}, fuel={}, ammo={}, health={} command={}",
+                  shipId, maybeFuel, maybeAmmo, maybeHealth, commands);
+        return commands;
+    }
+
     public static List<Tokens.Token> detonate(String shipId) {
         List<Tokens.Token> commands = List.of(Commands.lpar, number(1), comma, number(shipId), rpar);
         log.debug("Detonate command for shipId={} command={}", shipId, commands);
@@ -104,9 +118,9 @@ public class Commands {
 
     public static List<Tokens.Token> shoot(String shipId, Draw.Coord target, String x3) {
         List<Tokens.Token> commands = List.of(Commands.lpar,
-                                                number(2),
-                                                comma,
-                                                 number(shipId), comma, cons,
+                                              number(2),
+                                              comma,
+                                              number(shipId), comma, cons,
                                               number(target.x),
                                               number(target.y), comma, number(x3), rpar);
         log.trace("Shoot command for shipId={} target.x={}, target.y={} x3={} command={}",
