@@ -35,9 +35,7 @@
         <javac srcdir="${src.dir.java}"
                destdir="${build.dir.main}"
                classpathref="build.classpath"
-               includeantruntime="false">
-            <withKotlin/>
-        </javac>
+               includeantruntime="false"/>
     </target>
 
 
