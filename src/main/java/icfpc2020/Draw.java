@@ -1,13 +1,10 @@
 package icfpc2020;
 
 import icfpc2020.eval.value.LazyValue;
-import icfpc2020.galaxy.Converter;
 import icfpc2020.galaxy.Expr;
-import icfpc2020.galaxy.GalaxyParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.EnumSet;
 import java.util.List;
@@ -79,11 +76,6 @@ public class Draw {
         } else {
             throw new UnsupportedOperationException("Draw protocol expects two number after 'vec' command");
         }
-    }
-
-    // image as list of pairs
-    public static void draw(LazyValue value, Consumer<Coord> drawingBoard) {
-        draw(Converter.astToGalaxy(value), drawingBoard);
     }
 
     // image as list of pairs

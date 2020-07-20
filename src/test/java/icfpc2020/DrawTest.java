@@ -81,17 +81,6 @@ public class DrawTest {
         image.persist();
     }
 
-    private void checkDraw(LazyValue value, Set<Draw.Coord> expectedResult) throws IOException {
-        var board = new DrawingBoard();
-        Draw.draw(value, board);
-        Assert.assertEquals(expectedResult, board.set);
-        var image = new ImageRenderer(tempDirectory.toString() + Math.abs(value.hashCode()) + ".png");
-        board.set.forEach(image::putDot);
-        image.persist();
-    }
-
-
-
     @Test
     public void testDraw() throws IOException {
 
@@ -157,21 +146,6 @@ public class DrawTest {
                         coord(4, 4),
                         coord(6, 4),
                         coord(4, 5)));
-    }
-
-    @Test
-    public void testDrawWithASTCommands() throws IOException {
-        // ap draw ( ap ap vec 1 2 )   =   |picture3|
-        checkDraw(toLazyValue(List.of(Draw.Coord.of(1, 2))), Set.of(coord(1, 2)));
-
-    }
-
-    @NotNull
-    private LazyValue toLazyValue(List<Draw.Coord> coordList) throws IOException {
-        final Evaluator evaluator =
-                new Evaluator(new ByteArrayInputStream(
-                        ("test = " + Generator.createListOfCoords(coordList)).getBytes(StandardCharsets.UTF_8)));
-        return evaluator.getValue("test");
     }
 
 }
