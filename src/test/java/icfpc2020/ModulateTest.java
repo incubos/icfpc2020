@@ -11,6 +11,7 @@ public class ModulateTest {
     public void test() {
         Assert.assertEquals("010", Modulate.mod(BigInteger.valueOf(0L)).toString());
         Assert.assertEquals("01100001", Modulate.mod(BigInteger.valueOf(1L)).toString());
+        Assert.assertEquals("0111010000000", Modulate.mod(BigInteger.valueOf(128L)).toString());
         Assert.assertEquals("011110000100000000", Modulate.mod(BigInteger.valueOf(256L)).toString());
         Assert.assertEquals("10100001", Modulate.mod(BigInteger.valueOf(-1L)).toString());
         Assert.assertEquals("101110000100000000", Modulate.mod(BigInteger.valueOf(-256L)).toString());
