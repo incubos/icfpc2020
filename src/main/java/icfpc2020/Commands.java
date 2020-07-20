@@ -109,7 +109,7 @@ public class Commands {
                                                  number(shipId), comma, cons,
                                               number(target.x),
                                               number(target.y), comma, number(x3), rpar);
-        log.debug("Shoot command for shipId={} target.x={}, target.y={} x3={} command={}",
+        log.trace("Shoot command for shipId={} target.x={}, target.y={} x3={} command={}",
                   shipId, target.x, target.y, x3, commands);
         return commands;
     }
