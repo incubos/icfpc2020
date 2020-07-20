@@ -1,8 +1,10 @@
 package icfpc2020.api;
 
+import icfpc2020.Draw;
 import icfpc2020.list.MList;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,19 +23,38 @@ public class GameResponse {
     StaticGameInfo staticGameInfo;
     GameState gameState;
 
-    public GameResponse(MList list) {
-        if (list.getList().size() < 1 ||
-                list.getChild(0).isList() ||
-                !list.getChild(0).getValue().equals(BigInteger.ONE)) {
+//    public GameResponse(MList list) {
+//        if (list.getList().size() < 1 ||
+//                list.getChild(0).isList() ||
+//                !list.getChild(0).getValue().equals(BigInteger.ONE)) {
+//            success = false;
+//        } else {
+//            success = true;
+//            gameStage = GameStage.values()[list.getChild(1).getValue().intValue()];
+//            if (!list.getChild(2).isNil()) {
+//                staticGameInfo = new StaticGameInfo(list.getChild(2));
+//            }
+//            if (!list.getChild(3).isNil()) {
+//                gameState = new GameState(list.getChild(3));
+//            }
+//        }
+//    }
+
+
+    public GameResponse(List<Object> list) {
+        if (list.size() < 1 ||
+                list.get(0) instanceof List ||
+                !list.get(0).equals(BigInteger.ONE)) {
             success = false;
         } else {
             success = true;
-            gameStage = GameStage.values()[list.getChild(1).getValue().intValue()];
-            if (!list.getChild(2).isNil()) {
-                staticGameInfo = new StaticGameInfo(list.getChild(2));
+            gameStage =
+                    GameStage.values()[((BigInteger) list.get(0)).intValue()];
+            if (list.get(2) != null) {
+                staticGameInfo = new StaticGameInfo((List<Object>) list.get(2));
             }
-            if (!list.getChild(3).isNil()) {
-                gameState = new GameState(list.getChild(3));
+            if (list.get(3) != null) {
+                gameState = new GameState((List<Object>) list.get(3));
             }
         }
     }
@@ -64,8 +85,8 @@ enum Role {
 class StaticGameInfo {
     Role role;
 
-    public StaticGameInfo(MList list) {
-        role = Role.values()[list.getList().get(1).getValue().intValue()];
+    public StaticGameInfo(List<Object> list) {
+        role = Role.values()[((BigInteger)list.get(1)).intValue()];
     }
 
     @Override
@@ -75,18 +96,25 @@ class StaticGameInfo {
                 '}';
     }
 }
+
 // gameState = (gameTick, x1, shipsAndCommands)
 class GameState {
     BigInteger gameTick;
     Map<Ship, List<Command>> shipsAndCommands;
 
-    public GameState(MList list) {
-        gameTick = list.getList().get(0).getValue();
+    public GameState(List<Object> list) {
+        gameTick = ((BigInteger) list.get(0));
         shipsAndCommands = new HashMap<>();
-        list.getList().get(2).getList().forEach( l -> {
-            Ship ship = new Ship(l.getList().get(0));
-            List<Command> commands = l.getList().get(1).getList()
-                    .stream().map(Command::new).collect(Collectors.toList());
+        ((List<Object>) list.get(2)).forEach(l -> {
+            List<Object> shipAndCommands = (List<Object>) l;
+            Ship ship = new Ship((List<Object>) shipAndCommands.get(0));
+            List<Command> commands;
+            if (shipAndCommands.get(1) == null){
+                commands = new ArrayList<>();
+            } else {
+                commands = ((List<Object>) shipAndCommands.get(1))
+                        .stream().map(o -> ((List<Object>) o)).map(Command::new).collect(Collectors.toList());
+            }
             shipsAndCommands.put(ship, commands);
         });
     }
@@ -104,18 +132,14 @@ class GameState {
 class Ship {
     final Role role;
     final BigInteger shipId;
-    final int[] position;
-    final int[] velocity;
+    final Draw.Coord position;
+    final Draw.Coord velocity;
 
-    public Ship(MList list) {
-        role = Role.values()[list.getList().get(0).getValue().intValue()];
-        shipId = list.getList().get(1).getValue();
-        position = list.getList().get(2).getList()
-                .stream().mapToInt(l -> l.getValue().intValue())
-                .toArray();
-        velocity = list.getList().get(3).getList()
-                .stream().mapToInt(l -> l.getValue().intValue())
-                .toArray();
+    public Ship(List<Object> list) {
+        role = Role.values()[((BigInteger)list.get(0)).intValue()];
+        shipId = ((BigInteger)list.get(1));
+        position = (Draw.Coord)list.get(2);
+        velocity = (Draw.Coord)list.get(3);
     }
 
     @Override
@@ -123,8 +147,8 @@ class Ship {
         return "Ship{" +
                 "role=" + role +
                 ", shipId=" + shipId +
-                ", position=" + Arrays.toString(position) +
-                ", velocity=" + Arrays.toString(velocity) +
+                ", position=" + position +
+                ", velocity=" + velocity +
                 '}';
     }
 }
@@ -135,9 +159,9 @@ class Command {
     BigInteger type;
     BigInteger shipId;
 
-    public Command(MList list) {
-        type = list.getChild(0).getValue();
-        shipId = list.getChild(0).getValue();
+    public Command(List<Object> list) {
+        type = (BigInteger) list.get(0);
+        shipId = (BigInteger) list.get(0);
     }
 
     @Override
