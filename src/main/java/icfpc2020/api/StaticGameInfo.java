@@ -8,12 +8,14 @@ import java.util.Optional;
 
 // staticGameInfo staticGameInfo = (x0, role, x2, x3, x4)
 public class StaticGameInfo {
+    public final int ticks;
     @NotNull
     public final Role role;
     @NotNull
     public final Optional<StaticGameMaxParams> maxParams;
 
     public StaticGameInfo(List<Object> list) {
+        ticks = ((BigInteger) list.get(0)).intValue();
         role = Role.values()[((BigInteger)list.get(1)).intValue()];
         if (list.size() == 5) {
             final List<Object> value = (List<Object>) list.get(4);
