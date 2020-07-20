@@ -85,7 +85,7 @@ class Main {
 
             List<Object> joinResponse = DemodulateValue.eval(send1);
 
-            String send2 = privateAPI.send(Commands.start(playerKeyString, "1", "2", "1", "2"));
+            String send2 = privateAPI.send(Commands.start(playerKeyString, "10", "20", "10", "20"));
             log.info("Start command response={}", send2);
             log.info("dem={}", DemodulateValue.demodulate(send2));
             log.info("demList={}", DemodulateValue.eval(send2));
