@@ -112,6 +112,14 @@ class Main {
                                                             , coords[step % 4])));
                 gameResponse = makeTurn(commands);
                 gameEnded = gameResponse.gameStage == GameStage.FINISHED;
+                log.info("Sending to server {}", DemodulateValue.eval(commands));
+                String send = privateAPI.send(commands);
+                log.info("Command command response={}}", send);
+//                log.info("dem={}", DemodulateValue.demodulate(send));
+                log.info("Command command response demList={}", DemodulateValue.eval(send));
+                // Increment step
+                step += 1;
+                gameEnded = gameEnded(DemodulateValue.eval(send));
             }
         } catch (Exception e) {
             log.error("Unexpected error", e);
