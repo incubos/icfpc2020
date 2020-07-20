@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.net.*;
 import java.net.http.*;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.List;
 
 class Main {
@@ -81,11 +82,17 @@ class Main {
             List<Object> startResponse = DemodulateValue.eval(send2);
             BigInteger shipId = getShipId(startResponse);
             boolean gameEnded = false;
+            Draw.Coord[] coords = new Draw.Coord[]{Draw.Coord.of(1, 1),
+                    Draw.Coord.of(1, -1), Draw.Coord.of(-1, -1), Draw.Coord.of(-1, 1)};
+            int step = 0;
             while (!gameEnded) {
-                String send = privateAPI.send(Commands.commands(playerKeyString,
-                                                                List.of(Commands.accelerate(shipId.toString(), Draw.Coord.of(0, 0)))));
-                log.info("Join command response={}}", send);
-                log.info("dem={}", DemodulateValue.demodulate(send));
+                String commands = Commands.commands(playerKeyString,
+                                                    List.of(Commands.accelerate(shipId.toString()
+                                                            , coords[step % 4])));
+                log.info("Sending to server {}", DemodulateValue.eval(commands));
+                String send = privateAPI.send(commands);
+                log.info("Command command response={}}", send);
+//                log.info("dem={}", DemodulateValue.demodulate(send));
                 log.info("demList={}", DemodulateValue.eval(send));
 
                 gameEnded = gameEnded(DemodulateValue.eval(send));
