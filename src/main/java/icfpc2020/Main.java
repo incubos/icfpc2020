@@ -106,6 +106,7 @@ class Main {
                     Draw.Coord.of(1, -1), Draw.Coord.of(-1, -1), Draw.Coord.of(-1, 1)};
             int step = 0;
             while (!gameEnded) {
+                log.info(gameResponse.gameStage.toString());
                 String commands = Commands.commands(playerKeyString,
                                                     List.of(Commands.accelerate(shipId.toString()
                                                             , coords[step % 4])));
@@ -119,6 +120,7 @@ class Main {
     }
 
     private static GameResponse makeTurn(String commands) throws IOException {
+        log.info("Sending to server {}", DemodulateValue.eval(commands));
         String send = privateAPI.send(commands);
         log.info("Command command response={}}", send);
         log.info("Command command response demList={}", DemodulateValue.eval(send));
