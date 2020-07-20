@@ -108,9 +108,9 @@ class Main {
                                                             , coords[step % 4])));
                 log.info("Sending to server {}", DemodulateValue.eval(commands));
                 String send = privateAPI.send(commands);
-//                log.info("Command command response={}}", send);
+                log.info("Command command response={}}", send);
 //                log.info("dem={}", DemodulateValue.demodulate(send));
-                log.info("Server response={}", DemodulateValue.eval(send));
+                log.info("Command command response demList={}", DemodulateValue.eval(send));
 
                 gameEnded = gameEnded(DemodulateValue.eval(send));
             }
