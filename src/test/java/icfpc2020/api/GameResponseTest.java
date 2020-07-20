@@ -51,7 +51,7 @@ public class GameResponseTest {
                 new GameResponse(DemodulateValue.eval(
                         "110110000111011000101111011110000100000000110110000111110111100001110000001101100001110111001000000001111011100001000011011101000000000110000110000"));
         Assert.assertEquals(
-                "GameResponse{success=true, gameStage=NOT_STARTED, staticGameInfo=StaticGameInfo{role=ATTACKER, maxParams=Optional[StaticGameMaxParams{x0=1, x1=2, x2=1, x3=2}]}, gameState=null}",
+                "GameResponse{success=true, gameStage=FINISHED, staticGameInfo=StaticGameInfo{role=DEFENDER, maxParams=Optional.empty}, gameState=null}",
                 gameResponse.toString());
     }
 }
