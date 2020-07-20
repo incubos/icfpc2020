@@ -118,6 +118,7 @@ class Main {
                 gameResponse = new GameResponse(response);
 //                log.info("Command game response={}}", gameResponse);
                 gameEnded = !gameResponse.success || gameResponse.gameStage == GameStage.FINISHED;
+                log.info("======== Tick {} ========", gameResponse.gameState.gameTick);
             }
         } catch (Exception e) {
             log.error("Unexpected error", e);
