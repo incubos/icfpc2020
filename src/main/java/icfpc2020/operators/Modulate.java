@@ -29,7 +29,8 @@ public class Modulate {
             sb.append("01");
         if (!number.equals(BigInteger.ZERO)) {
             String bits = number.abs().toString(2);
-            int trailingZeros = 4 - bits.length() % 4;
+            int lenMod4 = bits.length() % 4;
+            int trailingZeros = lenMod4 == 0 ? 0 : 4 - lenMod4;
             sb.append("1".repeat((trailingZeros + bits.length()) / 4))
               .append("0")
               .append("0".repeat(trailingZeros))

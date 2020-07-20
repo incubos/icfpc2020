@@ -1,5 +1,6 @@
 package icfpc2020;
 
+import icfpc2020.api.GameResponse;
 import icfpc2020.api.PrivateAPIImpl;
 import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
@@ -71,6 +72,11 @@ class Main {
             String send1 = privateAPI.send(Commands.join(playerKeyString));
             log.info("Join command response={}}", send1);
             log.info("dem={}", DemodulateValue.demodulate(send1));
+ //           log.info("gameResponse={}", new GameResponse(DemodulateList.demMList(new MessageImpl(send1))));
+ //           String send2 = privateAPI.send(Commands.start(playerKeyString, "12", "23", "34", "45"));
+ //           log.info("Start command response={}", send2);
+ //          log.info("dem={}", DemodulateValue.demodulate(send2));
+ //           log.info("gameResponse={}", new GameResponse(DemodulateList.demMList(new MessageImpl(send2))));
             log.info("demList={}", DemodulateValue.eval(send1));
 
             List<Object> joinResponse = DemodulateValue.eval(send1);
@@ -97,8 +103,6 @@ class Main {
 
                 gameEnded = gameEnded(DemodulateValue.eval(send));
             }
-
-
         } catch (Exception e) {
             log.error("Unexpected error", e);
             System.exit(1);
