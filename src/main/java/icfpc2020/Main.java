@@ -7,6 +7,7 @@ import icfpc2020.api.Role;
 import icfpc2020.eval.value.DemodulateValue;
 import icfpc2020.operators.Modulate;
 import icfpc2020.strategy.RandomAccelerateStrategy;
+import icfpc2020.strategy.RandomCommandStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +96,7 @@ class Main {
             GameResponse gameResponse = new GameResponse(startResponse);
 
             boolean gameEnded = false;
-            var strategy = new RandomAccelerateStrategy();
+            var strategy = new RandomCommandStrategy();
             while (!gameEnded) {
                 String commands = Commands.commands(playerKeyString, strategy.next(gameResponse));
                 log.info("Sending to server {}", DemodulateValue.eval(commands));

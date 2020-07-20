@@ -99,15 +99,18 @@ public class Commands {
     }
 
     public static List<Tokens.Token> detonate(String shipId) {
-        List<Tokens.Token> commands = List.of(Commands.lpar, number(2), comma, number(shipId), rpar);
+        List<Tokens.Token> commands = List.of(Commands.lpar, number(1), comma, number(shipId), rpar);
         log.debug("Detonate command for shipId={} command={}", shipId, commands);
         return commands;
     }
 
     public static List<Tokens.Token> shoot(String shipId, Draw.Coord target, String x3) {
-        List<Tokens.Token> commands = List.of(Commands.lpar, number(2), comma, number(shipId), cons,
+        List<Tokens.Token> commands = List.of(Commands.lpar,
+                                                number(2),
+                                                comma,
+                                                 number(shipId), comma, cons,
                                               number(target.x),
-                                              number(target.y), number(x3), rpar);
+                                              number(target.y), comma, number(x3), rpar);
         log.debug("Shoot command for shipId={} target.x={}, target.y={} x3={} command={}",
                   shipId, target.x, target.y, x3, commands);
         return commands;
