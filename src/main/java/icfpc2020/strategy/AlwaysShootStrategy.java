@@ -1,6 +1,7 @@
 package icfpc2020.strategy;
 
 import icfpc2020.Commands;
+import icfpc2020.Draw;
 import icfpc2020.Tokens;
 import icfpc2020.api.GameResponse;
 import org.slf4j.Logger;
@@ -34,7 +35,12 @@ public class AlwaysShootStrategy implements Strategy {
                     .filter(s -> s.role != role)
                     .findFirst()
                     .get();
-            return List.of(Commands.shoot(myShipId.toString(), enemyShip.position, "0"));
+
+            var c = Draw.Coord.of(
+                    enemyShip.position.x + enemyShip.velocity.x,
+                    enemyShip.position.y + enemyShip.velocity.y
+            );
+            return List.of(Commands.shoot(myShipId.toString(), c, "0"));
         } catch (Throwable t) {
             log.error("Unexpected error", t);
             return Collections.emptyList();
