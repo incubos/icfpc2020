@@ -33,5 +33,10 @@ public class MovementStrategyTest {
         Assert.assertArrayEquals(new long[]{0, 1}, MovementStrategy.axy(100, -100, 0, 0, false, 32, 128, 10));
     }
 
+    @Test
+    public void test_4237() {
+        Assert.assertArrayEquals(new long[]{0, -1}, MovementStrategy.axy(-42, 37, 0, 0, true, 32, 128, 10));
+    }
+
 
 }

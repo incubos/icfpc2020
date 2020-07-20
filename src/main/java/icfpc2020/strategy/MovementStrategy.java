@@ -113,7 +113,7 @@ public class MovementStrategy implements Strategy {
             }
             if (x > run) {
                 ax = 0;
-                ay = clockWise ? -1 : 1;
+                ay = clockWise ? 1 : -1;
             } else {
                 ay = 0;
                 ax = clockWise ? 1 : -1;
