@@ -111,7 +111,8 @@ class Main {
                 log.info("Command command response={}}", send);
 //                log.info("dem={}", DemodulateValue.demodulate(send));
                 log.info("Command command response demList={}", DemodulateValue.eval(send));
-
+                // Increment step
+                step += 1;
                 gameEnded = gameEnded(DemodulateValue.eval(send));
             }
         } catch (Exception e) {
