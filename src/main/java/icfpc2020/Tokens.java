@@ -24,5 +24,10 @@ public class Tokens {
         public static Number of(final BigInteger number) {
             return new Number(number);
         }
+
+        @Override
+        public String toString() {
+            return number.toString();
+        }
     }
 }

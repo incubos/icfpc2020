@@ -1,5 +1,7 @@
 package icfpc2020;
 
+import icfpc2020.eval.value.DemodulateValue;
+import icfpc2020.eval.value.ModulateValue;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,8 @@ public class Commands {
     public static String join(String playerKey) {
         String s = ModulateList.mod2(List.of(lpar, number(2), comma, number(playerKey), comma, nil, rpar)).toString();
         log.debug("Join command for playerKey={} command={}", playerKey, s);
+        log.debug("Join command for playerKey={} commands={}", playerKey,
+                  DemodulateValue.demodulate(s));
         return s;
     }
 
@@ -49,6 +53,16 @@ public class Commands {
                                              comma, number(x3), rpar, rpar)).toString();
         log.debug("Start command for playerKey={} x0={}, x1={}, x2={}, x3={} command={}",
                   playerKey, x0, x1, x2, x3, s);
+        log.debug("Start command for playerKey={} commands={}", playerKey,
+                  DemodulateValue.demodulate(s));
+        return s;
+    }
+
+    public static String startNil(String playerKey) {
+        String s = ModulateList.mod2(List.of(Commands.lpar, number(3), comma, number(playerKey), comma, nil, rpar)).toString();
+        log.debug("Start command for playerKey={} command={}", playerKey, s);
+        log.debug("Start command for playerKey={} commands={}", playerKey,
+                  DemodulateValue.demodulate(s));
         return s;
     }
 
@@ -56,6 +70,8 @@ public class Commands {
     public static String commands(String playerKey, List<List<Tokens.Token>> commands) {
         List<Tokens.Token> result = new ArrayList<>();
         result.add(lpar);
+        result.add(number(4));
+        result.add(comma);
         result.add(number(playerKey));
         result.add(comma);
         Iterator<List<Tokens.Token>> iter = commands.iterator();
@@ -68,6 +84,7 @@ public class Commands {
                 result.add(comma);
             }
         }
+        result.add(rpar);
         String s = ModulateList.mod2(result).toString();
         log.debug("Commands command for playerKey={}, commands={} command={}", playerKey, commands, s);
         return s;

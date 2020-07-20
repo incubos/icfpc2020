@@ -1,18 +1,17 @@
 package icfpc2020.eval.value;
 
-import icfpc2020.MessageImpl;
+import icfpc2020.Draw;
 import icfpc2020.eval.Evaluator;
-import icfpc2020.operators.Demodulate;
-import icfpc2020.operators.Modulate;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DemodulateValue implements LazyValue {
     public static final LazyValue INSTANCE = new DemodulateValue();
@@ -78,6 +77,45 @@ public class DemodulateValue implements LazyValue {
         }
     }
 
+    public static List<Object> eval(String message) throws IOException {
+        Evaluator evaluator = new Evaluator("test=" + DemodulateValue.demodulate(message));
+        return (List<Object>) eval(evaluator.getValue("test").force());
+    }
+
+    private static Object eval(LazyValue lazyValue) {
+        var acc = new ArrayList<>();
+        LazyValue current = lazyValue;
+        while (true) {
+            if (current instanceof ConsValue) {
+                LazyValue left = ((ConsValue) current).left.force();
+                LazyValue right = ((ConsValue) current).right.force();
+                if (left instanceof ConstantValue && right instanceof ConstantValue) {
+                    log.trace("({},{})", left.asConst(), right.asConst());
+                    return Draw.Coord.of(left.asConst(), right.asConst());
+                } else if (left instanceof NilValue) {
+                    acc.add(null);
+                    log.trace("null");
+                    current = right;
+                } else if (left instanceof ConsValue) {
+                    log.trace("(");
+                    acc.add(eval(left));
+                    current = right;
+                } else if (left instanceof ConstantValue) {
+                    acc.add(left.asConst());
+                    log.trace("{}", left.asConst());
+                    current = right;
+                }
+            } else if (current instanceof NilValue) {
+                log.trace(")");
+                return acc;
+            } else if (current instanceof ConstantValue) {
+                acc.add(current.asConst());
+                log.trace("{}", current.asConst());
+                return acc;
+            }
+        }
+    }
+
     @NotNull
     public static String demodulate(String s) {
         StringBuilder result = new StringBuilder();
@@ -88,11 +126,11 @@ public class DemodulateValue implements LazyValue {
             switch (Token.fromChars(first, second)) {
                 case cons:
                     result.append(apply)
-                            .append(" ")
-                            .append(apply)
-                            .append(" ")
-                            .append(cons)
-                            .append(" ");
+                          .append(" ")
+                          .append(apply)
+                          .append(" ")
+                          .append(cons)
+                          .append(" ");
                     break;
                 case plus: {
                     pos = readNumber(s, pos, result, true);
@@ -104,7 +142,7 @@ public class DemodulateValue implements LazyValue {
                 }
                 case nil:
                     result.append(nil)
-                            .append(" ");
+                          .append(" ");
             }
         }
 
